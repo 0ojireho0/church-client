@@ -1,4 +1,5 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -7,12 +8,41 @@ import Bird from "../../../../assets/bird.png"
 
 // Components
 import InputWithLogo from '@/app/components/InputWithLogo'
+import { MoonLoader } from 'react-spinners'
 
 // Icons
 import { FaAt } from "react-icons/fa";
 import { MdOutlinePassword } from "react-icons/md";
 
+// React Hook Form
+import { useForm } from 'react-hook-form'
+
+// Hooks
+import { useAuth } from '@/app/hooks/auth'
+
 export default function Login() {
+
+  const [errors, setErrors] = useState("")
+  const [status, setStatus] = useState(null)
+  const [loading, setLoading] = useState(false)
+
+  const { register, handleSubmit, watch, formState: { errors: error } } = useForm();
+  const { login } = useAuth({
+    middleware: "guest",
+    redirectIfAuthenticated: '/dashboard'
+  })
+
+  const loginSubmit = (data) =>{
+    login({
+      username: data.username,
+      password: data.password,
+      setErrors,
+      setStatus,
+      setLoading
+    })
+  }
+
+
   return (
     <div className='bg-[#FFE4A2] flex justify-center items-center px-2 py-10 '>
       <div className='border-2 border-black w-full rounded-lg flex flex-col justify-center items-center bg-white gap-5 py-5 md:w-[30rem] md:gap-7  '>
@@ -25,21 +55,46 @@ export default function Login() {
         </div>
 
        
-        <form>
+        <form onSubmit={handleSubmit(loginSubmit)}>
           <div className='flex flex-col gap-3'>
-            <InputWithLogo 
-              logo={<FaAt className='text-2xl text-black/50' />}
-              placeholder={"Username"}
-              type="text"
-              />
-            <InputWithLogo 
-              logo={<MdOutlinePassword className='text-2xl text-black/50' />}
-              placeholder={"Password"}
-              type="password"
-              />
             <div className='flex flex-col'>
-              <button type='submit' className='bg-[#FFE4A2] py-2 font-semibold border-2 border-black/50 rounded-lg cursor-pointer hover:bg-yellow-200 hover:border-black/60'>Sign In</button>
-              <Link href="/register" className='text-right text-[0.7rem] text-blue-950 hover:underline'>Don't have an Account?</Link>
+              <InputWithLogo 
+                logo={<FaAt className='text-2xl text-black/50' />}
+                placeholder={"Username"}
+                type="text"
+                register={register('username', {
+                  required: "Username is required"
+                })}
+                />
+                {error.username && <span className='text-[0.7rem] text-red-800'>{error.username.message}</span>}
+            </div>
+            <div className='flex flex-col'>
+              <InputWithLogo 
+                logo={<MdOutlinePassword className='text-2xl text-black/50' />}
+                placeholder={"Password"}
+                type="password"
+                register={register('password', {
+                  required: "Password is required"
+                })}
+                />
+                {error.password && <span className='text-[0.7rem] text-red-800'>{error.password.message}</span>}
+                {errors && <span className='text-[0.7rem] text-red-800'>{errors}</span>}
+            </div>
+            <div className='flex flex-col'>
+
+              {loading ? (
+                <>
+                  <h1 className='bg-[#FFE4A2] py-2 font-semibold border-2 border-black/50 rounded-lg cursor-pointer hover:bg-yellow-200 hover:border-black/60 w-full flex justify-center items-center'><MoonLoader size={25} /></h1>
+                </>
+              ) : (
+                <>
+                  <button type='submit' className='bg-[#FFE4A2] py-2 font-semibold border-2 border-black/50 rounded-lg cursor-pointer hover:bg-yellow-200 hover:border-black/60'>Sign In</button>
+                </>
+              )}
+              
+              <div className='flex justify-end w-full'>
+                <Link href="/register" className='text-right text-[0.7rem] text-blue-950 hover:underline'>Don't have an Account?</Link>
+              </div>
             </div>
           
           
