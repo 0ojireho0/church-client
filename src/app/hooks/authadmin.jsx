@@ -4,13 +4,13 @@ import { useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 
-export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
+export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
     const router = useRouter()
     const params = useParams()
 
-    const { data: user, error, mutate } = useSWR('/api/user', () =>
+    const { data: admin, error, mutate } = useSWR('/api/admin/user-admin', () =>
         axios
-            .get('/api/user')
+            .get('/api/admin/user-admin')
             .then(res => res.data)
             .catch(error => {
                 if (error.response.status !== 409) throw error
@@ -21,7 +21,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
 
     const csrf = () => axios.get('/sanctum/csrf-cookie')
 
-    const register = async ({ setErrors, setLoading, reset, ...props }) => {
+    const registerAdmin = async ({ setErrors, setLoading, reset, ...props }) => {
 
         setLoading(true)
         await csrf()
@@ -29,7 +29,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         setErrors([])
 
         axios
-            .post('/register', props)
+            .post('api/admin/register-admin', props)
             .then((res) => {
                 if(res.status === 204){
                     Swal.fire({
@@ -54,7 +54,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    const login = async ({ setErrors, setStatus, setLoading, ...props }) => {
+    const loginAdmin = async ({ setErrors, setStatus, setLoading, ...props }) => {
         setLoading(true)
         await csrf()
 
@@ -62,7 +62,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         setStatus(null)
 
         axios
-            .post('/login', props)
+            .post('api/admin/login-admin', props)
             .then((res) => {
                 if(res.status === 200){
                     window.location.href = res.data.redirect_to;
@@ -121,20 +121,16 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
     //         .then(response => setStatus(response.data.status))
     // }
 
-    const logout = async ({setLoading} = {}) => {
+    const logoutAdmin = async () => {
         if (!error) {
-            await axios.post('/logout')
-                       .then(() => mutate())
-                       .finally(() => {
-                        setLoading(false)
-                       })
+            await axios.post('/logout').then(() => mutate())
         }
 
         window.location.pathname = '/login'
     }
 
     useEffect(() => {
-        if (middleware === 'guest' && redirectIfAuthenticated && user)
+        if (middleware === 'guest' && redirectIfAuthenticated && admin)
             router.push(redirectIfAuthenticated)
 
         // if (middleware === 'auth' && (user && !user.email_verified_at))
@@ -145,16 +141,16 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         //     user?.email_verified_at
         // )
         //     router.push(redirectIfAuthenticated)
-        if (middleware === 'auth' && error) logout()
-    }, [user, error])
+        if (middleware === 'auth-admin' && error) logout()
+    }, [admin, error])
 
     return {
-        user,
-        register,
-        login,
+        admin,
+        registerAdmin,
+        loginAdmin,
         // forgotPassword,
         // resetPassword,
         // resendEmailVerification,
-        logout,
+        logoutAdmin,
     }
 }

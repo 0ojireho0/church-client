@@ -4,7 +4,14 @@
     font-family: Joan-regular;
     src: url(../assets/fonts/Joan-Regular.ttf);
 }
+@font-face {
+    font-family: JosefinSans-regular;
+    src: url(../assets/fonts/JosefinSans-Regular.ttf);
+}
 
 .joan-regular{
     font-family: Joan-Regular;
+}
+.josefin-regular{
+    font-family: JosefinSans-regular;
 }
