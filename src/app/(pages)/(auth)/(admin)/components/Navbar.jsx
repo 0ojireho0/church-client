@@ -5,12 +5,13 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 // Logo
-import Logo from "../../../../../assets/logo.png"
+import Logo from "@/assets/logo.png"
 
 // Icons
 import { IoMenu } from "react-icons/io5"
-import { FaHome } from "react-icons/fa"
-import { RiAdminFill } from "react-icons/ri"
+import { FaFile } from "react-icons/fa";
+import { FaCalculator } from "react-icons/fa";
+import { MdManageAccounts } from "react-icons/md";
 import { FaXmark } from "react-icons/fa6"
 import { CgProfile } from "react-icons/cg";
 
@@ -21,14 +22,19 @@ export default function Navbar() {
 
   const navItems = [
     {
-      name: "Home",
-      path: "/dashboard",
-      icon: <FaHome />
+      name: "File",
+      path: "/dashboard-admin",
+      icon: <FaFile />
     },
     {
-      name: "Church",
-      path: "/church",
-      icon: <RiAdminFill />
+      name: "Accounting",
+      path: "/accounting",
+      icon: <FaCalculator />
+    },
+    {
+      name: "User Management",
+      path: "/user-management",
+      icon: <MdManageAccounts />
     },
   ]
 
@@ -64,7 +70,6 @@ export default function Navbar() {
           <Image src={Logo} alt='Logo' width={200} />
           <div className='flex gap-10'>
             {navItems.map((item, i) => {
-              const isActive = pathname === item.path
 
               return (
                 <Link

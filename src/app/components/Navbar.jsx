@@ -53,7 +53,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className='sticky top-0 bg-white drop-shadow-lg p-2 md:px-14 lg:px-28'>
+      <div className='sticky top-0 bg-white drop-shadow-lg p-2 md:px-14 lg:px-28 '>
         <IoMenu className={`text-3xl md:hidden`} onClick={() => setShow(true)} />
 
         <div className='hidden md:flex justify-between items-center md:p'>

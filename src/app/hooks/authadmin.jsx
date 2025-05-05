@@ -121,12 +121,16 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
     //         .then(response => setStatus(response.data.status))
     // }
 
-    const logoutAdmin = async () => {
+    const logoutAdmin = async ({setLoading} = {}) => {
         if (!error) {
-            await axios.post('/logout').then(() => mutate())
+            await axios.post('api/admin/logout-admin')
+                        .then(() => mutate())
+                        .finally(() => {
+                            setLoading(false)
+                        })
         }
 
-        window.location.pathname = '/login'
+        window.location.pathname = '/admin/login'
     }
 
     useEffect(() => {
@@ -141,7 +145,7 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
         //     user?.email_verified_at
         // )
         //     router.push(redirectIfAuthenticated)
-        if (middleware === 'auth-admin' && error) logout()
+        if (middleware === 'auth-admin' && error) logoutAdmin()
     }, [admin, error])
 
     return {
