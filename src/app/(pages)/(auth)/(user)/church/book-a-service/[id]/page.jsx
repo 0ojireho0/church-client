@@ -1,12 +1,33 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
+
+
+// Hooks
+import { useChurch } from '@/app/hooks/church'
+
+
 
 function ChurchName() {
 
+    const [getChurchInfo, setGetChurchInfo] = useState(null)
     const params = useParams()
 
-    console.log(params.id)
+    const id = params.id
+
+    const { bookService } = useChurch()
+    
+    useEffect(() => {
+      bookService({
+        id: id,
+        setGetChurchInfo
+      })
+    }, [id])
+
+
+    if(getChurchInfo == null){
+      return "Loading"
+    }
 
 
 
@@ -14,7 +35,7 @@ function ChurchName() {
     <div className=" flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-xl">
         <h2 className="text-center text-xl font-bold mb-4 border-b pb-2">
-          Selected Church: Quiapo Church
+          Selected Church: {getChurchInfo.church_name}
         </h2>
 
         <div className="grid grid-cols-2 gap-4 divide-x">
@@ -50,7 +71,7 @@ function ChurchName() {
             <h3 className="font-bold text-center mb-2">Office Hours</h3>
             <p className="text-center mb-4">Monday - Sunday 10:00am - 5:00pm</p>
             <h3 className="font-bold text-center mb-2">Address</h3>
-            <p className="text-center">General Luna St. Intramuros Manila</p>
+            <p className="text-center">{getChurchInfo.address}</p>
           </div>
         </div>
 

@@ -25,7 +25,7 @@ function ContactUs({showContactUs, setShowContactUs, contactData}) {
         </div>
         <div className='flex flex-col gap-3'>
           <h1 className='text-center font-bold text-xl'>Contact Us</h1>
-          <h1 className='text-center text-xl font-bold'>{contactData.name} </h1>
+          <h1 className='text-center text-xl font-bold'>{contactData.church_name} </h1>
           <h1 className='text-center text-xl'>Address: {contactData.address} </h1>
           <h1 className='text-center text-xl'>Landline: {contactData.landline} </h1>
           <h1 className='text-center text-xl'>Phone: {contactData.phone} </h1>
