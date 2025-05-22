@@ -7,7 +7,7 @@ import { useParams, useRouter } from 'next/navigation'
 // Hooks
 import { useChurch } from '@/app/hooks/church'
 
-
+import { MoonLoader } from 'react-spinners'
 
 function ChurchName() {
 
@@ -30,7 +30,11 @@ function ChurchName() {
 
 
     if(getChurchInfo == null){
-      return "Loading"
+      return (
+        <div className='flex justify-center items-center'>
+            <MoonLoader />
+        </div>
+      )
     }
 
     const handleCompleteForm = () => {
@@ -43,7 +47,7 @@ function ChurchName() {
   return (
     <div className=" flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-xl">
-        <h2 className="text-center text-xl font-bold mb-4 border-b pb-2">
+        <h2 className="text-center text-xl font-bold mb-4 border-b pb-2 josefin-regular">
           Selected Church: {getChurchInfo.church_name}
         </h2>
 
