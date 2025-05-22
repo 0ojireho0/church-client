@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
+
 
 
 // Hooks
@@ -11,7 +12,9 @@ import { useChurch } from '@/app/hooks/church'
 function ChurchName() {
 
     const [getChurchInfo, setGetChurchInfo] = useState(null)
+    const [getService, setGetService] = useState("")
     const params = useParams()
+    const router = useRouter()
 
     const id = params.id
 
@@ -25,8 +28,14 @@ function ChurchName() {
     }, [id])
 
 
+
     if(getChurchInfo == null){
       return "Loading"
+    }
+
+    const handleCompleteForm = () => {
+      // console.log(getService)
+      router.push(`/church/book-a-service/${id}/${getService}`)
     }
 
 
@@ -44,23 +53,23 @@ function ChurchName() {
             <h3 className="font-bold text-center mb-2">Services</h3>
             <form className="space-y-2">
               <div>
-                <input type="radio" id="baptism" name="service" className="mr-2" />
+                <input type="radio" id="baptism" name="service" className="mr-2" onChange={(e) => setGetService(e.target.value)} value={"baptism"} />
                 <label htmlFor="baptism">Baptism</label>
               </div>
               <div>
-                <input type="radio" id="wedding" name="service" className="mr-2" />
+                <input type="radio" id="wedding" name="service" className="mr-2" onChange={(e) => setGetService(e.target.value)} value={"wedding"} />
                 <label htmlFor="wedding">Wedding</label>
               </div>
               <div>
-                <input type="radio" id="memorial" name="service" className="mr-2" />
+                <input type="radio" id="memorial" name="service" className="mr-2" onChange={(e) => setGetService(e.target.value)} value={"memorial"}  />
                 <label htmlFor="memorial">Memorial</label>
               </div>
               <div>
-                <input type="radio" id="confirmation" name="service" className="mr-2" />
+                <input type="radio" id="confirmation" name="service" className="mr-2" onChange={(e) => setGetService(e.target.value)} value={"confirmation"}  />
                 <label htmlFor="confirmation">Confirmation</label>
               </div>
               <div>
-                <input type="radio" id="mass" name="service" className="mr-2" />
+                <input type="radio" id="mass" name="service" className="mr-2" onChange={(e) => setGetService(e.target.value)} value={"mass"} />
                 <label htmlFor="mass">Mass Scheduling</label>
               </div>
             </form>
@@ -72,11 +81,14 @@ function ChurchName() {
             <p className="text-center mb-4">Monday - Sunday 10:00am - 5:00pm</p>
             <h3 className="font-bold text-center mb-2">Address</h3>
             <p className="text-center">{getChurchInfo.address}</p>
+            <h3 className="font-bold text-center mb-2">Contact Us</h3>
+            <p className="text-center">Phone: {getChurchInfo.phone}</p>
+            <p className="text-center">Landline: {getChurchInfo.landline}</p>
           </div>
         </div>
 
         <div className="mt-6">
-          <button className="w-full bg-[#FFE4A2] text-black font-bold py-2 rounded-lg shadow hover:bg-yellow-200">
+          <button onClick={handleCompleteForm} className="w-full bg-[#FFE4A2] text-black font-bold py-2 rounded-lg shadow hover:bg-yellow-200 cursor-pointer">
             Complete the form
           </button>
         </div>

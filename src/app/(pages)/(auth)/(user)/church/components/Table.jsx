@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { MoonLoader } from 'react-spinners';
 
 
-function Table({church, handleShowContact, handleBookService}) {
+function Table({church, handleRequestCertificate, handleBookService}) {
 
     // const churchExample = [
     //     {
@@ -96,7 +96,7 @@ function Table({church, handleShowContact, handleBookService}) {
             <p className='text-justify josefin-regular'>{item.address}</p>
           </div>
           <div className='flex gap-3 justify-center items-center w-full px-2'>
-            <h1 className='bg-blue-300 p-2 w-full text-center rounded-lg border-2 border-black/50 cursor-pointer hover:bg-blue-400' onClick={() => handleShowContact(item)}>Contact Us</h1>
+            <h1 className='bg-blue-300 p-2 w-full text-center rounded-lg border-2 border-black/50 cursor-pointer hover:bg-blue-400 text-sm ' onClick={() => handleRequestCertificate(item)}>Request Certificate</h1>
             <h1 className='bg-gray-300 p-2 w-full text-center rounded-lg border-2 border-black/50 cursor-pointer hover:bg-gray-400' onClick={() => handleBookService(item)}>Book a Service</h1>
           </div>
         </div>

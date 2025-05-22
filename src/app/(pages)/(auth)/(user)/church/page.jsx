@@ -9,7 +9,6 @@ import Searchbar from '@/app/components/Searchbar'
 
 // Icons
 import { FaSearch } from "react-icons/fa";
-import ContactUs from './ContactUs';
 import Table from './components/Table';
 
 // Hooks
@@ -19,19 +18,14 @@ import { useChurch } from '@/app/hooks/church';
 
 export default function Church() {
 
-  const [showContactUs, setShowContactUs] = useState(false)
-  const [contactData, setContactData] = useState([])
-
   const router = useRouter()
 
   const { church } = useChurch()
 
 
 
-  const handleShowContact = (data) => {
-    console.log(data)
-    setShowContactUs(true)
-    setContactData(data)
+  const handleRequestCertificate = (data) => {
+    router.push(`/church/request-certificate/${data.id}`)
   }
 
   const handleBookService = (data) => {
@@ -52,18 +46,13 @@ export default function Church() {
       <div className='bg-white rounded-lg border border-black/50 drop-shadow-lg p-5 '>
         <Table 
           church={church}
-          handleShowContact={handleShowContact}
+          handleRequestCertificate={handleRequestCertificate}
           handleBookService={handleBookService}
         />
       </div>
     </div>
 
-    {showContactUs && 
-    <ContactUs 
-      showContactUs={showContactUs} 
-      setShowContactUs={setShowContactUs}  
-      contactData={contactData}
-      />}
+
     
     
     
