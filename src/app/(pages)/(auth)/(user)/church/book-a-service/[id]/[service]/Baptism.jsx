@@ -4,6 +4,10 @@ import React, {useEffect, useState} from 'react'
 import { useForm } from 'react-hook-form'
 import BookingCalendar from '../../../../components/BookingCalendar'
 
+import { MoonLoader } from 'react-spinners'
+
+
+
 function Baptism({church}) {
 
   const { register, handleSubmit } = useForm()
@@ -15,6 +19,14 @@ function Baptism({church}) {
     // console.log(data)
 
     setShowDateModal(true)
+  }
+
+  if(!church){
+    return(
+       <div className='flex justify-center items-center'>
+            <MoonLoader />
+        </div>
+    )
   }
 
   return (
@@ -31,7 +43,7 @@ function Baptism({church}) {
 
             <div className='grid gap-3 md:grid-cols-2 md:gap-10'>
               <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
-                <h1 className='font-bold josefin-regular text-center'>Personal Information of the Child</h1>
+                <h1 className='font-bold josefin-regular text-center'>PERSONAL INFORMATION OF THE CHILD</h1>
                 <div className='grid grid-cols-2 justify-center items-center gap-2'>
                   <label htmlFor="fullname" className='text-end'>Full Name: </label>
                   <input type="text" id='fullname' className='border rounded-md p-2 outline-none' />
@@ -49,7 +61,7 @@ function Baptism({church}) {
               </div>
 
               <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
-                <h1 className='font-bold josefin-regular text-center'>Parent’s Information</h1>
+                <h1 className='font-bold josefin-regular text-center'>PARENT'S INFORMATION</h1>
                 <div className='grid grid-cols-2 justify-center items-center gap-2'>
                   <label htmlFor="father" className='text-end'>Father's Name: </label>
                   <input type="text" id='father' className='border rounded-md p-2 outline-none' />
@@ -67,7 +79,7 @@ function Baptism({church}) {
               </div>
 
               <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
-                <h1 className='font-bold josefin-regular text-center'>Godparent’s Information</h1>
+                <h1 className='font-bold josefin-regular text-center'>GODPARENT'S INFORMATION</h1>
                 <div className='grid grid-cols-2 justify-center items-center gap-2'>
                   <label htmlFor="godfather" className='text-end'>Godfather's Name: </label>
                   <textarea id="godfather" className='border rounded-md p-2 outline-none'></textarea>

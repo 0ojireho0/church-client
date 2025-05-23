@@ -35,10 +35,10 @@ function ApplicationForm() {
   return (
     <div>
         {service === "baptism" && <Baptism church={getChurchInfo} />}
-        {service === "wedding" && <Wedding />}
-        {service === "memorial" && <Memorial />}
-        {service === "confirmation" && <Confirmation />}
-        {service === "mass" && <Mass />}
+        {service === "wedding" && <Wedding church={getChurchInfo} />}
+        {service === "memorial" && <Memorial church={getChurchInfo} />}
+        {service === "confirmation" && <Confirmation church={getChurchInfo} />}
+        {service === "mass" && <Mass church={getChurchInfo} />}
     </div>
   )
 }
