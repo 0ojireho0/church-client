@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form'
 
 function Confirmation({church}) {
 
+  const { register, handleSubmit } = useForm()
+
 
   if(!church){
     return(
@@ -13,6 +15,10 @@ function Confirmation({church}) {
             <MoonLoader />
         </div>
     )
+  }
+
+  const handleSubmitConfirmation = (data) => {
+    console.log(data)
   }
 
 
@@ -26,7 +32,7 @@ function Confirmation({church}) {
         </div>
 
         <div className='flex flex-col justify-center items-center gap-3'>
-          <form>
+          <form onSubmit={handleSubmit(handleSubmitConfirmation)}>
             <div className='grid gap-3 md:grid-cols-2 items-start'> 
               <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
                 <h1 className='font-bold josefin-regular text-center'>INFORMATION</h1>
@@ -63,10 +69,24 @@ function Confirmation({church}) {
                     <li>Valid ID</li>
                     <li>Authorization Letter (if someone else is claiming the certificate)</li>
                   </ul>
+                  <div className="flex items-center justify-center">
+                    <label
+                      htmlFor="file-upload"
+                      className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
+                    >
+                      Upload File
+                    </label>
+                    <input
+                      id="file-upload"
+                      type="file"
+                      className="hidden"
+                    />
+                  </div>
 
               </div>
-
-        
+            </div>
+            <div className='flex justify-center items-center my-5'>
+              <button type='submit' className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Choose your date</button>
             </div>
           </form>
         </div>

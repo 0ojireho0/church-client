@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import BookingCalendar from '../../../../components/BookingCalendar'
 
 import { MoonLoader } from 'react-spinners'
+import RowRadioButtonsGroup from '@/app/components/RowRadioButtonsGroup'
 
 
 
@@ -13,9 +14,24 @@ function Baptism({church}) {
   const { register, handleSubmit } = useForm()
 
   const [showDateModal, setShowDateModal] = useState(false)
+  const [selectedPayment, setSelectedPayment] = useState(null)
 
 
-  const handleChooseDate = (data) => {
+    const payment = [
+        {
+            value: "cash",
+            label: "Cash",
+          
+        },
+        {
+            value: "online",
+            label: "Online Payment",
+
+        },
+    ]
+
+
+  const handleSubmitBaptism = (data) => {
     // console.log(data)
 
     setShowDateModal(true)
@@ -39,7 +55,7 @@ function Baptism({church}) {
         </div>
 
         <div className='flex justify-center items-center flex-col gap-3'>
-          <form onSubmit={handleSubmit(handleChooseDate)}>
+          <form onSubmit={handleSubmit(handleSubmitBaptism)}>
 
             <div className='grid gap-3 md:grid-cols-2 md:gap-10'>
               <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
@@ -102,6 +118,30 @@ function Baptism({church}) {
                   <li>Birth Certificate from PSA (ORIGINAL AND PHOTOCOPY)</li>
                   <li>Marriage Contract</li>
                 </ul>
+                <div className="flex items-center">
+                  <label
+                    htmlFor="file-upload"
+                    className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
+                  >
+                    Upload File
+                  </label>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    className="hidden"
+                  />
+                </div>
+                <h1 className='font-bold josefin-regular text-center'>DONATION METHOD</h1>
+                <div className='flex justify-center items-center'>
+                  <RowRadioButtonsGroup 
+                      label={"Select a payment method"}
+                      name="payment"
+                      value={selectedPayment}
+                      onChange={(e) => setSelectedPayment(e.target.value)}
+                      options={payment}
+                  
+                  />
+                </div>
               </div>
 
             </div>

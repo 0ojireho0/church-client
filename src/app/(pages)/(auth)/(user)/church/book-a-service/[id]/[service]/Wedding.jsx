@@ -66,10 +66,10 @@ function Wedding({church}) {
                   <input type="text" id='groom_mother_name' className='border rounded-md p-2 outline-none' />
 
                   <label htmlFor="groom_parent_religion" className='text-end'>Religion: </label>
-                  <input type="date" id='groom_parent_religion' className='border rounded-md p-2 outline-none' />
+                  <input type="text" id='groom_parent_religion' className='border rounded-md p-2 outline-none' />
 
                   <label htmlFor="groom_parent_address" className='text-end'>Address: </label>
-                  <input type="date" id='groom_parent_address' className='border rounded-md p-2 outline-none' />
+                  <input type="text" id='groom_parent_address' className='border rounded-md p-2 outline-none' />
      
                   <label htmlFor="groom_parent_contact" className='text-end'>Contact No: </label>
                   <input type="text" id='groom_parent_contact' className='border rounded-md p-2 outline-none' />
@@ -80,17 +80,10 @@ function Wedding({church}) {
               <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
                 <h1 className='font-bold josefin-regular text-center'>WEDDING SCHEDULE</h1>
                 <div className='grid grid-cols-2 justify-center items-center gap-2'>
-                  <label htmlFor="fullname" className='text-end'>Full Name: </label>
-                  <input type="text" id='fullname' className='border rounded-md p-2 outline-none' />
-
-                  <label htmlFor="gender" className='text-end'>Gender: </label>
-                  <input type="text" id='gender' className='border rounded-md p-2 outline-none' />
-
-                  <label htmlFor="dob" className='text-end'>Date of Birth: </label>
-                  <input type="date" id='dob' className='border rounded-md p-2 outline-none' />
-     
-                  <label htmlFor="pob" className='text-end'>Place of Birth: </label>
-                  <input type="text" id='pob' className='border rounded-md p-2 outline-none' />
+                  <label className='text-end'>REHEARSAL DATE & TIME: </label>
+                  <h1 className='bg-blue-400 text-center text-white hover:bg-blue-500 rounded-lg py-2 px-4 cursor-pointer'>Select Date & Time</h1>
+                  <label className='text-end'>WEDDING DATE & TIME: </label>
+                  <h1 className='bg-blue-400 text-center text-white hover:bg-blue-500 rounded-lg py-2 px-4 cursor-pointer'>Select Date & Time</h1>
 
                 </div>
               </div>
@@ -132,10 +125,10 @@ function Wedding({church}) {
                   <input type="text" id='bride_mother_name' className='border rounded-md p-2 outline-none' />
 
                   <label htmlFor="bride_parent_religion" className='text-end'>Religion: </label>
-                  <input type="date" id='bride_parent_religion' className='border rounded-md p-2 outline-none' />
+                  <input type="text" id='bride_parent_religion' className='border rounded-md p-2 outline-none' />
 
                   <label htmlFor="bride_parent_address" className='text-end'>Address: </label>
-                  <input type="date" id='bride_parent_address' className='border rounded-md p-2 outline-none' />
+                  <input type="text" id='bride_parent_address' className='border rounded-md p-2 outline-none' />
      
                   <label htmlFor="bride_parent_contact" className='text-end'>Contact No: </label>
                   <input type="text" id='bride_parent_contact' className='border rounded-md p-2 outline-none' />
@@ -146,17 +139,17 @@ function Wedding({church}) {
               <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
                 <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS</h1>
                 <div className='grid grid-cols-2 justify-center items-center gap-2'>
-                  <label htmlFor="fullname" className='text-end'>Full Name: </label>
-                  <input type="text" id='fullname' className='border rounded-md p-2 outline-none' />
+                  <label htmlFor="banns" className='text-end'>Banns: </label>
+                  <input type="text" id='banns' className='border rounded-md p-2 outline-none' />
 
-                  <label htmlFor="gender" className='text-end'>Gender: </label>
-                  <input type="text" id='gender' className='border rounded-md p-2 outline-none' />
+                  <label htmlFor="license" className='text-end'>License: </label>
+                  <input type="text" id='license' className='border rounded-md p-2 outline-none' />
 
-                  <label htmlFor="dob" className='text-end'>Date of Birth: </label>
-                  <input type="date" id='dob' className='border rounded-md p-2 outline-none' />
+                  <label htmlFor="organist" className='text-end'>Organist: </label>
+                  <input type="text" id='organist' className='border rounded-md p-2 outline-none' />
      
-                  <label htmlFor="pob" className='text-end'>Place of Birth: </label>
-                  <input type="text" id='pob' className='border rounded-md p-2 outline-none' />
+                  <label htmlFor="flowers" className='text-end'>Flowers: </label>
+                  <input type="text" id='flowers' className='border rounded-md p-2 outline-none' />
 
                 </div>
               </div>

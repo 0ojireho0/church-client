@@ -17,12 +17,12 @@ function RowRadioButtonsGroup({ label, name, options = [], value, onChange }) {
             value={option.value} 
             control={<Radio />} 
             label={option.label}
-            sx={{
-              '& .MuiTypography-root': {
-                borderBottom: '2px solid black',
+            // sx={{
+            //   '& .MuiTypography-root': {
+            //     borderBottom: '2px solid black',
           
-              }
-            }}
+            //   }
+            // }}
           />
         ))}
       </RadioGroup>
