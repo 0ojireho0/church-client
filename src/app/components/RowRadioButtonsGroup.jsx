@@ -15,14 +15,8 @@ function RowRadioButtonsGroup({ label, name, options = [], value, onChange }) {
           <FormControlLabel 
             key={option.value} 
             value={option.value} 
-            control={<Radio />} 
+            control={<Radio required />} 
             label={option.label}
-            // sx={{
-            //   '& .MuiTypography-root': {
-            //     borderBottom: '2px solid black',
-          
-            //   }
-            // }}
           />
         ))}
       </RadioGroup>

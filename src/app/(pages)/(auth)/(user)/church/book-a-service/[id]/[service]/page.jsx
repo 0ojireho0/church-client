@@ -13,6 +13,7 @@ import Mass from './Mass'
 
 // Hooks
 import { useChurch } from '@/app/hooks/church'
+import { useAuth } from '@/app/hooks/auth'
 
 function ApplicationForm() {
 
@@ -22,6 +23,8 @@ function ApplicationForm() {
     const { id, service } = params
 
     const { bookService } = useChurch()
+
+    const { user } = useAuth()
 
 
     useEffect(() => {
@@ -34,11 +37,11 @@ function ApplicationForm() {
 
   return (
     <div>
-        {service === "baptism" && <Baptism church={getChurchInfo} />}
-        {service === "wedding" && <Wedding church={getChurchInfo} />}
-        {service === "memorial" && <Memorial church={getChurchInfo} />}
-        {service === "confirmation" && <Confirmation church={getChurchInfo} />}
-        {service === "mass" && <Mass church={getChurchInfo} />}
+        {service === "baptism" && <Baptism church={getChurchInfo} user={user} />}
+        {service === "wedding" && <Wedding church={getChurchInfo} user={user} />}
+        {service === "memorial" && <Memorial church={getChurchInfo} user={user} />}
+        {service === "confirmation" && <Confirmation church={getChurchInfo} user={user} />}
+        {service === "mass" && <Mass church={getChurchInfo} user={user} />}
     </div>
   )
 }
