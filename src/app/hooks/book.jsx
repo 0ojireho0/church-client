@@ -20,7 +20,7 @@ export const useBook = ({} = {}) => {
     const baptismBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, ...props}) => {
         await csrf()
 
-        console.log(props)
+        // console.log(props)
         axios.post('api/book-baptism', props)
             .then(res => {
                 if(res.status === 200){
@@ -30,7 +30,7 @@ export const useBook = ({} = {}) => {
                         icon: "success"
                     })
                     reset({
-                        ob: null, // specifically reset the date of birth
+                        dob: null, // specifically reset the date of birth
                     });
                     setSelectedPayment(null)
                     setSelectedDate(null)
@@ -44,9 +44,39 @@ export const useBook = ({} = {}) => {
             })
     }
 
+    const weddingBook = async({reset, setLoading, setSelectedPayment, setWeddingSelectedDate, setWeddingSelectedTime, setRehearsalSelectedDate, setRehearsalSelectedTime, ...props}) => {
+        await csrf()
+
+        axios.post('/api/book-wedding', props)
+            .then(res => {
+                if(res.status === 200){
+                    Swal.fire({
+                        title: "Success",
+                        text: "Submit Successfully",
+                        icon: "success"
+                    })
+                    reset({
+                        groom_dob: null,
+                        bride_dob: null
+                    });
+                    setSelectedPayment(null)
+                    setWeddingSelectedDate(null)
+                    setWeddingSelectedTime(null)
+                    setRehearsalSelectedDate(null)
+                    setRehearsalSelectedTime(null)
+                }
+            })
+            .catch(err => console.log(err))
+            .finally(() => {
+                setLoading(false)
+            })
+            
+    }
+
     return{
         book,
-        baptismBook
+        baptismBook,
+        weddingBook
     }
 
 }

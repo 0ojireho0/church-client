@@ -67,6 +67,7 @@ function Baptism({church, user}) {
       user,
       selectedPayment,
       fullyBooked,
+      church_id:church?.id,
       reset,
       setLoading,
       setSelectedPayment,

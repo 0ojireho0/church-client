@@ -38,26 +38,40 @@ function Confirmation({church}) {
                 <h1 className='font-bold josefin-regular text-center'>INFORMATION</h1>
                 <div className='grid grid-cols-2 justify-center items-center gap-2'>
 
-                  <label htmlFor="fullname" className='text-end'>Full Name: </label>
-                  <input type="text" id='fullname' className='border rounded-md p-2 outline-none' />
+                  <div className='flex flex-col'>
+                    <label htmlFor="fullname" className='text-start'>Full Name: </label>
+                    <input type="text" id='fullname' className='border rounded-md p-2 outline-none' />
+                  </div>
 
-                  <label htmlFor="dob" className='text-end'>Date of Birth: </label>
-                  <input type="date" id='dob' className='border rounded-md p-2 outline-none' />
+                  <div className='flex flex-col'>
+                    <label htmlFor="dob" className='text-start'>Date of Birth: </label>
+                    <input type="date" id='dob' className='border rounded-md p-2 outline-none' />
+                  </div>
      
-                  <label htmlFor="pob" className='text-end'>Place of Birth: </label>
-                  <input type="text" id='pob' className='border rounded-md p-2 outline-none' />
+                  <div className='flex flex-col'>
+                    <label htmlFor="pob" className='text-start'>Place of Birth: </label>
+                    <input type="text" id='pob' className='border rounded-md p-2 outline-none' />
+                  </div>
      
-                  <label htmlFor="father_name" className='text-end'>Father's Name: </label>
-                  <input type="number" id='father_name' className='border rounded-md p-2 outline-none' />
+                  <div className='flex flex-col'>
+                    <label htmlFor="father_name" className='text-start'>Father's Name: </label>
+                    <input type="number" id='father_name' className='border rounded-md p-2 outline-none' />
+                  </div>
      
-                  <label htmlFor="mother_name" className='text-end'>Mother's Name: </label>
-                  <input type="text" id='mother_name' className='border rounded-md p-2 outline-none' />
+                  <div className='flex flex-col'>
+                    <label htmlFor="mother_name" className='text-start'>Mother's Name: </label>
+                    <input type="text" id='mother_name' className='border rounded-md p-2 outline-none' />
+                  </div>
      
-                  <label htmlFor="purpose" className='text-end'>Purpose: </label>
-                  <input type="text" id='purpose' className='border rounded-md p-2 outline-none' />
+                  <div className='flex flex-col'>
+                    <label htmlFor="purpose" className='text-start'>Purpose: </label>
+                    <input type="text" id='purpose' className='border rounded-md p-2 outline-none' />
+                  </div>
      
-                  <label htmlFor="contact" className='text-end'>Contact No: </label>
-                  <input type="text" id='contact' className='border rounded-md p-2 outline-none' />
+                  <div className='flex flex-col'>
+                    <label htmlFor="contact" className='text-start'>Contact No: </label>
+                    <input type="text" id='contact' className='border rounded-md p-2 outline-none' />
+                  </div>
 
                 </div>
               </div>

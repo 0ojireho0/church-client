@@ -1,19 +1,24 @@
-import React from 'react'
+import React from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers'
-import dayjs from "../utils/dayjs-with-timezone"
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from '../utils/dayjs-with-timezone';
 
-
-function CustomDatePicker({field, fieldState, resetDatePicker}) {
+function CustomDatePicker({ field, fieldState }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
-        label="Date of Birth"
-        value={field.value ? dayjs(field.value).tz('UTC') : null}
+        // label="Date of Birth"
+        value={field.value ? dayjs.utc(field.value) : null} // force UTC on input
         onChange={(newValue) => {
-          const utcDate = newValue ? newValue.utc().format() : null;
-          field.onChange(utcDate); // or newValue.utc() if you want dayjs object
+          if (!newValue) {
+            field.onChange(null);
+            return;
+          }
+
+          // Convert to UTC and format as ISO string
+          const utcDate = newValue.utc().format(); // ISO 8601 string in UTC
+          field.onChange(utcDate);
         }}
         slotProps={{
           textField: {
@@ -23,7 +28,7 @@ function CustomDatePicker({field, fieldState, resetDatePicker}) {
         }}
       />
     </LocalizationProvider>
-  )
+  );
 }
 
-export default CustomDatePicker
+export default CustomDatePicker;

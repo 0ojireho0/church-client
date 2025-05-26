@@ -30,13 +30,14 @@ export default function CustomDateTimePicker({
     { label: '8:00 AM - 9:00 AM', value: '08:00:00' },
     { label: '9:00 AM - 10:00 AM', value: '09:00:00' },
     { label: '10:00 AM - 11:00 AM', value: '10:00:00' },
+    // { label: '1:00 PM - 2:00 PM', value: '13:00:00' },
   ];
 
 
   const isDateDisabled = (date) => {
     const formattedDate = dayjs(date).format('YYYY-MM-DD');
     const today = dayjs().format('YYYY-MM-DD');
-    return formattedDate === today || fullyBookedDates.includes(formattedDate);
+    return formattedDate === today || fullyBookedDates?.includes(formattedDate);
   };
 
   const handleDateChange = (date) => {
@@ -80,6 +81,13 @@ export default function CustomDateTimePicker({
           shouldDisableDate={isDateDisabled}
           disablePast
           timezone="Asia/Manila"
+          slotProps={{
+            popper: {
+              sx: {
+                zIndex: 9999
+              }
+            }
+          }}
         />
 
         {selectedDate && (
