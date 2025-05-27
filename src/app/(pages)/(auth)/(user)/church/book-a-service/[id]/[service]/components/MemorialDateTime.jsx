@@ -8,7 +8,7 @@ import CustomDateTimePicker from '@/app/components/CustomDateTimePicker'
 import dayjs from 'dayjs'
 
 
-function MemorialDateTime({setShowMemorialDateModal, selectedDate, setSelectedDate, selectedTime, setSelectedTime, setFullyBooked}) {
+function MemorialDateTime({setShowMemorialDateModal, selectedDate, setSelectedDate, selectedTime, setSelectedTime, setFullyBooked, church_id}) {
 
     const [showBookError, setShowBookError] = useState(false)
 
@@ -42,7 +42,7 @@ function MemorialDateTime({setShowMemorialDateModal, selectedDate, setSelectedDa
               selectedTime={selectedTime} 
               setSelectedTime={setSelectedTime} 
               setFullyBooked={setFullyBooked}
-
+              church_id={church_id}
               />
         </div>
         <div className='flex flex-col justify-center items-center mt-5'>

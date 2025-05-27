@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-
+import Link from 'next/link'
 import { useForm, Controller } from 'react-hook-form'
 
 // Components
@@ -457,11 +457,19 @@ function Wedding({church, user}) {
 
             <div className='my-5 flex justify-center items-center'>
               {loading ? (
-                <div className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>
-                  <MoonLoader size={20} />
+                <div className='flex items-center gap-10'>
+                  <Link href={"/church"} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Back</Link>
+                  <div className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>
+                    <MoonLoader size={20} />
+                  </div>
                 </div>
               ) : (
-                <button type='submit' className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>Submit</button>
+                <>
+                  <div className='flex items-center gap-10'>
+                    <Link href={"/church"} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Back</Link>
+                    <button type='submit' className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>Submit</button>
+                  </div>
+                </>
               ) }
             </div>
 
@@ -481,6 +489,7 @@ function Wedding({church, user}) {
                                   rehearsalSelectedTime={rehearsalSelectedTime}
                                   setRehearsalSelectedTime={setRehearsalSelectedTime}
                                   setRehearsalFullyBooked={setRehearsalFullyBooked}
+                                  church_id={church?.id}
                                   />}
 
     {showWeddingModal && <WeddingDateTime 
@@ -490,6 +499,7 @@ function Wedding({church, user}) {
                                   weddingSelectedTime={weddingSelectedTime}
                                   setWeddingSelectedTime={setWeddingSelectedTime}
                                   setWeddingFullyBooked={setWeddingFullyBooked}
+                                  church_id={church?.id}
                                   />}
     
     

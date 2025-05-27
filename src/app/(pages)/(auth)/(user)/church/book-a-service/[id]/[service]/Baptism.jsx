@@ -1,6 +1,6 @@
 'use client'
 import React, {useEffect, useState} from 'react'
-
+import Link from 'next/link'
 import { useForm, Controller } from 'react-hook-form'
 
 
@@ -261,7 +261,7 @@ function Baptism({church, user}) {
                 selectedTime={selectedTime} 
                 setSelectedTime={setSelectedTime} 
                 setFullyBooked={setFullyBooked}
-                
+                church_id={church?.id}
                 />
 
             </div>
@@ -269,11 +269,19 @@ function Baptism({church, user}) {
             <div className='flex justify-center items-center py-2 '>
               
               {loading ? (
-                <div className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>
-                  <MoonLoader size={20} />
+                <div className='flex items-center gap-10'>
+                  <Link href={"/church"} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Back</Link>
+                  <div className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>
+                    <MoonLoader size={20} />
+                  </div>
                 </div>
               ) : (
-                <button type='submit' className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>Submit</button>
+                <>
+                  <div className='flex items-center gap-10'>
+                    <Link href={"/church"} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Back</Link>
+                    <button type='submit' className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>Submit</button>
+                  </div>
+                </>
               ) }
             </div>
 

@@ -15,10 +15,15 @@ export default function CustomDateTimePicker({
   setSelectedDate,
   selectedTime,
   setSelectedTime,
-  setFullyBooked
+  setFullyBooked,
+  church_id
 }) {
 
-  const { book } = useBook({})
+  const { book } = useBook({
+    church_id: church_id
+  })
+
+  // console.log(church_id)
 
 
   const fullyBookedDates = book?.fullyBook;

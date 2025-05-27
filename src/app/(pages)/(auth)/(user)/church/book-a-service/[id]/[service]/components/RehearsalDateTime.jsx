@@ -11,7 +11,8 @@ function RehearsalDateTime({
         setRehearsalSelectedDate,
         rehearsalSelectedTime,
         setRehearsalSelectedTime,
-        setRehearsalFullyBooked
+        setRehearsalFullyBooked,
+        church_id
     }) {
 
 
@@ -48,7 +49,7 @@ function RehearsalDateTime({
               selectedTime={rehearsalSelectedTime} 
               setSelectedTime={setRehearsalSelectedTime} 
               setFullyBooked={setRehearsalFullyBooked}
-
+              church_id={church_id}
               />
         </div>
         <div className='flex flex-col justify-center items-center mt-5'>

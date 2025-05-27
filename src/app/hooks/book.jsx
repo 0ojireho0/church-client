@@ -5,13 +5,16 @@ import { useParams, useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 
 
-export const useBook = ({} = {}) => {
+export const useBook = ({church_id} = {}) => {
 
 
-    const {data: book, error, mutate } = useSWR('/api/book-available', () => 
+    const {data: book, error, mutate } = useSWR(`/api/book-available/${church_id}`, () => 
         axios
-            .get('/api/book-available')
+            .get(`/api/book-available/${church_id}`)
             .then(res => res.data)
+        ,{
+            refreshInterval: 10000
+        }
             
     )
 
@@ -73,10 +76,71 @@ export const useBook = ({} = {}) => {
             
     }
 
+    const memorialBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, ...props}) => {
+        await csrf()
+
+        // console.log(props)
+        axios.post('api/book-memorial', props)
+            .then(res => {
+                console.log(res)
+                if(res.status === 200){
+                    Swal.fire({
+                        title: "Success",
+                        text: "Submit Successfully",
+                        icon: "success"
+                    })
+                    reset({
+                        deceased_dob: null, 
+                        deceased_dod: null,
+                        spouse_deceased: null
+                    });
+                    setSelectedPayment(null)
+                    setSelectedDate(null)
+                    setSelectedTime(null)
+                }
+                mutate()
+            })
+            .catch(err => console.log(err))
+            .finally(() => {
+                setLoading(false)
+            })
+    }
+
+    const confirmationBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, ...props}) => {
+        await csrf()
+
+        // console.log(props)
+        axios.post('api/book-confirmation', props)
+            .then(res => {
+                console.log(res)
+                if(res.status === 200){
+                    Swal.fire({
+                        title: "Success",
+                        text: "Submit Successfully",
+                        icon: "success"
+                    })
+                    reset({
+                        dob: null, 
+
+                    });
+                    setSelectedPayment(null)
+                    setSelectedDate(null)
+                    setSelectedTime(null)
+                }
+                mutate()
+            })
+            .catch(err => console.log(err))
+            .finally(() => {
+                setLoading(false)
+            })
+    }
+
     return{
         book,
         baptismBook,
-        weddingBook
+        weddingBook,
+        memorialBook,
+        confirmationBook
     }
 
 }
