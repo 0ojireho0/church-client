@@ -1,15 +1,16 @@
 import React from 'react';
 import { Radio, RadioGroup, FormControl, FormControlLabel, FormLabel } from '@mui/material';
 
-function RowRadioButtonsGroup({ label, name, options = [], value, onChange }) {
+function RowRadioButtonsGroup({ label, name, options = [], value, onChange, row = true }) {
   return (
     <FormControl>
       {/* <FormLabel>{label}</FormLabel> */}
       <RadioGroup
-        row
+        row={row}
         name={name}
-        value={value}
+        value={value ?? ''}
         onChange={onChange}
+        
       >
         {options.map((option) => (
           <FormControlLabel 

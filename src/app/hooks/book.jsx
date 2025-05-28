@@ -29,7 +29,7 @@ export const useBook = ({church_id} = {}) => {
                 if(res.status === 200){
                     Swal.fire({
                         title: "Success",
-                        text: "Submit Successfully",
+                        text: `Submit Successfully, your reference number is ${res.data.ref_num}`,
                         icon: "success"
                     })
                     reset({
@@ -55,7 +55,7 @@ export const useBook = ({church_id} = {}) => {
                 if(res.status === 200){
                     Swal.fire({
                         title: "Success",
-                        text: "Submit Successfully",
+                        text: `Submit Successfully, your reference number is ${res.data.ref_num}`,
                         icon: "success"
                     })
                     reset({
@@ -84,9 +84,9 @@ export const useBook = ({church_id} = {}) => {
             .then(res => {
                 console.log(res)
                 if(res.status === 200){
-                    Swal.fire({
+                     Swal.fire({
                         title: "Success",
-                        text: "Submit Successfully",
+                        text: `Submit Successfully, your reference number is ${res.data.ref_num}`,
                         icon: "success"
                     })
                     reset({
@@ -116,7 +116,7 @@ export const useBook = ({church_id} = {}) => {
                 if(res.status === 200){
                     Swal.fire({
                         title: "Success",
-                        text: "Submit Successfully",
+                        text: `Submit Successfully, your reference number is ${res.data.ref_num}`,
                         icon: "success"
                     })
                     reset({
@@ -135,12 +135,40 @@ export const useBook = ({church_id} = {}) => {
             })
     }
 
+    const massBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, setSelectService, ...props}) => {
+        await csrf()
+
+        // console.log(props)
+        axios.post('api/book-mass', props)
+            .then(res => {
+                console.log(res)
+                if(res.status === 200){
+                    Swal.fire({
+                        title: "Success",
+                        text: `Submit Successfully, your reference number is ${res.data.ref_num}`,
+                        icon: "success"
+                    })
+                    reset();
+                    setSelectedPayment(null)
+                    setSelectedDate(null)
+                    setSelectedTime(null)
+                    setSelectService(null)
+                }
+                mutate()
+            })
+            .catch(err => console.log(err))
+            .finally(() => {
+                setLoading(false)
+            })
+    }
+
     return{
         book,
         baptismBook,
         weddingBook,
         memorialBook,
-        confirmationBook
+        confirmationBook,
+        massBook
     }
 
 }
