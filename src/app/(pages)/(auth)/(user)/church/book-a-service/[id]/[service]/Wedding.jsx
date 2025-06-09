@@ -433,7 +433,7 @@ function Wedding({church, user}) {
                   <label className='text-end'>REHEARSAL DATE & TIME: </label>
                   <h1 className='bg-blue-400 text-center text-white hover:bg-blue-500 rounded-lg py-2 px-4 cursor-pointer' onClick={() => setShowRehearsalModal(true)}>{rehearsalSelectedDate && rehearsalSelectedTime ? `${dayjs(rehearsalSelectedDate).format('MMMM DD, YYYY')} ${dayjs(rehearsalSelectedTime, 'HH:mm:ss').format('hh:mm A')}` : "Select Date & Time"}</h1>
                   <label className='text-end'>WEDDING DATE & TIME: </label>
-                  <h1 className='bg-blue-400 text-center text-white hover:bg-blue-500 rounded-lg py-2 px-4 cursor-pointer' onClick={() => setShowWeddingModal(true)}>{weddingSelectedDate && weddingSelectedTime ? `${dayjs(weddingSelectedDate).format('MMMM DD, YYYY')} $${dayjs(weddingSelectedTime, 'HH:mm:ss').format('hh:mm A')}` : "Select Date & Time"}</h1>
+                  <h1 className='bg-blue-400 text-center text-white hover:bg-blue-500 rounded-lg py-2 px-4 cursor-pointer' onClick={() => setShowWeddingModal(true)}>{weddingSelectedDate && weddingSelectedTime ? `${dayjs(weddingSelectedDate).format('MMMM DD, YYYY')} ${dayjs(weddingSelectedTime, 'HH:mm:ss').format('hh:mm A')}` : "Select Date & Time"}</h1>
 
                 </div>
                 

@@ -37,11 +37,11 @@ export default function Church() {
   return (
     <>
     <div className='p-2 md:px-14 lg:px-28 flex flex-col justify-center items-center gap-5'>
-      <Searchbar 
+      {/* <Searchbar 
         placeholder={"Search"} 
         icon={<FaSearch />} 
         
-        />
+        /> */}
 
       <div className='bg-white rounded-lg border border-black/50 drop-shadow-lg p-5 '>
         <Table 
