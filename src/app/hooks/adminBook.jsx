@@ -19,8 +19,32 @@ export const useAdminBook = ({searchStatus} = {}) => {
 
     const csrf = () => axios.get('/sanctum/csrf-cookie')
 
+    const changeStatus = ({setLoading, setShowEditModal, ...props}) => {
+
+        csrf()
+
+        axios.post('/api/admin/changeStatus', props)
+            .then(res => {
+                console.log(res)
+                mutate()
+                if(res.status === 200){
+                    Swal.fire({
+                        title: "Success",
+                        text: "Success text",
+                        icon: 'success'
+                    })
+                }
+            })
+            .catch(err => console.log(err))
+            .finally(() => {
+                setLoading(false)
+                setShowEditModal(false)
+            })
+    }
+
     return {
-        servicetype
+        servicetype,
+        changeStatus
     }
 
 }

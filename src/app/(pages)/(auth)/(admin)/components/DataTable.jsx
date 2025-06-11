@@ -10,11 +10,12 @@ import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
+import { Dropdown } from "primereact/dropdown";
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { Tag } from 'primereact/tag';
+import { Message } from 'primereact/message';
 import { Tooltip } from 'primereact/tooltip';
-
+import Swal from "sweetalert2";
 import { useAdminBook } from '@/app/hooks/adminBook'
 import dayjs from "dayjs";
 import { MoonLoader } from "react-spinners";
@@ -26,20 +27,19 @@ export default function FileTable({searchStatus}){
 
 
 
-    const [books, setBooks] = useState(null);
-    const [productDialog, setProductDialog] = useState(false);
-    const [deleteProductDialog, setDeleteProductDialog] = useState(false);
-    const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
+    const [book, setBook] = useState([])
+    const [showEditModal, setShowEditModal] = useState(false);
     const [selectedBooks, setSelectedBooks] = useState(null);
-    const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
-    const toast = useRef(null);
     const dt = useRef(null);
+    const [selectedStatus, setSelectedStatus] = useState(null)
+    const [error, setError] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const now = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
 
-  const { servicetype } = useAdminBook({
+  const { servicetype, changeStatus } = useAdminBook({
     searchStatus: searchStatus
   })
 
@@ -53,6 +53,12 @@ export default function FileTable({searchStatus}){
         { field: 'book_type', header: 'Type' },
         { field: 'status', header: 'Status' },
     ];
+
+    const status = [
+        {name: "Pending", code: 'Pending'},
+        {name: "Approved", code: 'Approved'},
+        {name: "Rejected", code: "Rejected"}
+    ]
     
     const exportColumns = cols.map((col) => ({ title: col.header, dataKey: col.field }));
 
@@ -162,7 +168,10 @@ export default function FileTable({searchStatus}){
     );
 
     const editStatus = (data) => {
-        console.log(data)
+        setBook(data)
+        setShowEditModal(true)
+        setSelectedStatus(data.status)
+
     }
 
     const actionBodyTemplate = (rowData) => {
@@ -172,12 +181,51 @@ export default function FileTable({searchStatus}){
             </React.Fragment>
         )
     }
+
+    const hideDialog = () => {
+        setError(false)
+        setShowEditModal(false)
+    }
+
+    const saveStatus = () => {
+
+        if(book?.status === selectedStatus){
+            setError(true)
+            return
+        }
+
+        setLoading(true)
+        changeStatus({
+            id: book?.id,
+            selectedStatus,
+            setLoading,
+            setShowEditModal
+        })
+        // console.log(book, selectedStatus)
+
+
+
+    }
+
+    const editModalFooter = (
+        <React.Fragment>
+            <Button label="Cancel" icon="pi pi-times" onClick={hideDialog} />
+            <Button label="Save" loading={loading} icon="pi pi-check" onClick={saveStatus} />
+        </React.Fragment>
+    );
   
+    const handleSelectStatus = (status) => {
+        // console.log(status)
+        setSelectedStatus(status)
+
+        if(status !== book?.status){
+            setError(false)
+        }
+    }
 
   return(
     <>
-    <div>
-        <Toast ref={toast} />
+    <div className='z-[99999] '>
         {servicetype ? (
             <>
         <div className="card">
@@ -207,6 +255,49 @@ export default function FileTable({searchStatus}){
                 <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
             </DataTable>
         </div>
+
+        <Dialog 
+            visible={showEditModal} 
+            style={{ width: '32rem' }} 
+            breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
+            header="Set Status"
+            modal
+            className="p-fluid"
+            footer={editModalFooter}
+            onHide={hideDialog}
+            draggable={false}
+            >
+            <div className="field">
+                <label htmlFor="id" className="font-bold">Id</label>
+                <InputText disabled id="id" value={book?.id} />
+            </div>
+            <div className="field">
+                <label htmlFor="id" className="font-bold">Name</label>
+                <InputText disabled id="id" value={book?.user?.name} />
+            </div>
+            <div className="field">
+                <label htmlFor="ref_no" className="font-bold">Reference Number</label>
+                <InputText disabled id="ref_no" value={book?.reference_num} />
+            </div>
+            <div className="field">
+                <label htmlFor="" className="font-bold">Set Status</label>
+                <Dropdown 
+                    options={status} 
+                    optionLabel="name" 
+                    optionValue="code" 
+                    value={selectedStatus} 
+                    onChange={(e) => handleSelectStatus(e.value)} 
+                    checkmark={true}
+                    disabled={book?.set_status === 1 ? true : false} 
+                    
+                    />
+                
+            </div>
+            <div className="field">
+                {error && <Message severity="warn" text="Must choose status" />}
+            </div>
+
+        </Dialog>
             </>
         ) : (
             <>
