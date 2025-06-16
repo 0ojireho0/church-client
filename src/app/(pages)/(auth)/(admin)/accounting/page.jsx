@@ -7,12 +7,12 @@ import { useForm } from 'react-hook-form'
 
 import InputSelect from '../components/InputSelect'
 
-import FileTable from '../components/DataTable'
+import AccountingTable from '../components/AccountingTable'
 
-export default function AdminDashboard() {
+
+function Accounting() {
 
   const [searchStatus, setSearchStatus] = useState(0)
-
   const checkRequestStatus = data => {
     setSearchStatus(data?.value)
   }
@@ -21,7 +21,6 @@ export default function AdminDashboard() {
     middleware: "auth-admin",
     redirectIfAuthenticated: "/dashboard-admin"
   })
-  
 
   const {
     handleSubmit,
@@ -29,6 +28,7 @@ export default function AdminDashboard() {
     control,
     formState: { errors },
   } = useForm()
+
 
   const serviceOptions = [
     {
@@ -54,40 +54,38 @@ export default function AdminDashboard() {
   ]
 
 
-
-
-
   return (
+    <>
     <AdminLayout>
+        <div className='flex flex-col gap-5'>
+            <h1 className='josefin-regular font-bold text-center text-2xl'>Accounting</h1>
+        </div>
 
-      <div className='flex flex-col gap-5'>
-        <h1 className='josefin-regular font-bold text-center text-2xl'>FILE</h1>
-         
-        <div className='w-full '>
-          <h1 className='josefin-regular font-bold '>Select Service Type</h1>
-          <InputSelect
-            id="searchStatus"
-            label="Default = All Service Type"
-            onChange={e => checkRequestStatus(e)}
-            required={false}
-            register={{
-              ...register('searchStatus'),
-            }}
-            errors={errors?.searchStatus}
-            control={control}
-            option={serviceOptions}
-          />
+        <div className='w-full'>
+            <h1 className='josefin-reguar font-bold'>Select Service Type</h1>
+            <InputSelect
+                id="searchStatus"
+                label="Default = All Service Type"
+                onChange={e => checkRequestStatus(e)}
+                required={false}
+                register={{
+                ...register('searchStatus'),
+                }}
+                errors={errors?.searchStatus}
+                control={control}
+                option={serviceOptions}
+            />
         </div>
 
         <div>
-          <FileTable searchStatus={searchStatus} />
+            <AccountingTable searchStatus={searchStatus} />
         </div>
-
-
-      </div>
-      
-
     </AdminLayout>
+    
+    
+    
+    </>
   )
 }
 
+export default Accounting

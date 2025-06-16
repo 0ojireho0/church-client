@@ -20,11 +20,8 @@ import autoTable from 'jspdf-autotable';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-// import 'primeflex/primeflex.css';
 
-export default function FileTable({searchStatus}){
-
-
+function AccountingTable({searchStatus}) {
 
     const [book, setBook] = useState([])
     const [showEditModal, setShowEditModal] = useState(false);
@@ -38,11 +35,6 @@ export default function FileTable({searchStatus}){
     const now = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
 
-  const { servicetype, changeStatus } = useAdminBook({
-    searchStatus: searchStatus
-  })
-
-
     const cols = [
         { field: 'id', header: 'Id' },
         { field: 'reference_num', header: 'Reference No.' },
@@ -53,18 +45,16 @@ export default function FileTable({searchStatus}){
         { field: 'status', header: 'Status' },
     ];
 
-    const status = [
-        {name: "Pending", code: 'Pending'},
-        {name: "Approved", code: 'Approved'},
-        {name: "Rejected", code: "Rejected"}
-    ]
-    
     const exportColumns = cols.map((col) => ({ title: col.header, dataKey: col.field }));
+
+
+  const { servicetype } = useAdminBook({
+    searchStatus: searchStatus
+  })
 
     const exportCSV = (selectionOnly) => {
         dt.current.exportCSV({ selectionOnly });
     };
-
 
     const flatten = (obj, path = '') =>
         Object.entries(obj).reduce((acc, [key, value]) => {
@@ -137,7 +127,6 @@ export default function FileTable({searchStatus}){
         });
     };
 
-
     const rightToolbarTemplate = () => {
       return(
         <div className="flex align-items-center justify-content-end gap-2">
@@ -166,151 +155,49 @@ export default function FileTable({searchStatus}){
     </div>
     );
 
-    const editStatus = (data) => {
-        setBook(data)
-        setShowEditModal(true)
-        setSelectedStatus(data.status)
-
-    }
-
-    const actionBodyTemplate = (rowData) => {
-        return(
-            <React.Fragment>
-                <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editStatus(rowData)} />
-            </React.Fragment>
-        )
-    }
-
-    const hideDialog = () => {
-        setError(false)
-        setShowEditModal(false)
-    }
-
-    const saveStatus = () => {
-
-        if(book?.status === selectedStatus){
-            setError(true)
-            return
-        }
-
-        setLoading(true)
-        changeStatus({
-            id: book?.id,
-            selectedStatus,
-            setLoading,
-            setShowEditModal
-        })
-        // console.log(book, selectedStatus)
-
-
-
-    }
-
-    const editModalFooter = (
-        <React.Fragment>
-            <Button label="Cancel" icon="pi pi-times" onClick={hideDialog} />
-            <Button label="Save" loading={loading} icon="pi pi-check" onClick={saveStatus} />
-        </React.Fragment>
-    );
-  
-    const handleSelectStatus = (status) => {
-        // console.log(status)
-        setSelectedStatus(status)
-
-        if(status !== book?.status){
-            setError(false)
-        }
-    }
-
     const statusBody = (rowData) => {
-        return (
+        return(
             <>
-            <span className={`
-                ${rowData.status === "Approved" ? "bg-green-600" : rowData.status === "Rejected" ? "bg-red-600" : "bg-yellow-400"}
-                px-4 py-2 text-white rounded-lg
-                `}>
-                {rowData.status}
-            </span>
-            
+                <span className={`
+                        ${rowData.mop_status === "Paid" ? "bg-blue-400" : "bg-red-400"}
+                        px-4 py-2 text-white rounded-lg
+                        `}>
+                    {rowData.mop_status}
+                </span>
             </>
         )
     }
 
-  return(
+  return (
     <>
-    <div className=''>
         {servicetype ? (
             <>
-        <div className="card">
-            <Toolbar className="mb-4" end={rightToolbarTemplate}  ></Toolbar>
-            <Tooltip target=".export-buttons>button" position="bottom" />
-            <DataTable ref={dt} value={servicetype} selection={selectedBooks} onSelectionChange={(e) => setSelectedBooks(e.value)} 
-                    dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
-                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" globalFilter={globalFilter} header={header} removableSort    
-            >
-                {/* <Column></Column> */}
-                <Column field="id" header="Id" sortable style={{minWidth: '10rem'}} ></Column>
-                <Column field="reference_num" header="Reference No." sortable style={{minWidth: '12rem'}}   ></Column>
-                <Column field="user.name" header="Name" sortable style={{minWidth: '12rem'}}  ></Column>
-                <Column 
-                    body={(rowData) => {
-                        const date = dayjs(rowData.date).format('MMMM DD, YYYY');
-                        const time = dayjs(`${date} ${rowData.time_slot}`, 'YYYY-MM-DD HH:mm:ss').format('hh:mm A');
-                        return `${date} ${time}`;
-                    }}
-                    sortable 
-                    header="Date & Time"
-                    style={{minWidth: '10rem'}} ></Column>
-                <Column field="book_type" header="Type" sortable style={{minWidth: '12rem'}} ></Column>
-                <Column field="mop" header="Mode of Payment" sortable style={{minWidth: '12rem'}} ></Column>
-                <Column field="status" body={statusBody} header="Status" sortable style={{minWidth: '12rem'}} ></Column>
-                <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
-            </DataTable>
-        </div>
-
-        <Dialog 
-            visible={showEditModal} 
-            style={{ width: '32rem' }} 
-            breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
-            header="Set Status"
-            modal
-            className="p-fluid"
-            footer={editModalFooter}
-            onHide={hideDialog}
-            draggable={false}
-            >
-            <div className="field">
-                <label htmlFor="id" className="font-bold">Id</label>
-                <InputText disabled id="id" value={book?.id} />
+            <div className="card">
+                <Toolbar className="mb-4" end={rightToolbarTemplate}  ></Toolbar>
+                <Tooltip target=".export-buttons>button" position="bottom" />
+                <DataTable ref={dt} value={servicetype} selection={selectedBooks} onSelectionChange={(e) => setSelectedBooks(e.value)} 
+                        dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
+                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" globalFilter={globalFilter} header={header} removableSort
+                >
+                    {/* <Column></Column> */}
+                    <Column field="id" header="Id" sortable style={{minWidth: '10rem'}} ></Column>
+                    <Column field="reference_num" header="Reference No." sortable style={{minWidth: '12rem'}}   ></Column>
+                    <Column field="user.name" header="Name" sortable style={{minWidth: '12rem'}}  ></Column>
+                    <Column 
+                        body={(rowData) => {
+                            const date = dayjs(rowData.date).format('MMMM DD, YYYY');
+                            const time = dayjs(`${date} ${rowData.time_slot}`, 'YYYY-MM-DD HH:mm:ss').format('hh:mm A');
+                            return `${date} ${time}`;
+                        }}
+                        sortable 
+                        header="Date & Time"
+                        style={{minWidth: '10rem'}} ></Column>
+                    <Column field="book_type" header="Type" sortable style={{minWidth: '12rem'}} ></Column>
+                    <Column field="mop" header="Mode of Payment" sortable style={{minWidth: '12rem'}} ></Column>
+                    <Column field="mop_status" header="Status" body={statusBody} sortable style={{minWidth: '12rem'}} ></Column>
+                </DataTable>
             </div>
-            <div className="field">
-                <label htmlFor="id" className="font-bold">Name</label>
-                <InputText disabled id="id" value={book?.user?.name} />
-            </div>
-            <div className="field">
-                <label htmlFor="ref_no" className="font-bold">Reference Number</label>
-                <InputText disabled id="ref_no" value={book?.reference_num} />
-            </div>
-            <div className="field">
-                <label htmlFor="" className="font-bold">Set Status</label>
-                <Dropdown 
-                    options={status} 
-                    optionLabel="name" 
-                    optionValue="code" 
-                    value={selectedStatus} 
-                    onChange={(e) => handleSelectStatus(e.value)} 
-                    checkmark={true}
-                    disabled={book?.set_status === 1 ? true : false} 
-                    
-                    />
-                
-            </div>
-            <div className="field">
-                {error && <Message severity="warn" text="Must choose status" />}
-            </div>
-
-        </Dialog>
             </>
         ) : (
             <>
@@ -320,14 +207,9 @@ export default function FileTable({searchStatus}){
 
             </>
         )}
-
-    </div>
-    
     
     </>
-  )
-
-  
-    
-
+  ) 
 }
+
+export default AccountingTable
