@@ -183,7 +183,7 @@ function Mass({church, user}) {
               
               {loading ? (
                 <div className='flex items-center gap-10'>
-                  <Link href={"/church"} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Back</Link>
+                  <Link href={`/church/book-a-service/${church.id}`} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Back</Link>
                   <div className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>
                     <MoonLoader size={20} />
                   </div>
@@ -191,7 +191,7 @@ function Mass({church, user}) {
               ) : (
                 <>
                   <div className='flex items-center gap-10'>
-                    <Link href={"/church"} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Back</Link>
+                    <Link href={`/church/book-a-service/${church.id}`} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Back</Link>
                     <button type='submit' className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>Submit</button>
                   </div>
                 </>

@@ -12,6 +12,7 @@ import { MoonLoader } from 'react-spinners'
 
 import { useForm } from 'react-hook-form'
 import RowRadioButtonsGroup from '@/app/components/RowRadioButtonsGroup'
+import Link from 'next/link'
 
 function RequestCertificate() {
 
@@ -151,7 +152,8 @@ function RequestCertificate() {
                         
                     </div>
 
-                    <div className='flex justify-center items-center mt-5'>
+                    <div className='flex justify-center items-center mt-5 gap-3'>
+                        <Link href={"/dashboard"} className='bg-black text-white py-2 px-4 rounded-lg'>Back</Link>
                         <button type='submit' className='cursor-pointer bg-red-400 text-white py-2 px-4 rounded-lg '>Submit</button>
                     </div>
                 </form>
@@ -159,6 +161,7 @@ function RequestCertificate() {
 
         </div>
     </div>
+
     
     
     </>

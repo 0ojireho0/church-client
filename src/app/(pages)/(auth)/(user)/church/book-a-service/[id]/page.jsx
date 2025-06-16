@@ -8,6 +8,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { useChurch } from '@/app/hooks/church'
 
 import { MoonLoader } from 'react-spinners'
+import Link from 'next/link'
 
 function ChurchName() {
 
@@ -91,10 +92,11 @@ function ChurchName() {
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 flex flex-col gap-3 ">
           <button onClick={handleCompleteForm} className="w-full bg-[#FFE4A2] text-black font-bold py-2 rounded-lg shadow hover:bg-yellow-200 cursor-pointer">
-            Complete the form
+            Next
           </button>
+          <Link href={"/church"} className='bg-black/70 hover:bg-black text-white py-2 px-4 rounded-lg text-center'>Back</Link>
         </div>
       </div>
     </div>
