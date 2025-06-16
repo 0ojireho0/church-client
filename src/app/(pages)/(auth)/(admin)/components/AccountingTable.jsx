@@ -5,10 +5,7 @@ import { Button } from "primereact/button";
 import { Toolbar } from "primereact/toolbar";
 import { IconField } from 'primereact/iconfield';
 import { InputIcon } from 'primereact/inputicon';
-import { Dropdown } from "primereact/dropdown";
-import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { Message } from 'primereact/message';
 import { Tooltip } from 'primereact/tooltip';
 import { useAdminBook } from '@/app/hooks/adminBook'
 import dayjs from "dayjs";
@@ -23,14 +20,10 @@ import 'primeicons/primeicons.css';
 
 function AccountingTable({searchStatus}) {
 
-    const [book, setBook] = useState([])
-    const [showEditModal, setShowEditModal] = useState(false);
     const [selectedBooks, setSelectedBooks] = useState(null);
     const [globalFilter, setGlobalFilter] = useState(null);
     const dt = useRef(null);
-    const [selectedStatus, setSelectedStatus] = useState(null)
-    const [error, setError] = useState(false)
-    const [loading, setLoading] = useState(false)
+
 
     const now = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
