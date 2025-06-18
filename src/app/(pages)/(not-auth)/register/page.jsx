@@ -8,17 +8,24 @@ import Bird from "../../../../assets/bird.png"
 import { MoonLoader } from 'react-spinners'
 
 // React Hook Form
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form';
 
 // Hooks
 import { useAuth } from '@/app/hooks/auth'
+import Cleave from 'cleave.js/react'
+
 
 export default function Register() {
     
     const [errors, setErrors] = useState([])
     const [loading, setLoading] = useState(false)
+    const [cleaveKey, setCleaveKey] = useState(0)
     
-    const { register:registers, reset, formState: {errors: error}, handleSubmit } = useForm()
+    const { register:registers, reset, formState: {errors: error}, handleSubmit, control } = useForm({
+        defaultValues: {
+            contact: ''
+        }
+    })
 
     const { register } = useAuth({
         middleware: "guest",
@@ -29,17 +36,25 @@ export default function Register() {
 
 
     const registerSubmit = (data) => {
+
+    
+        const clearAll = data.contact.replace(/[()\-\s]/g, '');
+        // console.log(data)
+
         register({
             name: data.fullname,
             email: data.email,
-            contact: data.contact,
+            contact: clearAll,
             username: data.username,
             password: data.password,
             password_confirmation: data.confirm_password,
             setErrors,
             setLoading,
-            reset
+            reset,
+            setCleaveKey
         })
+
+        
     }
 
 
@@ -90,17 +105,35 @@ export default function Register() {
                     {error.email && <span className='text-[0.7rem] text-red-800 '>{error.email.message}</span>}
                 </div>
                 <div className='flex flex-col'>
-                    <input 
-                        type="text" 
-                        placeholder='Contact # (+63)' 
-                        className='border-2 border-black/50 py-2 px-4 rounded-lg joan-regular outline-none'
-                        {...registers('contact', {
-                            required: "Contact # is required",
-                            pattern: {
-                                value: /^\+63\d{10}$/, // Must start with +63 and have exactly 10 digits after
-                                message: "Mobile number must start with +63"
-                              },
-                        })} 
+                    <Controller
+                    name="contact"
+                    control={control}
+                    rules={{
+                        required: "Contact # is required",
+                        validate: value => {
+                        const digits = value.replace(/\D/g, '');
+                        if (!/^639\d{9}$/.test(digits)) {
+                            return "Mobile number must start with +63 and have 10 digits";
+                        }
+                        return true;
+                        }
+                    }}
+                    render={({ field, fieldState }) => (
+                        <Cleave
+                        key={cleaveKey}
+                        {...field}
+                        htmlRef={field.ref}
+                        options={{
+                            prefix: '+63',
+                            delimiters: [' (', ')-', '-', ''],
+                            blocks: [3, 3, 3, 4],
+                            numericOnly: true
+                        }}
+                        value={field.value || ''}
+                        className="border-2 border-black/50 py-2 px-4 rounded-lg joan-regular outline-none w-full"
+                        placeholder="Contact # (+63)"
+                        />
+                    )}
                     />
                     {error.contact && <span className='text-[0.7rem] text-red-800 '>{error.contact.message}</span>}
                 </div>

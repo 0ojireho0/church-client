@@ -141,11 +141,17 @@ function Memorial({church, user}) {
 
                 <div className='flex flex-col'>
                   <label htmlFor="deceased_gender" className='text-start'>Gender: </label>
-                  <input type="text" id='deceased_gender' className='border rounded-md p-2 outline-none' 
+                  <select 
+                    name="deceased_gender" 
+                    id="deceased_gender" 
+                    className='border rounded-md p-2 outline-none'
                     {...register('deceased_gender', {
-                      required: `Gender is required`
+                      required: 'Gender is required'
                     })}
-                  />
+                    >
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
                   {error.deceased_gender && <span className='text-red-500 text-sm '>{error.deceased_gender.message}</span>}
                 </div>
 
@@ -223,11 +229,17 @@ function Memorial({church, user}) {
 
                 <div className='flex flex-col'>
                   <label htmlFor="spouse_gender" className='text-start'>Gender: </label>
-                  <input type="text" id='spouse_gender' className='border rounded-md p-2 outline-none' 
+                  <select 
+                    name="spouse_gender" 
+                    id="spouse_gender" 
+                    className='border rounded-md p-2 outline-none'
                     {...register('spouse_gender', {
-                      required: `Gender is required`
+                      required: 'Gender is required'
                     })}
-                  />
+                    >
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
                   {error.spouse_gender && <span className='text-red-500 text-sm '>{error.spouse_gender.message}</span>}
                 </div>
 

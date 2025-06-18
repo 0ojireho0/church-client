@@ -122,7 +122,7 @@ function Wedding({church, user}) {
                   </div>
 
                  
-                  <div className='flex flex-col'>
+                  {/* <div className='flex flex-col'>
                     <label htmlFor="groom_gender" className='text-start'>Gender: </label>
                     <input type="text" id='groom_gender' className='border rounded-md p-2 outline-none' 
                       {...register('groom_gender', {
@@ -130,7 +130,7 @@ function Wedding({church, user}) {
                       })}
                     />
                     {error.groom_gender && <span className='text-red-500 text-sm '>{error.groom_gender.message}</span>}
-                  </div>
+                  </div> */}
 
                   
                   <div className='flex flex-col'>
@@ -207,7 +207,7 @@ function Wedding({church, user}) {
                   </div>
 
                   
-                  <div className='flex flex-col'>
+                  {/* <div className='flex flex-col'>
                     <label htmlFor="bride_gender" className='text-start'>Gender: </label>
                     <input type="text" id='bride_gender' className='border rounded-md p-2 outline-none' 
                       {...register('bride_gender', {
@@ -215,7 +215,7 @@ function Wedding({church, user}) {
                       })}
                     />
                     {error.bride_gender && <span className='text-red-500 text-sm '>{error.bride_gender.message}</span>}
-                  </div>
+                  </div> */}  
 
                   
                   <div className='flex flex-col'>

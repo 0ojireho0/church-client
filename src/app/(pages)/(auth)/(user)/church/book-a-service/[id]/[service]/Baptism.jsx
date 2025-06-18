@@ -57,23 +57,25 @@ function Baptism({church, user}) {
       return
     }
 
-    const jsonData = JSON.stringify(data)
-    setLoading(true)
+    console.log(data)
 
-    baptismBook({
-      date: dayjs(selectedDate).format('YYYY-MM-DD'), 
-      selectedTime,
-      jsonData,
-      user,
-      selectedPayment,
-      fullyBooked,
-      church_id:church?.id,
-      reset,
-      setLoading,
-      setSelectedPayment,
-      setSelectedDate,
-      setSelectedTime
-    })
+    // const jsonData = JSON.stringify(data)
+    // setLoading(true)
+
+    // baptismBook({
+    //   date: dayjs(selectedDate).format('YYYY-MM-DD'), 
+    //   selectedTime,
+    //   jsonData,
+    //   user,
+    //   selectedPayment,
+    //   fullyBooked,
+    //   church_id:church?.id,
+    //   reset,
+    //   setLoading,
+    //   setSelectedPayment,
+    //   setSelectedDate,
+    //   setSelectedTime
+    // })
 
     
   }
@@ -114,11 +116,17 @@ function Baptism({church, user}) {
 
                   <label htmlFor="gender" className='text-end'>Gender: </label>
                   <div className='flex flex-col'>
-                    <input type="text" id='gender' className='border rounded-md p-2 outline-none' 
+                    <select 
+                      name="gender" 
+                      id="gender" 
+                      className='border rounded-md p-2 outline-none'
                       {...register('gender', {
                         required: 'Gender is required'
                       })}
-                    />
+                      >
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                    </select>
                     {error.gender && <span className='text-red-500 text-sm '>{error.gender.message}</span>}
                   </div>
 
