@@ -19,9 +19,18 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
             }),
     )
 
+    const { data: allAdmin, error:errorAllAdmin, mutate: mutateAllAdmin } = useSWR('/api/admin/all-admin', () => 
+        axios
+            .get('api/admin/all-admin')
+            .then(res => res.data)
+            .catch(err => {
+                console.log(err)
+            })
+    )
+
     const csrf = () => axios.get('/sanctum/csrf-cookie')
 
-    const registerAdmin = async ({ setErrors, setLoading, reset, ...props }) => {
+    const registerAdmin = async ({ setErrors, setLoading, reset, ...props } = {}) => {
 
         setLoading(true)
         await csrf()
@@ -38,6 +47,9 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
                         icon: "success"
                     })
                     reset()
+                    mutateAllAdmin()
+
+                    return true
                 }
             })
             .catch(error => {
@@ -133,6 +145,28 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
         window.location.pathname = '/admin/login'
     }
 
+
+    const deleteAdmin = async({...props}) => {
+        axios
+            .delete('api/admin/delete-admin', {
+                data: props
+            })
+            .then(res => {
+                console.log(res)
+                if(res.status === 200){
+                    Swal.fire({
+                        title: "Success",
+                        text: "Created Successfully",
+                        icon: "success"
+                    })
+                    mutateAllAdmin()
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
     useEffect(() => {
         if (middleware === 'guest' && redirectIfAuthenticated && admin)
             router.push(redirectIfAuthenticated)
@@ -156,5 +190,7 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
         // resetPassword,
         // resendEmailVerification,
         logoutAdmin,
+        allAdmin,
+        deleteAdmin
     }
 }

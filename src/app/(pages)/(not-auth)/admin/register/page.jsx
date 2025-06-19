@@ -12,7 +12,6 @@ import { useForm } from 'react-hook-form'
 
 // Hooks
 import { useAuthAdmin } from '@/app/hooks/authadmin'
-import { useChurch } from '@/app/hooks/church'
 
 export default function AdminRegister() {
     
@@ -27,7 +26,6 @@ export default function AdminRegister() {
         
     })
 
-    const { church } = useChurch({})
 
 
 
@@ -38,7 +36,7 @@ export default function AdminRegister() {
             username: data.username,
             password: data.password,
             password_confirmation: data.confirm_password,
-            church_id: data.church,
+            admin_type: "Super Admin",
             setErrors,
             setLoading,
             reset
@@ -114,7 +112,7 @@ export default function AdminRegister() {
                     />
                     {error.confirm_password && <span className='text-[0.7rem] text-red-800 '>{error.confirm_password.message}</span>}
                 </div>
-                <div className='flex flex-col'>
+                {/* <div className='flex flex-col'>
                     <select
                     {...registers('church', {
                         required: "Church selection is required"
@@ -129,7 +127,7 @@ export default function AdminRegister() {
                     ))}
                     </select>
                     {error.church && <span className='text-[0.7rem] text-red-800'>{error.church.message}</span>}
-                </div>
+                </div> */}
             </div>
 
             <div className='flex flex-col justify-center items-center px-10'>
