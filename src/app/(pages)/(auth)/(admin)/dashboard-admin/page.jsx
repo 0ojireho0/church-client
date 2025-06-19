@@ -85,7 +85,7 @@ export default function AdminDashboard() {
         </div>
 
         <div>
-          <FileTable searchStatus={searchStatus} church_id={admin?.church?.id} admin_id={admin?.id} />
+          <FileTable searchStatus={searchStatus} church_id={admin?.church?.id} />
         </div>
 
 

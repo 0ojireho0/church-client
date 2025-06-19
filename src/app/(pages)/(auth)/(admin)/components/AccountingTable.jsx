@@ -18,7 +18,7 @@ import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 
-function AccountingTable({searchStatus}) {
+function AccountingTable({searchStatus, church_id}) {
 
     const [selectedBooks, setSelectedBooks] = useState(null);
     const [globalFilter, setGlobalFilter] = useState(null);
@@ -42,7 +42,8 @@ function AccountingTable({searchStatus}) {
 
 
   const { servicetype } = useAdminBook({
-    searchStatus: searchStatus
+    searchStatus: searchStatus,
+    church_id: church_id
   })
 
     const exportCSV = (selectionOnly) => {
@@ -179,6 +180,10 @@ function AccountingTable({searchStatus}) {
                     <Column field="user.name" header="Name" sortable style={{minWidth: '12rem'}}  ></Column>
                     <Column 
                         body={(rowData) => {
+                            if (!rowData.date || !rowData.time_slot) {
+                                const date = dayjs(rowData.created_at).format('MMMM DD, YYYY hh:mm A')
+                                return `${date}`;
+                            }
                             const date = dayjs(rowData.date).format('MMMM DD, YYYY');
                             const time = dayjs(`${date} ${rowData.time_slot}`, 'YYYY-MM-DD HH:mm:ss').format('hh:mm A');
                             return `${date} ${time}`;

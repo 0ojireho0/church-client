@@ -78,7 +78,7 @@ function Accounting() {
         </div>
 
         <div>
-            <AccountingTable searchStatus={searchStatus} />
+            <AccountingTable searchStatus={searchStatus} church_id={admin?.church?.id} />
         </div>
     </AdminLayout>
     

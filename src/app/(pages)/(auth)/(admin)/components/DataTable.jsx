@@ -22,7 +22,7 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 // import 'primeflex/primeflex.css';
 
-export default function FileTable({searchStatus, church_id, admin_id}){
+export default function FileTable({searchStatus, church_id}){
 
 
 
