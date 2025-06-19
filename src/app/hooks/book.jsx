@@ -20,7 +20,7 @@ export const useBook = ({church_id} = {}) => {
 
     const csrf = () => axios.get('/sanctum/csrf-cookie')
 
-    const baptismBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, ...props}) => {
+    const baptismBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, setLoadingDone, setShowOnlinePaymentModal, ...props}) => {
         await csrf()
 
         // console.log(props)
@@ -44,10 +44,12 @@ export const useBook = ({church_id} = {}) => {
             .catch(err => console.log(err))
             .finally(() => {
                 setLoading(false)
+                setLoadingDone(false)
+                setShowOnlinePaymentModal(false)
             })
     }
 
-    const weddingBook = async({reset, setLoading, setSelectedPayment, setWeddingSelectedDate, setWeddingSelectedTime, setRehearsalSelectedDate, setRehearsalSelectedTime, ...props}) => {
+    const weddingBook = async({reset, setLoading, setSelectedPayment, setWeddingSelectedDate, setWeddingSelectedTime, setRehearsalSelectedDate, setRehearsalSelectedTime, setLoadingDone, setShowOnlinePaymentModal, ...props}) => {
         await csrf()
 
         axios.post('/api/book-wedding', props)
@@ -72,11 +74,13 @@ export const useBook = ({church_id} = {}) => {
             .catch(err => console.log(err))
             .finally(() => {
                 setLoading(false)
+                setLoadingDone(false)
+                setShowOnlinePaymentModal(false)
             })
             
     }
 
-    const memorialBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, ...props}) => {
+    const memorialBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, setLoadingDone, setShowOnlinePaymentModal, ...props}) => {
         await csrf()
 
         // console.log(props)
@@ -103,10 +107,12 @@ export const useBook = ({church_id} = {}) => {
             .catch(err => console.log(err))
             .finally(() => {
                 setLoading(false)
+                setLoadingDone(false)
+                setShowOnlinePaymentModal(false)
             })
     }
 
-    const confirmationBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, ...props}) => {
+    const confirmationBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, setLoadingDone, setShowOnlinePaymentModal, ...props}) => {
         await csrf()
 
         // console.log(props)
@@ -132,10 +138,12 @@ export const useBook = ({church_id} = {}) => {
             .catch(err => console.log(err))
             .finally(() => {
                 setLoading(false)
+                setLoadingDone(false)
+                setShowOnlinePaymentModal(false)
             })
     }
 
-    const massBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, setSelectService, ...props}) => {
+    const massBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, setSelectService, setLoadingDone, setShowOnlinePaymentModal, ...props}) => {
         await csrf()
 
         // console.log(props)
@@ -159,6 +167,36 @@ export const useBook = ({church_id} = {}) => {
             .catch(err => console.log(err))
             .finally(() => {
                 setLoading(false)
+                setLoadingDone(false)
+                setShowOnlinePaymentModal(false)
+            })
+    }
+
+    const requestCertificate = async({setLoading, setLoadingDone, reset, setShowOnlinePaymentModal, setSelectedPayment, setSelectedOptions, ...props}) => {
+        
+        await csrf()
+
+        axios.post('api/request-certificate', props)
+            .then(res => {
+                if(res.status === 200){
+                    console.log(res)
+                    Swal.fire({
+                        title: "Success",
+                        text: `Submit Successfully, your reference number is ${res.data.ref_num}`,
+                        icon: "success"
+                    })
+                    setSelectedPayment(null)
+                    setSelectedOptions([])
+                    reset()
+                }
+            })
+            .catch(err => {
+                // console.log(err)
+            })
+            .finally(() => {
+                setLoading(false)
+                setLoadingDone(false)
+                setShowOnlinePaymentModal(false)
             })
     }
 
@@ -168,7 +206,8 @@ export const useBook = ({church_id} = {}) => {
         weddingBook,
         memorialBook,
         confirmationBook,
-        massBook
+        massBook,
+        requestCertificate
     }
 
 }

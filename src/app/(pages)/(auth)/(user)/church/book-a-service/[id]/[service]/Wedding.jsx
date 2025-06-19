@@ -30,6 +30,10 @@ function Wedding({church, user}) {
   const [selectedPayment, setSelectedPayment] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  const [showOnlinePaymentModal, setShowOnlinePaymentModal] = useState(false)
+  const [passData, setPassData] = useState()
+  const [loadingDone, setLoadingDone] = useState(false)
+
   const payment = [
       {
           value: "cash",
@@ -56,7 +60,7 @@ function Wedding({church, user}) {
   }
 
   const handleSubmitWedding = (data) => {
-
+    const jsonData = JSON.stringify(data)
     if(!rehearsalSelectedDate || !rehearsalSelectedTime || !weddingSelectedDate || !weddingSelectedTime){
       Swal.fire({
         title: "Error",
@@ -66,7 +70,14 @@ function Wedding({church, user}) {
       return
     }
 
-    const jsonData = JSON.stringify(data)
+    if(selectedPayment === "online"){
+      setShowOnlinePaymentModal(true)
+
+      setPassData(jsonData)
+      return
+    }
+
+
     setLoading(true)
 
     weddingBook({
@@ -87,8 +98,35 @@ function Wedding({church, user}) {
       setWeddingSelectedTime,
       setRehearsalSelectedDate,
       setRehearsalSelectedTime,
+      setShowOnlinePaymentModal,
+      setLoadingDone
     })
 
+  }
+
+  const handleDoneSubmit = () => {
+    setLoadingDone(true)
+    weddingBook({
+      jsonData: passData,
+      rehearsal_date: dayjs(rehearsalSelectedDate).format('YYYY-MM-DD'),
+      rehearsal_time: rehearsalSelectedTime,
+      wedding_date: dayjs(weddingSelectedDate).format('YYYY-MM-DD'),
+      wedding_time: weddingSelectedTime,
+      user,
+      selectedPayment,
+      church_id: church?.id,
+      rehearsalFullyBooked,
+      weddingFullyBooked,
+      reset,
+      setLoading,
+      setSelectedPayment,
+      setWeddingSelectedDate,
+      setWeddingSelectedTime,
+      setRehearsalSelectedDate,
+      setRehearsalSelectedTime,
+      setShowOnlinePaymentModal,
+      setLoadingDone
+    })
   }
 
 
@@ -122,15 +160,6 @@ function Wedding({church, user}) {
                   </div>
 
                  
-                  {/* <div className='flex flex-col'>
-                    <label htmlFor="groom_gender" className='text-start'>Gender: </label>
-                    <input type="text" id='groom_gender' className='border rounded-md p-2 outline-none' 
-                      {...register('groom_gender', {
-                        required: 'Gender is required'
-                      })}
-                    />
-                    {error.groom_gender && <span className='text-red-500 text-sm '>{error.groom_gender.message}</span>}
-                  </div> */}
 
                   
                   <div className='flex flex-col'>
@@ -205,17 +234,6 @@ function Wedding({church, user}) {
                     />
                     {error.bride_fullname && <span className='text-red-500 text-sm '>{error.bride_fullname.message}</span>}
                   </div>
-
-                  
-                  {/* <div className='flex flex-col'>
-                    <label htmlFor="bride_gender" className='text-start'>Gender: </label>
-                    <input type="text" id='bride_gender' className='border rounded-md p-2 outline-none' 
-                      {...register('bride_gender', {
-                        required: `Gender is required`
-                      })}
-                    />
-                    {error.bride_gender && <span className='text-red-500 text-sm '>{error.bride_gender.message}</span>}
-                  </div> */}  
 
                   
                   <div className='flex flex-col'>
@@ -406,22 +424,38 @@ function Wedding({church, user}) {
 
                   <div className='flex flex-col'>
                     <label htmlFor="banns" className='text-start'>Banns: </label>
-                    <input type="text" id='banns' className='border rounded-md p-2 outline-none' />
+                    <input type="text" id='banns' className='border rounded-md p-2 outline-none' 
+                      {...register('banns', {
+                        required: `Contact No is required`
+                      })}
+                    />
                   </div>
                   
                   <div className='flex flex-col'>
                     <label htmlFor="license" className='text-start'>License: </label>
-                    <input type="text" id='license' className='border rounded-md p-2 outline-none' />
+                    <input type="text" id='license' className='border rounded-md p-2 outline-none' 
+                      {...register('license', {
+                        required: `Contact No is required`
+                      })}
+                    />
                   </div>
 
                   <div className='flex flex-col'>
                     <label htmlFor="organist" className='text-start'>Organist: </label>
-                    <input type="text" id='organist' className='border rounded-md p-2 outline-none' />
+                    <input type="text" id='organist' className='border rounded-md p-2 outline-none' 
+                      {...register('organist', {
+                        required: `Contact No is required`
+                      })}
+                    />
                   </div>
      
                   <div className='flex flex-col'>
                     <label htmlFor="flowers" className='text-start'>Flowers: </label>
-                    <input type="text" id='flowers' className='border rounded-md p-2 outline-none' />
+                    <input type="text" id='flowers' className='border rounded-md p-2 outline-none' 
+                      {...register('flowers', {
+                        required: `Contact No is required`
+                      })}
+                    />
                   </div>
 
                 </div>
@@ -501,6 +535,47 @@ function Wedding({church, user}) {
                                   setWeddingFullyBooked={setWeddingFullyBooked}
                                   church_id={church?.id}
                                   />}
+
+    {showOnlinePaymentModal && (
+      <>
+      <div className='fixed inset-0 bg-black/50 flex justify-center items-center px-2'>
+        <div className='bg-white w-full md:w-1/2 py-2 px-4 rounded-lg'>
+          <h1 className='josefin-regular font-bold text-sm text-center'>Here are the steps for confirmation of your booking!</h1>
+          <h1 className='text-sm josefin-regular font-bold mt-3'>1. Send the full payment amount to GCASH/Bank Transfer:</h1>
+          <div className='flex flex-col items-center'>
+            <h1 className='text-sm font-bold josefin-regular'>GCASH</h1>
+            <h1 className='josefin-regular text-sm'>09123456789</h1>
+            <h1 className='josefin-regular text-sm'>Juan Dela Cruz</h1>
+          </div>
+          <div className='flex flex-col items-center mt-3'>
+            <h1 className='text-sm font-bold josefin-regular'>Bank Transfer</h1>
+            <h1 className='josefin-regular text-sm'>Account #: 1234 567 890</h1>
+            <h1 className='josefin-regular text-sm'>Account Name: Juan Dela Cruz</h1>
+          </div>
+          <h1 className='text-sm josefin-regular font-bold mt-3'>2. Send Proof of payment to our email: </h1>
+          <h1 className='text-sm josefin-regular text-center'>quiapochurch@gmail.com</h1>
+          <h1 className='text-sm josefin-regular font-bold mt-3'>3. Wait for our confirmation email within 24 hours upon sending your proof of payment via Email. (If you did not receive a confirmation email, please contact us.) </h1>
+          <div className='mt-3 flex justify-center items-center gap-5'>
+            {loadingDone ? (
+              <>
+              <div className='bg-red-600 py-1 px-6 rounded-lg'>
+                <MoonLoader size={30} color='white' />
+              </div>
+              </>
+            ) : (
+              <>
+              <h1 className='bg-red-600 hover:bg-red-700 text-white py-1 px-6 rounded-lg cursor-pointer' onClick={() => handleDoneSubmit()}>Done</h1>
+              </>
+            )}
+            <h1 className='bg-blue-600 hover:bg-blue-700 text-white py-1 px-6 rounded-lg cursor-pointer' onClick={() => setShowOnlinePaymentModal(false)}>Cancel</h1>
+          </div>
+
+        </div>
+      </div>
+
+
+      </>
+    )}
     
     
     

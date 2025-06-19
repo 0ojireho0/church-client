@@ -51,6 +51,10 @@ export default function AdminDashboard() {
       label: "Mass Scheduling",
       value: 5
     },
+    {
+      label: "Request Certificate",
+      value: 6
+    }
   ]
 
 
@@ -62,6 +66,7 @@ export default function AdminDashboard() {
 
       <div className='flex flex-col gap-5'>
         <h1 className='josefin-regular font-bold text-center text-2xl'>FILE</h1>
+        <h1 className='josefin-regular font-bold text-center text-2xl'>{admin?.church?.church_name}</h1>
          
         <div className='w-full '>
           <h1 className='josefin-regular font-bold '>Select Service Type</h1>
@@ -80,7 +85,7 @@ export default function AdminDashboard() {
         </div>
 
         <div>
-          <FileTable searchStatus={searchStatus} />
+          <FileTable searchStatus={searchStatus} church_id={admin?.church?.id} admin_id={admin?.id} />
         </div>
 
 

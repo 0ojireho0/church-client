@@ -24,6 +24,10 @@ function Memorial({church, user}) {
   const [selectedPayment, setSelectedPayment] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  const [showOnlinePaymentModal, setShowOnlinePaymentModal] = useState(false)
+  const [passData, setPassData] = useState()
+  const [loadingDone, setLoadingDone] = useState(false)
+
   const payment = [
       {
           value: "cash",
@@ -50,7 +54,7 @@ function Memorial({church, user}) {
 
   const handleSubmitMemorial = (data) => {
 
-
+    const jsonData = JSON.stringify(data)
     if(!selectedDate || !selectedTime){
       Swal.fire({
         title: "Error",
@@ -61,14 +65,12 @@ function Memorial({church, user}) {
     }
 
 
-    const jsonData = JSON.stringify(data)
+    if(selectedPayment === "online"){
+      setShowOnlinePaymentModal(true)
 
-    // console.log(data)
-    // console.log(dayjs(selectedDate).format('MMMM DD, YYYY'))
-    // console.log(selectedTime)
-    // console.log(selectedPayment)
-    // console.log(church)
-    // console.log(user)
+      setPassData(jsonData)
+      return
+    }
 
 
     setLoading(true)
@@ -84,7 +86,29 @@ function Memorial({church, user}) {
       setLoading,
       setSelectedPayment,
       setSelectedDate,
-      setSelectedTime
+      setSelectedTime, 
+      setShowOnlinePaymentModal,
+      setLoadingDone
+    })
+  }
+
+  const handleDoneSubmit = () => {
+    setLoadingDone(true)
+    memorialBook({
+      date: dayjs(selectedDate).format('YYYY-MM-DD'), 
+      selectedTime,
+      jsonData: passData,
+      user,
+      selectedPayment,
+      fullyBooked,
+      church_id:church?.id,
+      reset,
+      setLoading,
+      setSelectedPayment,
+      setSelectedDate,
+      setSelectedTime, 
+      setShowOnlinePaymentModal,
+      setLoadingDone
     })
   }
 
@@ -328,6 +352,47 @@ function Memorial({church, user}) {
                                 church_id={church?.id}
                                 />
                                 }
+
+    {showOnlinePaymentModal && (
+      <>
+      <div className='fixed inset-0 bg-black/50 flex justify-center items-center px-2'>
+        <div className='bg-white w-full md:w-1/2 py-2 px-4 rounded-lg'>
+          <h1 className='josefin-regular font-bold text-sm text-center'>Here are the steps for confirmation of your booking!</h1>
+          <h1 className='text-sm josefin-regular font-bold mt-3'>1. Send the full payment amount to GCASH/Bank Transfer:</h1>
+          <div className='flex flex-col items-center'>
+            <h1 className='text-sm font-bold josefin-regular'>GCASH</h1>
+            <h1 className='josefin-regular text-sm'>09123456789</h1>
+            <h1 className='josefin-regular text-sm'>Juan Dela Cruz</h1>
+          </div>
+          <div className='flex flex-col items-center mt-3'>
+            <h1 className='text-sm font-bold josefin-regular'>Bank Transfer</h1>
+            <h1 className='josefin-regular text-sm'>Account #: 1234 567 890</h1>
+            <h1 className='josefin-regular text-sm'>Account Name: Juan Dela Cruz</h1>
+          </div>
+          <h1 className='text-sm josefin-regular font-bold mt-3'>2. Send Proof of payment to our email: </h1>
+          <h1 className='text-sm josefin-regular text-center'>quiapochurch@gmail.com</h1>
+          <h1 className='text-sm josefin-regular font-bold mt-3'>3. Wait for our confirmation email within 24 hours upon sending your proof of payment via Email. (If you did not receive a confirmation email, please contact us.) </h1>
+          <div className='mt-3 flex justify-center items-center gap-5'>
+            {loadingDone ? (
+              <>
+              <div className='bg-red-600 py-1 px-6 rounded-lg'>
+                <MoonLoader size={30} color='white' />
+              </div>
+              </>
+            ) : (
+              <>
+              <h1 className='bg-red-600 hover:bg-red-700 text-white py-1 px-6 rounded-lg cursor-pointer' onClick={() => handleDoneSubmit()}>Done</h1>
+              </>
+            )}
+            <h1 className='bg-blue-600 hover:bg-blue-700 text-white py-1 px-6 rounded-lg cursor-pointer' onClick={() => setShowOnlinePaymentModal(false)}>Cancel</h1>
+          </div>
+
+        </div>
+      </div>
+
+
+      </>
+    )}
     
     
     </>

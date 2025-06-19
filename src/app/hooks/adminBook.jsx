@@ -4,12 +4,12 @@ import { useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 
-export const useAdminBook = ({searchStatus} = {}) => {
+export const useAdminBook = ({searchStatus, church_id} = {}) => {
 
     
-    const { data: servicetype, error, mutate } = useSWR(`api/admin/search-service/${searchStatus || 0}`, () =>
+    const { data: servicetype, error, mutate } = useSWR(`api/admin/search-service/${searchStatus || 0}/${church_id}`, () =>
         axios
-            .get(`api/admin/search-service/${searchStatus || 0}`)
+            .get(`api/admin/search-service/${searchStatus || 0}/${church_id}`)
             .then(res => res.data)
             .catch(err => console.log(err)),
             {
@@ -19,7 +19,7 @@ export const useAdminBook = ({searchStatus} = {}) => {
 
     const csrf = () => axios.get('/sanctum/csrf-cookie')
 
-    const changeStatus = ({setLoading, setShowEditModal, ...props}) => {
+    const changeStatus = ({setLoading, setShowEditModal, setRemarks, ...props}) => {
 
         csrf()
 
@@ -33,6 +33,7 @@ export const useAdminBook = ({searchStatus} = {}) => {
                         text: "Success text",
                         icon: 'success'
                     })
+                    setRemarks("")
                 }
             })
             .catch(err => console.log(err))

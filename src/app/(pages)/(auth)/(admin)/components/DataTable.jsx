@@ -22,7 +22,7 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 // import 'primeflex/primeflex.css';
 
-export default function FileTable({searchStatus}){
+export default function FileTable({searchStatus, church_id, admin_id}){
 
 
 
@@ -34,12 +34,14 @@ export default function FileTable({searchStatus}){
     const [selectedStatus, setSelectedStatus] = useState(null)
     const [error, setError] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [remarks, setRemarks] = useState("")
 
     const now = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
 
   const { servicetype, changeStatus } = useAdminBook({
-    searchStatus: searchStatus
+    searchStatus: searchStatus,
+    church_id: church_id
   })
 
 
@@ -157,6 +159,7 @@ export default function FileTable({searchStatus}){
             {searchStatus === 3 && "Memorial Request"}
             {searchStatus === 4 && "Confirmation Request"}
             {searchStatus === 5 && "Mass Request"}
+            {searchStatus === 6 && "Request Certificates"}
             
             </h4>
         <IconField iconPosition="left">
@@ -183,6 +186,7 @@ export default function FileTable({searchStatus}){
 
     const hideDialog = () => {
         setError(false)
+        setRemarks('')
         setShowEditModal(false)
     }
 
@@ -196,11 +200,13 @@ export default function FileTable({searchStatus}){
         setLoading(true)
         changeStatus({
             id: book?.id,
+            remarks,
             selectedStatus,
             setLoading,
-            setShowEditModal
+            setShowEditModal,
+            setRemarks
         })
-        // console.log(book, selectedStatus)
+    
 
 
 
@@ -255,6 +261,10 @@ export default function FileTable({searchStatus}){
                 <Column field="user.name" header="Name" sortable style={{minWidth: '12rem'}}  ></Column>
                 <Column 
                     body={(rowData) => {
+                        if (!rowData.date || !rowData.time_slot) {
+                            const date = dayjs(rowData.created_at).format('MMMM DD, YYYY hh:mm A')
+                            return `${date}`;
+                        }
                         const date = dayjs(rowData.date).format('MMMM DD, YYYY');
                         const time = dayjs(`${date} ${rowData.time_slot}`, 'YYYY-MM-DD HH:mm:ss').format('hh:mm A');
                         return `${date} ${time}`;
@@ -263,6 +273,7 @@ export default function FileTable({searchStatus}){
                     header="Date & Time"
                     style={{minWidth: '10rem'}} ></Column>
                 <Column field="book_type" header="Type" sortable style={{minWidth: '12rem'}} ></Column>
+                <Column field="service_type" header="Service Type" sortable style={{minWidth: '12rem'}} ></Column>
                 <Column field="mop" header="Mode of Payment" sortable style={{minWidth: '12rem'}} ></Column>
                 <Column field="status" body={statusBody} header="Status" sortable style={{minWidth: '12rem'}} ></Column>
                 <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
@@ -309,6 +320,12 @@ export default function FileTable({searchStatus}){
             <div className="field">
                 {error && <Message severity="warn" text="Must choose status" />}
             </div>
+            {selectedStatus === "Rejected" && (
+            <div className="field">
+                    <label htmlFor="remarks" className="font-bold">Remarks</label>
+                    <InputText id="remarks" required value={remarks} onChange={e => setRemarks(e.target.value)} />
+            </div>
+            )}
 
         </Dialog>
             </>
