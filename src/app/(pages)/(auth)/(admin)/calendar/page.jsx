@@ -27,6 +27,7 @@ function CalendarPage() {
 
 
   const [events, setEvents] = useState([])
+  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
   useEffect(() => {
     // Example data, replace with API call if needed
@@ -43,17 +44,18 @@ function CalendarPage() {
       },
     ]
 
+   
     const convertedEvents = calendar?.map((item, index) => {
       const start = moment(
         `${item.date} ${item.time_slot}`,
         'YYYY-MM-DD HH:mm:ss'
       ).toDate()
       const end = moment(start).add(1, 'hour').toDate()
-      const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+      
 
       return {
         id: index,
-        title: `${capitalize(item.service_type)} - ${item.user.name}`,
+        title: `${capitalize(item.service_type)} - ${item.user.name}  `,
         start,
         end,
       }
@@ -62,13 +64,6 @@ function CalendarPage() {
     setEvents(convertedEvents)
   }, [calendar])
 
-  if(!calendar){
-      return (
-        <div className='flex justify-center items-center'>
-            <MoonLoader />
-        </div>
-      )
-  }
 
   return (
     <AdminLayout>
