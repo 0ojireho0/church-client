@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useForm, Controller } from 'react-hook-form'
 
@@ -12,9 +12,11 @@ import WeddingDateTime from './components/WeddingDateTime'
 import Swal from 'sweetalert2'
 
 import { useBook } from '@/app/hooks/book'
+import { useRouter } from 'next/navigation'
 
 
-function Wedding({church, user}) {
+
+function Wedding({church, user, allChurch}) {
 
 
   const [showRehearsalModal, setShowRehearsalModal] = useState(false)
@@ -34,6 +36,8 @@ function Wedding({church, user}) {
   const [passData, setPassData] = useState()
   const [loadingDone, setLoadingDone] = useState(false)
 
+  const router = useRouter()
+
   const payment = [
       {
           value: "cash",
@@ -49,15 +53,9 @@ function Wedding({church, user}) {
   const { weddingBook } = useBook({})
 
 
-  const { register, handleSubmit, reset, formState: {errors: error}, control } = useForm()
+  const { register, handleSubmit, reset, formState: {errors: error}, control, getValues } = useForm()
 
-  if(!church){
-    return(
-       <div className='flex justify-center items-center'>
-            <MoonLoader />
-        </div>
-    )
-  }
+
 
   const handleSubmitWedding = (data) => {
     const jsonData = JSON.stringify(data)
@@ -129,7 +127,85 @@ function Wedding({church, user}) {
     })
   }
 
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+      const toRad = angle => (angle * Math.PI) / 180;
+      const R = 6378; // Earth radius in km
 
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+
+      const a =
+          Math.sin(dLat / 2) ** 2 +
+          Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+          Math.sin(dLon / 2) ** 2;
+
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+      return R * c; // Distance in km
+  }
+  function getNearestChurches(churches, targetChurchId, limit = 3) {
+    const target = churches.find(ch => ch.id === targetChurchId);
+    if (!target) throw new Error("Target church not found.");
+
+    // Compute distances
+    const distances = churches
+        .filter(ch => ch.id !== targetChurchId) // exclude self
+        .map(ch => ({
+            ...ch,
+            distance: haversineDistance(target.latitude, target.longitude, ch.latitude, ch.longitude)
+        }));
+
+    // Greedy: sort by distance and pick the closest 3
+    distances.sort((a, b) => a.distance - b.distance);
+
+    return distances.slice(0, limit);
+  }
+
+  const handleFindRecommendedChurch = () => {
+    const formData = getValues()
+
+    const fullData = {
+      ...formData,
+      selectedPayment,
+      churchId: church?.id
+    }
+
+    const recommended = getNearestChurches(allChurch, church.id, 3)
+
+    console.log(fullData, recommended)
+
+    localStorage.setItem("wedding_form", JSON.stringify(fullData))
+    localStorage.setItem("recommended_church", JSON.stringify(recommended))
+
+    router.push('/church/recommended-church/wedding')
+  }
+
+  const handleBackBtn = () => {
+    localStorage.removeItem('wedding_form')
+  }
+
+  useEffect(() => {
+    const getWeddingForm = JSON.parse(localStorage.getItem('wedding_form'))
+
+    if (!getWeddingForm) {
+      // console.log("wala") // No saved form
+    } else {
+      // console.log("meron", getWeddingForm) // Restore the form
+      reset(getWeddingForm)
+
+      // Restore other selections manually
+      if (getWeddingForm.selectedPayment) setSelectedPayment(getWeddingForm.selectedPayment)
+
+    }
+  }, [reset])
+
+  if(!church){
+    return(
+       <div className='flex justify-center items-center'>
+            <MoonLoader />
+        </div>
+    )
+  }
 
 
   return (
@@ -492,16 +568,18 @@ function Wedding({church, user}) {
             <div className='my-5 flex justify-center items-center'>
               {loading ? (
                 <div className='flex items-center gap-10'>
-                  <Link href={`/church/book-a-service/${church.id}`} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Back</Link>
+                  <Link href={`/church/book-a-service/${church.id}`} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700' onClick={handleBackBtn}>Back</Link>
                   <div className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>
                     <MoonLoader size={20} />
                   </div>
+                  <h1 className='bg-green-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-green-700' onClick={handleFindRecommendedChurch}>Recommend Another Church</h1>
                 </div>
               ) : (
                 <>
                   <div className='flex items-center gap-10'>
-                    <Link href={`/church/book-a-service/${church.id}`} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Back</Link>
+                  <Link href={`/church/book-a-service/${church.id}`} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700' onClick={handleBackBtn}>Back</Link>
                     <button type='submit' className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>Submit</button>
+                    <h1 className='bg-green-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-green-700' onClick={handleFindRecommendedChurch}>Recommend Another Church</h1>
                   </div>
                 </>
               ) }

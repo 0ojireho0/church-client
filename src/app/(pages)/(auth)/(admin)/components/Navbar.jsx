@@ -32,8 +32,8 @@ export default function Navbar() {
       icon: <FaCalculator />
     },
     {
-      name: "User Management",
-      path: "/user-management",
+      name: "Church Management",
+      path: "/church-management",
       icon: <MdManageAccounts />
     },
   ]

@@ -22,7 +22,7 @@ function ApplicationForm() {
     const params = useParams()
     const { id, service } = params
 
-    const { bookService } = useChurch()
+    const { bookService, church } = useChurch()
 
     const { user } = useAuth()
 
@@ -37,11 +37,11 @@ function ApplicationForm() {
 
   return (
     <div>
-        {service === "baptism" && <Baptism church={getChurchInfo} user={user} />}
-        {service === "wedding" && <Wedding church={getChurchInfo} user={user} />}
-        {service === "memorial" && <Memorial church={getChurchInfo} user={user} />}
-        {service === "confirmation" && <Confirmation church={getChurchInfo} user={user} />}
-        {service === "mass" && <Mass church={getChurchInfo} user={user} />}
+        {service === "baptism" && <Baptism church={getChurchInfo} user={user} allChurch={church} />}
+        {service === "wedding" && <Wedding church={getChurchInfo} user={user} allChurch={church} />}
+        {service === "memorial" && <Memorial church={getChurchInfo} user={user} allChurch={church} />}
+        {service === "confirmation" && <Confirmation church={getChurchInfo} user={user} allChurch={church} />}
+        {service === "mass" && <Mass church={getChurchInfo} user={user} allChurch={church} />}
     </div>
   )
 }

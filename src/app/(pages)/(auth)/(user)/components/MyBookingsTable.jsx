@@ -77,6 +77,10 @@ function MyBookingsTable({user_id}) {
                         <Column field="reference_num" header="Reference No." sortable style={{minWidth: '12rem'}}   ></Column>
                         <Column 
                             body={(rowData) => {
+                                if (!rowData.date || !rowData.time_slot) {
+                                    const date = dayjs(rowData.created_at).format('MMMM DD, YYYY hh:mm A')
+                                    return `${date}`;
+                                }
                                 const date = dayjs(rowData.date).format('MMMM DD, YYYY');
                                 const time = dayjs(`${date} ${rowData.time_slot}`, 'YYYY-MM-DD HH:mm:ss').format('hh:mm A');
                                 return `${date} ${time}`;

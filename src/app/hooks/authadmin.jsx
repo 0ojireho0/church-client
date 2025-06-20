@@ -147,6 +147,9 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
 
 
     const deleteAdmin = async({...props}) => {
+
+        await csrf()
+
         axios
             .delete('api/admin/delete-admin', {
                 data: props
@@ -156,7 +159,7 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
                 if(res.status === 200){
                     Swal.fire({
                         title: "Success",
-                        text: "Created Successfully",
+                        text: "Deleted Successfully",
                         icon: "success"
                     })
                     mutateAllAdmin()
@@ -164,6 +167,37 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
             .catch(error => {
                 console.log(error)
+            })
+    }
+
+    const updateAdmin = async ({setEditUser, setLoading, ...props}) => {
+        await csrf()
+
+        axios
+            .put('api/admin/update-admin', props)
+            .then(res => {
+                console.log(res)
+                if(res.status === 200){
+                    Swal.fire({
+                        title: "Success",
+                        text: "Updated Successfully",
+                        icon: "success"
+                    })
+                    mutateAllAdmin()
+                }
+            })
+            .catch(err => {
+                if(err.response.status === 422){
+                    Swal.fire({
+                        title: "Failed",
+                        text: `${err.response.data.message}`,
+                        icon: 'error'
+                    })
+                }
+            })
+            .finally(() => {
+                setEditUser(null)
+                setLoading(false)
             })
     }
 
@@ -191,6 +225,7 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
         // resendEmailVerification,
         logoutAdmin,
         allAdmin,
-        deleteAdmin
+        deleteAdmin,
+        updateAdmin
     }
 }

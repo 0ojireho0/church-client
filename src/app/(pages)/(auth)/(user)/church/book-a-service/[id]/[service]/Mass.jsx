@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react'
 import Link from 'next/link'
 import { useForm, Controller } from 'react-hook-form'
-
+import { useRouter } from 'next/navigation'
 
 // Components
 import { MoonLoader } from 'react-spinners'
@@ -16,9 +16,9 @@ import CustomDatePicker from '@/app/components/CustomDatePicker'
 // Hooks
 import { useBook } from '@/app/hooks/book'
 
-function Mass({church, user}) {
+function Mass({church, user, allChurch}) {
 
-  const { register, handleSubmit, reset, formState: {errors: error}, setValue } = useForm()
+  const { register, handleSubmit, reset, formState: {errors: error}, setValue, getValues } = useForm()
   const { massBook } = useBook({})
 
   const [selectedPayment, setSelectedPayment] = useState(null)
@@ -32,6 +32,7 @@ function Mass({church, user}) {
   const [showOnlinePaymentModal, setShowOnlinePaymentModal] = useState(false)
   const [passData, setPassData] = useState()
   const [loadingDone, setLoadingDone] = useState(false)
+  const router = useRouter()
 
   const payment = [
       {
@@ -75,13 +76,7 @@ function Mass({church, user}) {
     }
   }, [selectService])
 
-  if(!church){
-    return(
-       <div className='flex justify-center items-center'>
-            <MoonLoader />
-        </div>
-    )
-  }
+
 
 
   const handleSubmitMass = (data) => {
@@ -142,6 +137,88 @@ function Mass({church, user}) {
       setShowOnlinePaymentModal,
       setLoadingDone
     })
+  }
+
+  useEffect(() => {
+    const getMassForm = JSON.parse(localStorage.getItem('mass_form'))
+
+    if (!getMassForm) {
+      // console.log("wala") // No saved form
+    } else {
+      // console.log("meron", getBaptismForm) // Restore the form
+      reset(getMassForm)
+
+      // Restore other selections manually
+      if (getMassForm.selectedPayment) setSelectedPayment(getMassForm.selectedPayment)
+      if (getMassForm.service) setSelectService(getMassForm.service)
+
+    }
+  }, [reset])
+
+  const handleBackBtn = () => {
+    localStorage.removeItem('mass_form')
+  }
+
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+      const toRad = angle => (angle * Math.PI) / 180;
+      const R = 6378; // Earth radius in km
+
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+
+      const a =
+          Math.sin(dLat / 2) ** 2 +
+          Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+          Math.sin(dLon / 2) ** 2;
+
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+      return R * c; // Distance in km
+  }
+  function getNearestChurches(churches, targetChurchId, limit = 3) {
+    const target = churches.find(ch => ch.id === targetChurchId);
+    if (!target) throw new Error("Target church not found.");
+
+    // Compute distances
+    const distances = churches
+        .filter(ch => ch.id !== targetChurchId) // exclude self
+        .map(ch => ({
+            ...ch,
+            distance: haversineDistance(target.latitude, target.longitude, ch.latitude, ch.longitude)
+        }));
+
+    // Greedy: sort by distance and pick the closest 3
+    distances.sort((a, b) => a.distance - b.distance);
+
+    return distances.slice(0, limit);
+  }
+
+
+  const handleFindRecommendedChurch = () => {
+    const formData = getValues()
+
+    const fullData = {
+      ...formData,
+      selectedPayment,
+      selectedDate,
+      selectedTime,
+      churchId: church?.id
+    }
+
+    const recommended = getNearestChurches(allChurch, church.id, 3)
+
+    localStorage.setItem("mass_form", JSON.stringify(fullData))
+    localStorage.setItem("recommended_church", JSON.stringify(recommended))
+
+    router.push('/church/recommended-church/mass')
+  }
+
+  if(!church){
+    return(
+       <div className='flex justify-center items-center'>
+            <MoonLoader />
+        </div>
+    )
   }
 
   return (
@@ -216,16 +293,18 @@ function Mass({church, user}) {
               
               {loading ? (
                 <div className='flex items-center gap-10'>
-                  <Link href={`/church/book-a-service/${church.id}`} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Back</Link>
+                  <Link href={`/church/book-a-service/${church.id}`} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700' onClick={handleBackBtn}>Back</Link>
                   <div className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>
                     <MoonLoader size={20} />
-                  </div>
+                  </div>  
+                  <h1 className='bg-green-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-green-700' onClick={handleFindRecommendedChurch}>Recommend Another Church</h1>
                 </div>
               ) : (
                 <>
                   <div className='flex items-center gap-10'>
-                    <Link href={`/church/book-a-service/${church.id}`} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Back</Link>
+                    <Link href={`/church/book-a-service/${church.id}`} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700' onClick={handleBackBtn}>Back</Link>
                     <button type='submit' className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>Submit</button>
+                    <h1 className='bg-green-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-green-700' onClick={handleFindRecommendedChurch}>Recommend Another Church</h1>
                   </div>
                 </>
               ) }

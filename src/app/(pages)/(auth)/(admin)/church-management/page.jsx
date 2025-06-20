@@ -1,19 +1,25 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AdminLayout from '@/app/components/Layout/AdminLayout'
 
 import { useAuthAdmin } from '@/app/hooks/authadmin'
 import { NewUserModal } from '../components/NewUserModal'
+import { EditUserModal } from '../components/EditUserModal'
 import { useChurch } from '@/app/hooks/church'
 
 import Swal from 'sweetalert2'
+import { useRouter } from 'next/navigation'
 
 function UserManagement() {
 
 
-  const [showNewUserModal, setShowNewUserModal] = useState(false)
+  const route = useRouter()
 
-  const { allAdmin, deleteAdmin } = useAuthAdmin({})
+  const [showNewUserModal, setShowNewUserModal] = useState(false)
+  const [editUser, setEditUser] = useState(null) 
+  const [loading, setLoading] = useState(false)
+
+  const { allAdmin, deleteAdmin, admin, updateAdmin } = useAuthAdmin({})
 
   const { church } = useChurch({})
 
@@ -45,9 +51,42 @@ function UserManagement() {
     });
   };
 
+  // useEffect(() => {
+  //   if(admin?.admin_type !== "Super Admin"){
+  //     route.push('/dashboard-admin')
+  //   }
+  // }, [admin])
+
+
+  const handleUpdateUser = (id, updatedData) => {
+
+
+    if(editUser.fullname === updatedData.fullname && editUser.email === updatedData.email){
+      setEditUser(null)
+      Swal.fire({
+        title: "Warning",
+        text: "You must update at least one field before saving.",
+        icon: "warning"
+      });
+      return 
+    }
+
+    setLoading(true)
+    updateAdmin({
+      id: id, 
+      fullname: updatedData.fullname,
+      email: updatedData.email,
+      setEditUser,
+      setLoading
+    })
+
+  }
+
   return (
     <>
-      <AdminLayout>
+    {admin?.admin_type === "Super Admin" ? (
+      <>
+    <AdminLayout>
         <div className='flex flex-col gap-5'>
           <h1 className='josefin-regular font-bold text-center text-2xl'>User Management</h1>
         </div>
@@ -75,7 +114,12 @@ function UserManagement() {
                     <td className="px-6 py-4 border-b font-medium">{item.fullname}</td>
                     <td className="px-6 py-4 border-b">{item.church.church_name}</td>
                     <td className="px-6 py-4 border-b text-center">
-                      <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 text-xs rounded mr-2">Edit</button>
+                      <button
+                        className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 text-xs rounded mr-2"
+                        onClick={() => setEditUser(item)}
+                      >
+                        Edit
+                      </button>
                       <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 text-xs rounded cursor-pointer" onClick={()=>handleDeleteUser(item)}>Delete</button>
                     </td>
                   </tr>
@@ -89,6 +133,24 @@ function UserManagement() {
       {showNewUserModal && (
         <NewUserModal churches={church} setShowNewUserModal={setShowNewUserModal} />
       )}
+
+      {editUser && (
+        <EditUserModal
+          user={editUser}
+          onClose={() => setEditUser(null)}
+          onSave={handleUpdateUser}
+          loading={loading}
+        />
+      )}
+      </>
+    ) : (
+      <>
+      <div className='flex justify-center items-center'>
+        This page is for CBCP Only
+      </div>
+      
+      </>
+    )}
     </>
   )
 }

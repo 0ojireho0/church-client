@@ -35,6 +35,7 @@ export const useBook = ({church_id} = {}) => {
                     reset({
                         dob: null, // specifically reset the date of birth
                     });
+                    localStorage.removeItem('baptism_form')
                     setSelectedPayment(null)
                     setSelectedDate(null)
                     setSelectedTime(null)
@@ -64,6 +65,7 @@ export const useBook = ({church_id} = {}) => {
                         groom_dob: null,
                         bride_dob: null
                     });
+                    localStorage.removeItem('wedding_form')
                     setSelectedPayment(null)
                     setWeddingSelectedDate(null)
                     setWeddingSelectedTime(null)
@@ -98,6 +100,7 @@ export const useBook = ({church_id} = {}) => {
                         deceased_dod: null,
                         spouse_deceased: null
                     });
+                    localStorage.removeItem('memorial_form')
                     setSelectedPayment(null)
                     setSelectedDate(null)
                     setSelectedTime(null)
@@ -129,6 +132,7 @@ export const useBook = ({church_id} = {}) => {
                         dob: null, 
 
                     });
+                    localStorage.removeItem('confirmation_form')
                     setSelectedPayment(null)
                     setSelectedDate(null)
                     setSelectedTime(null)
@@ -156,6 +160,7 @@ export const useBook = ({church_id} = {}) => {
                         text: `Submit Successfully, your reference number is ${res.data.ref_num}`,
                         icon: "success"
                     })
+                    localStorage.removeItem('mass_form')
                     reset();
                     setSelectedPayment(null)
                     setSelectedDate(null)
