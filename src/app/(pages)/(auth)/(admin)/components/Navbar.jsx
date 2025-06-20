@@ -14,6 +14,7 @@ import { FaCalculator } from "react-icons/fa";
 import { MdManageAccounts } from "react-icons/md";
 import { FaXmark } from "react-icons/fa6"
 import { CgProfile } from "react-icons/cg";
+import { FaCalendarAlt } from "react-icons/fa";
 
 // Components
 import Dropdown from './Dropdown'
@@ -36,6 +37,11 @@ export default function Navbar() {
       path: "/church-management",
       icon: <MdManageAccounts />
     },
+    {
+      name: "Calendar",
+      path: "/calendar",
+      icon: <FaCalendarAlt />
+    }
   ]
 
   const pathname = usePathname()
