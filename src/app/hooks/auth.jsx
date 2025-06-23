@@ -84,39 +84,56 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    // const forgotPassword = async ({ setErrors, setStatus, email }) => {
-    //     await csrf()
+    const forgotPassword = async ({ setErrors, setStatus, email, setLoading }) => {
+        await csrf()
 
-    //     setErrors([])
-    //     setStatus(null)
+        setErrors([])
+        setStatus(null)
 
-    //     axios
-    //         .post('/forgot-password', { email })
-    //         .then(response => setStatus(response.data.status))
-    //         .catch(error => {
-    //             if (error.response.status !== 422) throw error
+        axios
+            .post('/forgot-password', { email })
+            .then(response => {
+                Swal.fire({
+                    title: "Success",
+                    text: `${response.data.message}`,
+                    icon: "success"
+                })
+            })
+            .catch(error => {
+                if (error.response.status !== 422) throw error
 
-    //             setErrors(error.response.data.errors)
-    //         })
-    // }
+                setErrors(error.response.data.errors)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    }
 
-    // const resetPassword = async ({ setErrors, setStatus, ...props }) => {
-    //     await csrf()
+    const resetPassword = async ({ setErrors, setStatus, setLoading, ...props }) => {
+        await csrf()
 
-    //     setErrors([])
-    //     setStatus(null)
+        setErrors([])
+        setStatus(null)
 
-    //     axios
-    //         .post('/reset-password', { token: params.token, ...props })
-    //         .then(response =>
-    //             router.push('/login?reset=' + btoa(response.data.status)),
-    //         )
-    //         .catch(error => {
-    //             if (error.response.status !== 422) throw error
+        axios
+            .post('/reset-password', { token: props.token, ...props })
+            .then(res => {
+                router.push('/login')
+                Swal.fire({
+                    title: "Success",
+                    text: `${res.data.status}`,
+                    icon: "success"
+                })
+            })
+            .catch(error => {
+                if (error.response.status !== 422) throw error
 
-    //             setErrors(error.response.data.errors)
-    //         })
-    // }
+                setErrors(error.response.data.message)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    }
 
     // const resendEmailVerification = ({ setStatus }) => {
     //     axios
@@ -155,8 +172,8 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         user,
         register,
         login,
-        // forgotPassword,
-        // resetPassword,
+        forgotPassword,
+        resetPassword,
         // resendEmailVerification,
         logout,
     }

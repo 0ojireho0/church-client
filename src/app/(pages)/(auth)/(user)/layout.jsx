@@ -1,5 +1,6 @@
 import Navbar from "./components/Navbar"
 import "../../../globals.css"
+import ChatbotToggle from "./components/ChatbotToggle"
 
 export const metadata = {
   title: 'ChurchConnect',
@@ -7,6 +8,10 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
+
+
+
+
   return (
     <html lang="en">
       <body>
@@ -14,6 +19,7 @@ export default function RootLayout({ children }) {
           <Navbar />
           <main className="grow bg-[#FFE4A2] py-2 ">
             {children}
+            <ChatbotToggle />
           </main>
           
         </div>

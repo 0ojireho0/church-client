@@ -92,8 +92,9 @@ export default function Login() {
                 </>
               )}
               
-              <div className='flex justify-end w-full'>
+              <div className='flex justify-between w-full'>
                 <Link href="/register" className='text-right text-[0.7rem] text-blue-950 hover:underline'>Don't have an Account?</Link>
+                <Link href="/forgot-password" className='text-right text-[0.7rem] text-blue-950 hover:underline'>Forgot your password?</Link>
               </div>
             </div>
           

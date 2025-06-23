@@ -30,7 +30,7 @@ export default function Dropdown() {
         <div className='bg-white w-full md:w-[15rem] border-2 rounded-lg p-2 text-center flex flex-col gap-2'>
         <h1 className='josefin-regular font-bold cursor-pointer'>{user?.name}</h1>
         <h1 className='josefin-regular cursor-pointer hover:bg-black/60 hover:text-white hover:rounded-lg'>Edit Profile</h1>
-        <Link href={"/my-booking"} className='josefin-regular cursor-pointer hover:bg-black/60 hover:text-white hover:rounded-lg'>My Bookings</Link>
+        {/* <Link href={"/my-booking"} className='josefin-regular cursor-pointer hover:bg-black/60 hover:text-white hover:rounded-lg'>My Bookings</Link> */}
         {loading ? (
             <>
             <h1 className='flex justify-center items-center'><MoonLoader size={30} /></h1>

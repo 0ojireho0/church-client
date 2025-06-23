@@ -36,6 +36,13 @@ export default function FileTable({searchStatus, church_id}){
     const [loading, setLoading] = useState(false)
     const [remarks, setRemarks] = useState("")
 
+    const [showViewBaptism, setShowViewBaptism] = useState(false)
+    const [showViewWedding, setShowViewWedding] = useState(false)
+    const [showViewMemorial, setShowViewMemorial] = useState(false)
+    const [showViewConfirmation, setShowViewConfirmation] = useState(false)
+    const [showViewMass, setShowViewMass] = useState(false)
+    const [formData, setFormData] = useState([])
+
     const now = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
 
@@ -176,10 +183,36 @@ export default function FileTable({searchStatus, church_id}){
 
     }
 
+    const viewForm = (data) => {
+        setFormData(data)
+        if(data.service_type == "baptism"){
+            setShowViewBaptism(true)
+        } else if(data.service_type == "wedding"){
+            setShowViewWedding(true)
+        } else if(data.service_type == "memorial"){
+            setShowViewMemorial(true)
+        } else if(data.service_type == "confirmation"){
+            setShowViewConfirmation(true)
+        }else{
+            setShowViewMass(true)
+        }
+
+        // console.log(data)
+ 
+    }
+
     const actionBodyTemplate = (rowData) => {
         return(
             <React.Fragment>
                 <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editStatus(rowData)} />
+            </React.Fragment>
+        )
+    }
+
+    const viewBodyTemplate = (rowData) => {
+        return (   
+            <React.Fragment>
+                <Button icon="pi pi-eye" rounded outlined className="mr-2" onClick={() => viewForm(rowData)} />
             </React.Fragment>
         )
     }
@@ -218,6 +251,61 @@ export default function FileTable({searchStatus, church_id}){
             <Button label="Save" loading={loading} icon="pi pi-check" onClick={saveStatus} />
         </React.Fragment>
     );
+
+    const onHideBaptism = () => {
+        // setFormData([])
+        setShowViewBaptism(false)
+    }
+
+    const baptismModalFooter = (
+        <React.Fragment>
+            <Button label="Cancel" icon="pi pi-times" onClick={onHideBaptism} />
+        </React.Fragment>
+    )
+
+    const onHideWedding = () => {
+        // setFormData([])
+        setShowViewWedding(false)
+    }
+
+    const weddingModalFooter = (
+        <React.Fragment>
+            <Button label="Cancel" icon="pi pi-times" onClick={onHideWedding} />
+        </React.Fragment>
+    )
+
+    const onHideMemorial = () => {
+        // setFormData([])
+        setShowViewMemorial(false)
+    }
+
+    const memorialModalFooter = (
+        <React.Fragment>
+            <Button label="Cancel" icon="pi pi-times" onClick={onHideMemorial} />
+        </React.Fragment>
+    )
+
+    const onHideConfirmation = () => {
+        // setFormData([])
+        setShowViewConfirmation(false)
+    }
+
+    const confirmationModalFooter = (
+        <React.Fragment>
+            <Button label="Cancel" icon="pi pi-times" onClick={onHideConfirmation} />
+        </React.Fragment>
+    )
+
+    const onHideMass = () => {
+        // setFormData([])
+        setShowViewMass(false)
+    }
+
+    const massModalFooter = (
+        <React.Fragment>
+            <Button label="Cancel" icon="pi pi-times" onClick={onHideMass} />
+        </React.Fragment>
+    )
   
     const handleSelectStatus = (status) => {
         // console.log(status)
@@ -276,6 +364,7 @@ export default function FileTable({searchStatus, church_id}){
                 <Column field="service_type" header="Service Type" sortable style={{minWidth: '12rem'}} ></Column>
                 <Column field="mop" header="Mode of Payment" sortable style={{minWidth: '12rem'}} ></Column>
                 <Column field="status" body={statusBody} header="Status" sortable style={{minWidth: '12rem'}} ></Column>
+                <Column header="View" body={viewBodyTemplate} exportable={false} style={{minWidth: '12rem'}} ></Column>
                 <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
             </DataTable>
         </div>
@@ -327,6 +416,275 @@ export default function FileTable({searchStatus, church_id}){
             </div>
             )}
 
+        </Dialog>
+
+        <Dialog 
+        visible={showViewBaptism} 
+        style={{ width: '32rem' }} 
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
+        header={`Baptism Details - ${formData?.reference_num}`}
+        modal
+        className="p-fluid"
+        footer={baptismModalFooter}
+        onHide={onHideBaptism}
+        draggable={false}
+        >
+        <div className="field">
+            <label htmlFor="fullname" className="font-bold">Full Name</label>
+            <InputText disabled id="fullname" value={formData?.form_data?.fullname} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="dob" className="font-bold">Date of Birth</label>
+            <InputText disabled id="dob" value={new Date(formData?.form_data?.dob).toLocaleDateString()} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="gender" className="font-bold">Gender</label>
+            <InputText disabled id="gender" value={formData?.form_data?.gender} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="pob" className="font-bold">Place of Birth</label>
+            <InputText disabled id="pob" value={formData?.form_data?.pob} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="address" className="font-bold">Address</label>
+            <InputText disabled id="address" value={formData?.form_data?.address} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="contact" className="font-bold">Contact Number</label>
+            <InputText disabled id="contact" value={formData?.form_data?.contact} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="father" className="font-bold">Father's Name</label>
+            <InputText disabled id="father" value={formData?.form_data?.father} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="mother" className="font-bold">Mother's Name</label>
+            <InputText disabled id="mother" value={formData?.form_data?.mother} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="godfather" className="font-bold">Godfather</label>
+            <InputText disabled id="godfather" value={formData?.form_data?.godfather} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="godmother" className="font-bold">Godmother</label>
+            <InputText disabled id="godmother" value={formData?.form_data?.godmother} />
+        </div>
+
+        </Dialog>
+
+        <Dialog 
+        visible={showViewWedding} 
+        style={{ width: '32rem' }} 
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
+        header={`Wedding Details - ${formData?.reference_num}`}
+        modal
+        className="p-fluid"
+        footer={weddingModalFooter}
+        onHide={onHideWedding}
+        draggable={false}
+        >
+        {/* Groom Info */}
+        <h4 className="mt-3 mb-2 font-bold">Groom Information</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="field"><label className="font-bold">Full Name</label><InputText disabled value={formData?.form_data?.groom_fullname} /></div>
+            <div className="field"><label className="font-bold">Date of Birth</label><InputText disabled value={new Date(formData?.form_data?.groom_dob).toLocaleDateString()} /></div>
+            <div className="field"><label className="font-bold">Age</label><InputText disabled value={formData?.form_data?.groom_age} /></div>
+            <div className="field"><label className="font-bold">Place of Birth</label><InputText disabled value={formData?.form_data?.groom_pob} /></div>
+            <div className="field"><label className="font-bold">Religion</label><InputText disabled value={formData?.form_data?.groom_religion} /></div>
+            <div className="field"><label className="font-bold">Occupation</label><InputText disabled value={formData?.form_data?.groom_occupation} /></div>
+            <div className="field"><label className="font-bold">Father's Name</label><InputText disabled value={formData?.form_data?.groom_father_name} /></div>
+            <div className="field"><label className="font-bold">Mother's Name</label><InputText disabled value={formData?.form_data?.groom_mother_name} /></div>
+            <div className="field"><label className="font-bold">Parent Address</label><InputText disabled value={formData?.form_data?.groom_parent_address} /></div>
+            <div className="field"><label className="font-bold">Parent Contact</label><InputText disabled value={formData?.form_data?.groom_parent_contact} /></div>
+            <div className="field"><label className="font-bold">Parent Religion</label><InputText disabled value={formData?.form_data?.groom_parent_religion} /></div>
+        </div>
+
+        {/* Bride Info */}
+        <h4 className="mt-4 mb-2 font-bold">Bride Information</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="field"><label className="font-bold">Full Name</label><InputText disabled value={formData?.form_data?.bride_fullname} /></div>
+            <div className="field"><label className="font-bold">Date of Birth</label><InputText disabled value={new Date(formData?.form_data?.bride_dob).toLocaleDateString()} /></div>
+            <div className="field"><label className="font-bold">Age</label><InputText disabled value={formData?.form_data?.bride_age} /></div>
+            <div className="field"><label className="font-bold">Place of Birth</label><InputText disabled value={formData?.form_data?.bride_pob} /></div>
+            <div className="field"><label className="font-bold">Religion</label><InputText disabled value={formData?.form_data?.bride_religion} /></div>
+            <div className="field"><label className="font-bold">Occupation</label><InputText disabled value={formData?.form_data?.bride_occupation} /></div>
+            <div className="field"><label className="font-bold">Father's Name</label><InputText disabled value={formData?.form_data?.bride_father_name} /></div>
+            <div className="field"><label className="font-bold">Mother's Name</label><InputText disabled value={formData?.form_data?.bride_mother_name} /></div>
+            <div className="field"><label className="font-bold">Parent Address</label><InputText disabled value={formData?.form_data?.bride_parent_address} /></div>
+            <div className="field"><label className="font-bold">Parent Contact</label><InputText disabled value={formData?.form_data?.bride_parent_contact} /></div>
+            <div className="field"><label className="font-bold">Parent Religion</label><InputText disabled value={formData?.form_data?.bride_parent_religion} /></div>
+        </div>
+
+        {/* Other Info */}
+        <h4 className="mt-4 mb-2 font-bold">Additional Details</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="field"><label className="font-bold">License</label><InputText disabled value={formData?.form_data?.license} /></div>
+            <div className="field"><label className="font-bold">Banns</label><InputText disabled value={formData?.form_data?.banns} /></div>
+            <div className="field"><label className="font-bold">Organist</label><InputText disabled value={formData?.form_data?.organist} /></div>
+            <div className="field"><label className="font-bold">Flowers</label><InputText disabled value={formData?.form_data?.flowers} /></div>
+        </div>
+        </Dialog>
+
+        <Dialog 
+        visible={showViewMemorial} 
+        style={{ width: '32rem' }} 
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
+        header={`Memorial Details - ${formData?.reference_num}`}
+        modal
+        className="p-fluid"
+        footer={memorialModalFooter}
+        onHide={onHideMemorial}
+        draggable={false}
+        >
+        <div className="field">
+            <label htmlFor="deceased_fullname" className="font-bold">Full Name of Deceased</label>
+            <InputText disabled id="deceased_fullname" value={formData?.form_data?.deceased_fullname} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="deceased_dob" className="font-bold">Date of Birth</label>
+            <InputText disabled id="deceased_dob" value={new Date(formData?.form_data?.deceased_dob).toLocaleDateString()} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="deceased_dod" className="font-bold">Date of Death</label>
+            <InputText disabled id="deceased_dod" value={new Date(formData?.form_data?.deceased_dod).toLocaleDateString()} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="deceased_gender" className="font-bold">Gender</label>
+            <InputText disabled id="deceased_gender" value={formData?.form_data?.deceased_gender} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="deceased_age" className="font-bold">Age</label>
+            <InputText disabled id="deceased_age" value={formData?.form_data?.deceased_age} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="spouse_fullname" className="font-bold">Spouse Full Name</label>
+            <InputText disabled id="spouse_fullname" value={formData?.form_data?.spouse_fullname} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="spouse_gender" className="font-bold">Spouse Gender</label>
+            <InputText disabled id="spouse_gender" value={formData?.form_data?.spouse_gender} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="spouse_deceased" className="font-bold">Date of Spouse's Death</label>
+            <InputText disabled id="spouse_deceased" value={new Date(formData?.form_data?.spouse_deceased).toLocaleDateString()} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="funeral_home_name" className="font-bold">Funeral Home Name</label>
+            <InputText disabled id="funeral_home_name" value={formData?.form_data?.funeral_home_name} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="funeral_mailing_address" className="font-bold">Funeral Mailing Address</label>
+            <InputText disabled id="funeral_mailing_address" value={formData?.form_data?.funeral_mailing_address} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="plot" className="font-bold">Plot Number</label>
+            <InputText disabled id="plot" value={formData?.form_data?.plot} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="loc_plot" className="font-bold">Plot Location</label>
+            <InputText disabled id="loc_plot" value={formData?.form_data?.loc_plot} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="losr" className="font-bold">Location of Spouse Remain</label>
+            <InputText disabled id="losr" value={formData?.form_data?.losr} />
+        </div>
+        </Dialog>
+
+        <Dialog 
+        visible={showViewConfirmation} 
+        style={{ width: '32rem' }} 
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
+        header={`Confirmation Details - ${formData?.reference_num}`}
+        modal
+        className="p-fluid"
+        footer={confirmationModalFooter}
+        onHide={onHideConfirmation}
+        draggable={false}
+        >
+        <div className="field">
+            <label htmlFor="fullname" className="font-bold">Full Name</label>
+            <InputText disabled id="fullname" value={formData?.form_data?.fullname} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="dob" className="font-bold">Date of Birth</label>
+            <InputText disabled id="dob" value={new Date(formData?.form_data?.dob).toLocaleDateString()} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="pob" className="font-bold">Place of Birth</label>
+            <InputText disabled id="pob" value={formData?.form_data?.pob} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="father_name" className="font-bold">Father's Name</label>
+            <InputText disabled id="father_name" value={formData?.form_data?.father_name} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="mother_name" className="font-bold">Mother's Name</label>
+            <InputText disabled id="mother_name" value={formData?.form_data?.mother_name} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="contact" className="font-bold">Contact Number</label>
+            <InputText disabled id="contact" value={formData?.form_data?.contact} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="purpose" className="font-bold">Purpose</label>
+            <InputText disabled id="purpose" value={formData?.form_data?.purpose} />
+        </div>
+        </Dialog>
+
+        <Dialog 
+        visible={showViewMass} 
+        style={{ width: '32rem' }} 
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
+        header={`Mass Details - ${formData?.reference_num}`}
+        modal
+        className="p-fluid"
+        footer={massModalFooter}
+        onHide={onHideMass}
+        draggable={false}
+        >
+        <div className="field">
+            <label htmlFor="fullname" className="font-bold">Full Name</label>
+            <InputText disabled id="fullname" value={formData?.form_data?.fullname} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="service" className="font-bold">Type of Service</label>
+            <InputText disabled id="service" 
+                value={
+                        formData?.form_data?.service == "thanksgiving" ? "Thanksgiving" :
+                        formData?.form_data?.service == "special" ? "Special Intentions / Good Health / Safe Travel etc." :
+                        formData?.form_data?.service == "pass" ? "To Pass the exam / Interview etc." : 
+                        formData?.form_data?.service == "healing" ? "Healing / Fast Recovery" : 
+                        formData?.form_data?.service == "all" ? "All for the souls" : "-"
+                        } />
+        </div>
         </Dialog>
             </>
         ) : (
