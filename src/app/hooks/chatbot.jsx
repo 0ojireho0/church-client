@@ -18,7 +18,7 @@ export const useChatBot = ({} = {}) => {
             message: props.chatInput
         })
         .then(res => {
-
+            console.log(res)
             const botMessage = { sender: 'bot', text: (
                 <>
                 <div>

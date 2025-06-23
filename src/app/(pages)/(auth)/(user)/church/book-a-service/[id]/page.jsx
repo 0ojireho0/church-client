@@ -83,7 +83,7 @@ function ChurchName() {
           {/* Office Info */}
           <div className="pl-4">
             <h3 className="font-bold text-center mb-2">Office Hours</h3>
-            <p className="text-center mb-4">Monday - Sunday 10:00am - 5:00pm</p>
+            <p className="text-center mb-4">{getChurchInfo.office_hours}</p>
             <h3 className="font-bold text-center mb-2">Address</h3>
             <p className="text-center">{getChurchInfo.address}</p>
             <h3 className="font-bold text-center mb-2">Contact Us</h3>
