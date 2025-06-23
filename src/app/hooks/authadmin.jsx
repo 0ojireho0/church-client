@@ -202,8 +202,8 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
     }
 
     useEffect(() => {
-        // if (middleware === 'guest' && redirectIfAuthenticated && admin)
-        //     router.push(redirectIfAuthenticated)
+        if (middleware === 'guest' && redirectIfAuthenticated && admin)
+            router.push(redirectIfAuthenticated)
 
         // if (middleware === 'auth' && (user && !user.email_verified_at))
         //     router.push('/verify-email')
@@ -213,7 +213,7 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
         //     user?.email_verified_at
         // )
         //     router.push(redirectIfAuthenticated)
-        // if (middleware === 'auth-admin' && error) logoutAdmin()
+        if (middleware === 'auth-admin' && error) logoutAdmin()
     }, [admin, error])
 
     return {
