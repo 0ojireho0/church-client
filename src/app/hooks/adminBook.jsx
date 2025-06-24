@@ -30,7 +30,7 @@ export const useAdminBook = ({searchStatus, church_id} = {}) => {
                 if(res.status === 200){
                     Swal.fire({
                         title: "Success",
-                        text: "Success text",
+                        text: "Success Change Status",
                         icon: 'success'
                     })
                     setRemarks("")
