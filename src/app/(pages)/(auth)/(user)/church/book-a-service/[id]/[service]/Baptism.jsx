@@ -33,7 +33,7 @@ function Baptism({church, user, allChurch}) {
   const [passData, setPassData] = useState()
   const [loadingDone, setLoadingDone] = useState(false)
 
-  
+  const [files, setFiles] = useState([])
 
   const [loading, setLoading] = useState(false)
 
@@ -59,42 +59,50 @@ function Baptism({church, user, allChurch}) {
 
   const handleSubmitBaptism = (data) => {
 
-    const jsonData = JSON.stringify(data)
-
-    if(!selectedDate || !selectedTime ){
-      Swal.fire({
-        title: "Error",
-        text: "Select Booking Date",
-        icon: "warning"
-      })
-      return
-    }
-
-    if(selectedPayment === "online"){
-      setShowOnlinePaymentModal(true)
-
-      setPassData(jsonData)
-      return
-    }
-    setLoading(true)
-
-    baptismBook({
-      date: dayjs(selectedDate).format('YYYY-MM-DD'), 
-      selectedTime,
-      jsonData,
-      user,
-      selectedPayment,
-      fullyBooked,
-      church_id:church?.id,
-      reset,
-      setLoading,
-      setSelectedPayment,
-      setSelectedDate,
-      setSelectedTime, 
-      setLoadingDone,
-      setShowOnlinePaymentModal,
-      setLoadingDone
+  if (!selectedDate || !selectedTime) {
+    Swal.fire({
+      title: "Error",
+      text: "Select Booking Date",
+      icon: "warning"
     })
+    return
+  }
+
+  const formData = new FormData()
+
+  formData.append('jsonData', JSON.stringify(data))
+  formData.append('date', dayjs(selectedDate).format('YYYY-MM-DD'))
+  formData.append('selectedTime', selectedTime)
+  formData.append('selectedPayment', selectedPayment)
+  formData.append('church_id', church?.id)
+  formData.append('user_id', user?.id)
+  formData.append('fullyBooked', fullyBooked)
+
+  files.forEach((file, index) => {
+    formData.append(`files[]`, file)
+  })
+
+  // If online payment:
+  if (selectedPayment === "online") {
+    setPassData(formData)
+    setShowOnlinePaymentModal(true)
+    return
+  }
+
+  setLoading(true)
+
+  baptismBook({
+    formData,
+    reset,
+    setLoading,
+    setSelectedPayment,
+    setSelectedDate,
+    setSelectedTime,
+    setFullyBooked,
+    setLoadingDone,
+    setShowOnlinePaymentModal,
+    setFiles
+  })
 
     
   }
@@ -102,22 +110,38 @@ function Baptism({church, user, allChurch}) {
   const handleDoneSubmit = () => {
     setLoadingDone(true)
     baptismBook({
-      date: dayjs(selectedDate).format('YYYY-MM-DD'), 
-      selectedTime,
-      jsonData: passData,
-      user,
-      selectedPayment,
-      fullyBooked,
-      church_id:church?.id,
+      formData: passData,
       reset,
       setLoading,
       setSelectedPayment,
       setSelectedDate,
       setSelectedTime, 
       setShowOnlinePaymentModal,
-      setLoadingDone
+      setLoadingDone,
+      setFiles
     })
   }
+
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files)
+
+    const filteredFiles = selectedFiles.filter(file => file.size <= 10 * 1024 * 1024)
+
+    if (filteredFiles.length !== selectedFiles.length) {
+      Swal.fire({
+        title: "File Too Large",
+        text: "One or more files exceed the 10MB limit.",
+        icon: "error"
+      })
+    }
+
+    setFiles(prev => [...prev, ...filteredFiles])
+  }
+
+  const handleFileDelete = (index) => {
+    setFiles(prev => prev.filter((_, i) => i !== index))
+  }
+
 
   useEffect(() => {
     const getBaptismForm = JSON.parse(localStorage.getItem('baptism_form'))
@@ -213,7 +237,17 @@ function Baptism({church, user, allChurch}) {
 
         <div className='flex justify-center items-center flex-col gap-3'>
           <form onSubmit={handleSubmit(handleSubmitBaptism)}>
+            <div className='flex justify-center items-center my-5'>
+              <CustomDateTimePicker 
+                selectedDate={selectedDate} 
+                setSelectedDate={setSelectedDate} 
+                selectedTime={selectedTime} 
+                setSelectedTime={setSelectedTime} 
+                setFullyBooked={setFullyBooked}
+                church_id={church?.id}
+                />
 
+            </div>
             <div className='grid gap-3 md:grid-cols-2 md:gap-10'>
               <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
                 <h1 className='font-bold josefin-regular text-center'>PERSONAL INFORMATION OF THE CHILD</h1>
@@ -360,8 +394,27 @@ function Baptism({church, user, allChurch}) {
                     id="file-upload"
                     type="file"
                     className="hidden"
+                    multiple
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    onChange={handleFileChange}
                   />
                 </div>
+              {files.length > 0 && (
+                <div className="mt-3 flex flex-col gap-2">
+                  {files.map((file, index) => (
+                    <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                      <div className="text-sm truncate max-w-xs">{file.name}</div>
+                      <button
+                        type="button"
+                        className="text-red-500 hover:underline text-xs"
+                        onClick={() => handleFileDelete(index)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
                 <h1 className='font-bold josefin-regular text-center'>DONATION METHOD</h1>
                 <div className='flex justify-center items-center'>
                   <RowRadioButtonsGroup 
@@ -375,18 +428,9 @@ function Baptism({church, user, allChurch}) {
                 </div>
               </div>
 
-            </div>
-            <div className='flex justify-center items-center my-5'>
-              <CustomDateTimePicker 
-                selectedDate={selectedDate} 
-                setSelectedDate={setSelectedDate} 
-                selectedTime={selectedTime} 
-                setSelectedTime={setSelectedTime} 
-                setFullyBooked={setFullyBooked}
-                church_id={church?.id}
-                />
 
             </div>
+
 
             <div className='flex justify-center items-center py-2 '>
               

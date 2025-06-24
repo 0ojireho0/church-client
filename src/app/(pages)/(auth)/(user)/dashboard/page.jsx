@@ -23,7 +23,7 @@ export default function Dashboard() {
       <div className='px-2 py-5 flex justify-center items-center flex-col gap-4 md:grid md:grid-cols-2 md:items-center md:justify-start xl:gap-2 md:px-14 lg:px-28 md:flex-col-reverse bottom-0'>
         <Image src={HomeImage} className=' w-[40rem] xl:w-[37rem] ' alt='Home' />
         <div className='flex flex-col gap-2'>
-          <h1 className='text-xl font-bold md:text-3xl josefin-regular text-center'>Welcome to ChurchConnect!</h1>
+          <h1 className='text-xl font-bold md:text-5xl josefin-regular text-center'>Welcome to ChurchConnect!</h1>
           <h1 className='joan-regular text-xl'>Bringing the church closer to you, wherever you are,</h1>
           <h1 className='joan-regular text-xl'>Honoring life’s sacred milestones through meaningful church services.</h1>
           <h1 className='joan-regular'>Gathering - Services - Liturgy</h1>

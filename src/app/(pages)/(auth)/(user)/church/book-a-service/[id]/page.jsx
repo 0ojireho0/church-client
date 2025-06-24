@@ -75,7 +75,7 @@ function ChurchName() {
               </div>
               <div>
                 <input type="radio" id="mass" name="service" className="mr-2" onChange={(e) => setGetService(e.target.value)} value={"mass"} />
-                <label htmlFor="mass">Mass Scheduling</label>
+                <label htmlFor="mass">Mass Intentions</label>
               </div>
             </form>
           </div>

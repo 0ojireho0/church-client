@@ -479,6 +479,26 @@ export default function FileTable({searchStatus, church_id}){
             <InputText disabled id="godmother" value={formData?.form_data?.godmother} />
         </div>
 
+        {formData?.files?.length > 0 && (
+            <div className="field">
+            <label className="font-bold">Uploaded Files</label>
+            <ul className="list-disc ml-5">
+                {formData.files.map((file, index) => (
+                <li key={index}>
+                    <a 
+                    href={file.filepath} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline break-words"
+                    >
+                    {file.filename}
+                    </a>
+                </li>
+                ))}
+            </ul>
+            </div>
+        )}
+
         </Dialog>
 
         <Dialog 
@@ -532,6 +552,26 @@ export default function FileTable({searchStatus, church_id}){
             <div className="field"><label className="font-bold">Organist</label><InputText disabled value={formData?.form_data?.organist} /></div>
             <div className="field"><label className="font-bold">Flowers</label><InputText disabled value={formData?.form_data?.flowers} /></div>
         </div>
+
+        {formData?.files?.length > 0 && (
+            <div className="field">
+            <label className="font-bold">Uploaded Files</label>
+            <ul className="list-disc ml-5">
+                {formData.files.map((file, index) => (
+                <li key={index}>
+                    <a 
+                    href={file.filepath} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline break-words"
+                    >
+                    {file.filename}
+                    </a>
+                </li>
+                ))}
+            </ul>
+            </div>
+        )}
         </Dialog>
 
         <Dialog 
@@ -609,6 +649,26 @@ export default function FileTable({searchStatus, church_id}){
             <label htmlFor="losr" className="font-bold">Location of Spouse Remain</label>
             <InputText disabled id="losr" value={formData?.form_data?.losr} />
         </div>
+
+        {formData?.files?.length > 0 && (
+            <div className="field">
+            <label className="font-bold">Uploaded Files</label>
+            <ul className="list-disc ml-5">
+                {formData.files.map((file, index) => (
+                <li key={index}>
+                    <a 
+                    href={file.filepath} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline break-words"
+                    >
+                    {file.filename}
+                    </a>
+                </li>
+                ))}
+            </ul>
+            </div>
+        )}
         </Dialog>
 
         <Dialog 
@@ -656,6 +716,26 @@ export default function FileTable({searchStatus, church_id}){
             <label htmlFor="purpose" className="font-bold">Purpose</label>
             <InputText disabled id="purpose" value={formData?.form_data?.purpose} />
         </div>
+
+        {formData?.files?.length > 0 && (
+            <div className="field">
+            <label className="font-bold">Uploaded Files</label>
+            <ul className="list-disc ml-5">
+                {formData.files.map((file, index) => (
+                <li key={index}>
+                    <a 
+                    href={file.filepath} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline break-words"
+                    >
+                    {file.filename}
+                    </a>
+                </li>
+                ))}
+            </ul>
+            </div>
+        )}
         </Dialog>
 
         <Dialog 
@@ -685,6 +765,26 @@ export default function FileTable({searchStatus, church_id}){
                         formData?.form_data?.service == "all" ? "All for the souls" : "-"
                         } />
         </div>
+
+        {formData?.files?.length > 0 && (
+            <div className="field">
+            <label className="font-bold">Uploaded Files</label>
+            <ul className="list-disc ml-5">
+                {formData.files.map((file, index) => (
+                <li key={index}>
+                    <a 
+                    href={file.filepath} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline break-words"
+                    >
+                    {file.filename}
+                    </a>
+                </li>
+                ))}
+            </ul>
+            </div>
+        )}
         </Dialog>
             </>
         ) : (

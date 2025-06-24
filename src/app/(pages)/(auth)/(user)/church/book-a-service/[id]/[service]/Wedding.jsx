@@ -36,6 +36,8 @@ function Wedding({church, user, allChurch}) {
   const [passData, setPassData] = useState()
   const [loadingDone, setLoadingDone] = useState(false)
 
+  const [files, setFiles] = useState([])
+
   const router = useRouter()
 
   const payment = [
@@ -58,7 +60,6 @@ function Wedding({church, user, allChurch}) {
 
 
   const handleSubmitWedding = (data) => {
-    const jsonData = JSON.stringify(data)
     if(!rehearsalSelectedDate || !rehearsalSelectedTime || !weddingSelectedDate || !weddingSelectedTime){
       Swal.fire({
         title: "Error",
@@ -68,10 +69,27 @@ function Wedding({church, user, allChurch}) {
       return
     }
 
+    const formData = new FormData()
+
+    formData.append('jsonData', JSON.stringify(data))
+    formData.append('rehearsal_date', dayjs(rehearsalSelectedDate).format('YYYY-MM-DD'))
+    formData.append('rehearsal_time', rehearsalSelectedTime)
+    formData.append('wedding_date', dayjs(weddingSelectedDate).format('YYYY-MM-DD'))
+    formData.append('wedding_time', weddingSelectedTime)
+    formData.append('selectedPayment', selectedPayment)
+    formData.append('church_id', church?.id)
+    formData.append('user_id', user?.id)
+    formData.append('rehearsalFullyBooked', rehearsalFullyBooked)
+    formData.append('weddingFullyBooked', weddingFullyBooked)
+
+    files.forEach((file, index) => {
+      formData.append(`files[]`, file)
+    })
+
     if(selectedPayment === "online"){
       setShowOnlinePaymentModal(true)
 
-      setPassData(jsonData)
+      setPassData(formData)
       return
     }
 
@@ -79,16 +97,7 @@ function Wedding({church, user, allChurch}) {
     setLoading(true)
 
     weddingBook({
-      jsonData,
-      rehearsal_date: dayjs(rehearsalSelectedDate).format('YYYY-MM-DD'),
-      rehearsal_time: rehearsalSelectedTime,
-      wedding_date: dayjs(weddingSelectedDate).format('YYYY-MM-DD'),
-      wedding_time: weddingSelectedTime,
-      user,
-      selectedPayment,
-      church_id: church?.id,
-      rehearsalFullyBooked,
-      weddingFullyBooked,
+      formData,
       reset,
       setLoading,
       setSelectedPayment,
@@ -97,7 +106,8 @@ function Wedding({church, user, allChurch}) {
       setRehearsalSelectedDate,
       setRehearsalSelectedTime,
       setShowOnlinePaymentModal,
-      setLoadingDone
+      setLoadingDone,
+      setFiles
     })
 
   }
@@ -105,16 +115,7 @@ function Wedding({church, user, allChurch}) {
   const handleDoneSubmit = () => {
     setLoadingDone(true)
     weddingBook({
-      jsonData: passData,
-      rehearsal_date: dayjs(rehearsalSelectedDate).format('YYYY-MM-DD'),
-      rehearsal_time: rehearsalSelectedTime,
-      wedding_date: dayjs(weddingSelectedDate).format('YYYY-MM-DD'),
-      wedding_time: weddingSelectedTime,
-      user,
-      selectedPayment,
-      church_id: church?.id,
-      rehearsalFullyBooked,
-      weddingFullyBooked,
+      formData: passData,
       reset,
       setLoading,
       setSelectedPayment,
@@ -123,8 +124,29 @@ function Wedding({church, user, allChurch}) {
       setRehearsalSelectedDate,
       setRehearsalSelectedTime,
       setShowOnlinePaymentModal,
-      setLoadingDone
+      setLoadingDone,
+      setFiles
     })
+  }
+
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files)
+
+    const filteredFiles = selectedFiles.filter(file => file.size <= 10 * 1024 * 1024)
+
+    if (filteredFiles.length !== selectedFiles.length) {
+      Swal.fire({
+        title: "File Too Large",
+        text: "One or more files exceed the 10MB limit.",
+        icon: "error"
+      })
+    }
+
+    setFiles(prev => [...prev, ...filteredFiles])
+  }
+
+  const handleFileDelete = (index) => {
+    setFiles(prev => prev.filter((_, i) => i !== index))
   }
 
   function haversineDistance(lat1, lon1, lat2, lon2) {
@@ -219,6 +241,16 @@ function Wedding({church, user, allChurch}) {
 
         <div className='flex flex-col justify-center items-center gap-3'>
           <form onSubmit={handleSubmit(handleSubmitWedding)}>
+            <div className='flex flex-col justify-center items-center my-5'>
+                <h1 className='font-bold josefin-regular text-center'>WEDDING SCHEDULE</h1>
+                <div className='grid grid-cols-2 justify-center items-center gap-2'>
+                  <label className='text-end'>REHEARSAL DATE & TIME: </label>
+                  <h1 className='bg-blue-400 text-center text-white hover:bg-blue-500 rounded-lg py-2 px-4 cursor-pointer' onClick={() => setShowRehearsalModal(true)}>{rehearsalSelectedDate && rehearsalSelectedTime ? `${dayjs(rehearsalSelectedDate).format('MMMM DD, YYYY')} ${dayjs(rehearsalSelectedTime, 'HH:mm:ss').format('hh:mm A')}` : "Select Date & Time"}</h1>
+                  <label className='text-end'>WEDDING DATE & TIME: </label>
+                  <h1 className='bg-blue-400 text-center text-white hover:bg-blue-500 rounded-lg py-2 px-4 cursor-pointer' onClick={() => setShowWeddingModal(true)}>{weddingSelectedDate && weddingSelectedTime ? `${dayjs(weddingSelectedDate).format('MMMM DD, YYYY')} ${dayjs(weddingSelectedTime, 'HH:mm:ss').format('hh:mm A')}` : "Select Date & Time"}</h1>
+
+                </div>
+            </div>
             <div className='grid gap-3 md:grid-cols-2 items-start'>
 
               <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
@@ -538,15 +570,6 @@ function Wedding({church, user, allChurch}) {
               </div>
         
               <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
-                <h1 className='font-bold josefin-regular text-center'>WEDDING SCHEDULE</h1>
-                <div className='grid grid-cols-2 justify-center items-center gap-2'>
-                  <label className='text-end'>REHEARSAL DATE & TIME: </label>
-                  <h1 className='bg-blue-400 text-center text-white hover:bg-blue-500 rounded-lg py-2 px-4 cursor-pointer' onClick={() => setShowRehearsalModal(true)}>{rehearsalSelectedDate && rehearsalSelectedTime ? `${dayjs(rehearsalSelectedDate).format('MMMM DD, YYYY')} ${dayjs(rehearsalSelectedTime, 'HH:mm:ss').format('hh:mm A')}` : "Select Date & Time"}</h1>
-                  <label className='text-end'>WEDDING DATE & TIME: </label>
-                  <h1 className='bg-blue-400 text-center text-white hover:bg-blue-500 rounded-lg py-2 px-4 cursor-pointer' onClick={() => setShowWeddingModal(true)}>{weddingSelectedDate && weddingSelectedTime ? `${dayjs(weddingSelectedDate).format('MMMM DD, YYYY')} ${dayjs(weddingSelectedTime, 'HH:mm:ss').format('hh:mm A')}` : "Select Date & Time"}</h1>
-
-                </div>
-                
                 <h1 className='font-bold josefin-regular text-center'>DONATION METHOD</h1>
                 <div className='flex justify-center items-center'>
                   <RowRadioButtonsGroup 
@@ -558,6 +581,40 @@ function Wedding({church, user, allChurch}) {
                   
                   />
                 </div>
+
+                <div className="flex flex-col items-center justify-center">
+                  <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS:</h1>
+                  <label
+                    htmlFor="file-upload"
+                    className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
+                  >
+                    Upload File
+                  </label>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    className="hidden"
+                    multiple
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    onChange={handleFileChange}
+                  />
+                </div>
+              {files.length > 0 && (
+                <div className="mt-3 flex flex-col gap-2">
+                  {files.map((file, index) => (
+                    <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                      <div className="text-sm truncate max-w-xs">{file.name}</div>
+                      <button
+                        type="button"
+                        className="text-red-500 hover:underline text-xs"
+                        onClick={() => handleFileDelete(index)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
 
 
               </div>

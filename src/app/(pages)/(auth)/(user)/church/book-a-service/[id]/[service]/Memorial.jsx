@@ -29,6 +29,8 @@ function Memorial({church, user, allChurch}) {
   const [passData, setPassData] = useState()
   const [loadingDone, setLoadingDone] = useState(false)
 
+  const [files, setFiles] = useState([])
+
   const router = useRouter()
 
   const payment = [
@@ -51,7 +53,7 @@ function Memorial({church, user, allChurch}) {
 
   const handleSubmitMemorial = (data) => {
 
-    const jsonData = JSON.stringify(data)
+
     if(!selectedDate || !selectedTime){
       Swal.fire({
         title: "Error",
@@ -61,52 +63,75 @@ function Memorial({church, user, allChurch}) {
       return
     }
 
+  const formData = new FormData()
+
+  formData.append('jsonData', JSON.stringify(data))
+  formData.append('date', dayjs(selectedDate).format('YYYY-MM-DD'))
+  formData.append('selectedTime', selectedTime)
+  formData.append('selectedPayment', selectedPayment)
+  formData.append('church_id', church?.id)
+  formData.append('user_id', user?.id)
+  formData.append('fullyBooked', fullyBooked)
+
+  files.forEach((file, index) => {
+    formData.append(`files[]`, file)
+  })
 
     if(selectedPayment === "online"){
       setShowOnlinePaymentModal(true)
 
-      setPassData(jsonData)
+      setPassData(formData)
       return
     }
 
 
     setLoading(true)
     memorialBook({
-      date: dayjs(selectedDate).format('YYYY-MM-DD'), 
-      selectedTime,
-      jsonData,
-      user,
-      selectedPayment,
-      fullyBooked,
-      church_id:church?.id,
+      formData,
       reset,
       setLoading,
       setSelectedPayment,
       setSelectedDate,
       setSelectedTime, 
       setShowOnlinePaymentModal,
-      setLoadingDone
+      setLoadingDone,
+      setFiles
     })
   }
 
   const handleDoneSubmit = () => {
     setLoadingDone(true)
     memorialBook({
-      date: dayjs(selectedDate).format('YYYY-MM-DD'), 
-      selectedTime,
-      jsonData: passData,
-      user,
-      selectedPayment,
-      fullyBooked,
-      church_id:church?.id,
+      formData: passData,
       reset,
       setLoading,
       setSelectedPayment,
       setSelectedDate,
       setSelectedTime, 
       setShowOnlinePaymentModal,
-      setLoadingDone
+      setLoadingDone,
+      setFiles
     })
+  }
+
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files)
+
+    const filteredFiles = selectedFiles.filter(file => file.size <= 10 * 1024 * 1024)
+
+    if (filteredFiles.length !== selectedFiles.length) {
+      Swal.fire({
+        title: "File Too Large",
+        text: "One or more files exceed the 10MB limit.",
+        icon: "error"
+      })
+    }
+
+    setFiles(prev => [...prev, ...filteredFiles])
+  }
+
+  const handleFileDelete = (index) => {
+    setFiles(prev => prev.filter((_, i) => i !== index))
   }
 
   function haversineDistance(lat1, lon1, lat2, lon2) {
@@ -383,6 +408,40 @@ function Memorial({church, user, allChurch}) {
                 
                 />
               </div>
+
+                <div className="flex flex-col justify-center items-center">
+                  <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS:</h1>
+                  <label
+                    htmlFor="file-upload"
+                    className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
+                  >
+                    Upload File
+                  </label>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    className="hidden"
+                    multiple
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    onChange={handleFileChange}
+                  />
+                </div>
+              {files.length > 0 && (
+                <div className="mt-3 flex flex-col gap-2">
+                  {files.map((file, index) => (
+                    <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                      <div className="text-sm truncate max-w-xs">{file.name}</div>
+                      <button
+                        type="button"
+                        className="text-red-500 hover:underline text-xs"
+                        onClick={() => handleFileDelete(index)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             
 
 
