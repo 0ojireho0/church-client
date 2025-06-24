@@ -11,6 +11,7 @@ import { InputText } from 'primereact/inputtext';
 import { Message } from 'primereact/message';
 import { Tooltip } from 'primereact/tooltip';
 import { useAdminBook } from '@/app/hooks/adminBook'
+import { InputTextarea } from "primereact/inputtextarea";
 import dayjs from "dayjs";
 import { MoonLoader } from "react-spinners";
 
@@ -41,6 +42,7 @@ export default function FileTable({searchStatus, church_id}){
     const [showViewMemorial, setShowViewMemorial] = useState(false)
     const [showViewConfirmation, setShowViewConfirmation] = useState(false)
     const [showViewMass, setShowViewMass] = useState(false)
+    const [showViewCertificate, setShowViewCertificate] = useState(false)
     const [formData, setFormData] = useState([])
 
     const now = dayjs().format('YYYY-MM-DD HH:mm:ss');
@@ -193,6 +195,8 @@ export default function FileTable({searchStatus, church_id}){
             setShowViewMemorial(true)
         } else if(data.service_type == "confirmation"){
             setShowViewConfirmation(true)
+        }else if(data.service_type == "certificate"){
+            setShowViewCertificate(true)
         }else{
             setShowViewMass(true)
         }
@@ -304,6 +308,17 @@ export default function FileTable({searchStatus, church_id}){
     const massModalFooter = (
         <React.Fragment>
             <Button label="Cancel" icon="pi pi-times" onClick={onHideMass} />
+        </React.Fragment>
+    )
+
+    const onHideCertificate = () => {
+        // setFormData([])
+        setShowViewCertificate(false)
+    }
+
+    const certificateModalFooter = (
+        <React.Fragment>
+            <Button label="Cancel" icon="pi pi-times" onClick={onHideCertificate} />
         </React.Fragment>
     )
   
@@ -785,6 +800,68 @@ export default function FileTable({searchStatus, church_id}){
             </ul>
             </div>
         )}
+        </Dialog>
+
+        <Dialog 
+        visible={showViewCertificate} 
+        style={{ width: '32rem' }} 
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
+        header={`Certificate Details - ${formData?.reference_num}`}
+        modal
+        className="p-fluid"
+        footer={certificateModalFooter}
+        onHide={onHideCertificate}
+        draggable={false}
+        >
+        <div className="field">
+            <label htmlFor="fullname" className="font-bold">Full Name</label>
+            <InputText disabled id="fullname" value={formData?.form_data?.fullname} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="birthday" className="font-bold">Birthday</label>
+            <InputText disabled id="birthday" value={formData?.form_data?.birthday} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="baptismDate" className="font-bold">Preferred Baptism Date</label>
+            <InputText disabled id="baptismDate" value={formData?.form_data?.baptismDate} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="contact" className="font-bold">Contact Number</label>
+            <InputText disabled id="contact" value={formData?.form_data?.contact} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="address" className="font-bold">Address</label>
+            <InputText disabled id="address" value={formData?.form_data?.address} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="place" className="font-bold">Place of Baptism</label>
+            <InputText disabled id="place" value={formData?.form_data?.place} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="father" className="font-bold">Father's Name</label>
+            <InputText disabled id="father" value={formData?.form_data?.father} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="mother" className="font-bold">Mother's Name</label>
+            <InputText disabled id="mother" value={formData?.form_data?.mother} />
+        </div>
+
+        <div className="field">
+            <label htmlFor="services" className="font-bold">Requested Services</label>
+            <InputTextarea 
+                disabled 
+                id="services" 
+                value={formData?.form_data?.services?.join(', ')} 
+                rows={2} 
+            />
+        </div>
         </Dialog>
             </>
         ) : (
