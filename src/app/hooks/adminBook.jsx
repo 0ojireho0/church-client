@@ -7,9 +7,9 @@ import Swal from 'sweetalert2'
 export const useAdminBook = ({searchStatus, church_id} = {}) => {
 
     
-    const { data: servicetype, error, mutate } = useSWR(`api/admin/search-service/${searchStatus || 0}/${church_id || 0}`, () =>
+    const { data: servicetype, error, mutate } = useSWR(`/admin/search-service/${searchStatus || 0}/${church_id || 0}`, () =>
         axios
-            .get(`api/admin/search-service/${searchStatus || 0}/${church_id || 0}`)
+            .get(`/admin/search-service/${searchStatus || 0}/${church_id || 0}`)
             .then(res => res.data)
             .catch(err => console.log(err)),
             {
@@ -23,7 +23,7 @@ export const useAdminBook = ({searchStatus, church_id} = {}) => {
 
         csrf()
 
-        axios.post('/api/admin/changeStatus', props)
+        axios.post('/admin/changeStatus', props)
             .then(res => {
                 console.log(res)
                 mutate()

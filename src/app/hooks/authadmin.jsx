@@ -8,9 +8,9 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
     const router = useRouter()
     const params = useParams()
 
-    const { data: admin, error, mutate } = useSWR('/api/admin/user-admin', () =>
+    const { data: admin, error, mutate } = useSWR('/admin/user-admin', () =>
         axios
-            .get('/api/admin/user-admin')
+            .get('/admin/user-admin')
             .then(res => res.data)
             .catch(error => {
                 if (error.response.status !== 409) throw error
@@ -19,9 +19,9 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
             }),
     )
 
-    const { data: allAdmin, error:errorAllAdmin, mutate: mutateAllAdmin } = useSWR('/api/admin/all-admin', () => 
+    const { data: allAdmin, error:errorAllAdmin, mutate: mutateAllAdmin } = useSWR('/admin/all-admin', () => 
         axios
-            .get('api/admin/all-admin')
+            .get('/admin/all-admin')
             .then(res => res.data)
             .catch(err => {
                 console.log(err)
@@ -38,7 +38,7 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
         setErrors([])
 
         axios
-            .post('api/admin/register-admin', props)
+            .post('/admin/register-admin', props)
             .then((res) => {
                 if(res.status === 204){
                     Swal.fire({
@@ -74,7 +74,7 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
         setStatus(null)
 
         axios
-            .post('api/admin/login-admin', props)
+            .post('/admin/login-admin', props)
             .then((res) => {
                 if(res.status === 200){
                     window.location.href = res.data.redirect_to;
@@ -135,7 +135,7 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
 
     const logoutAdmin = async ({setLoading} = {}) => {
         if (!error) {
-            await axios.post('api/admin/logout-admin')
+            await axios.post('/admin/logout-admin')
                         .then(() => mutate())
                         .finally(() => {
                             setLoading(false)
@@ -151,7 +151,7 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
         await csrf()
 
         axios
-            .delete('api/admin/delete-admin', {
+            .delete('/admin/delete-admin', {
                 data: props
             })
             .then(res => {
@@ -174,7 +174,7 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
         await csrf()
 
         axios
-            .put('api/admin/update-admin', props)
+            .put('/admin/update-admin', props)
             .then(res => {
                 console.log(res)
                 if(res.status === 200){

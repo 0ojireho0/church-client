@@ -20,7 +20,7 @@ export const useBook = ({church_id} = {}) => {
 
     const {data: calendar, error: errorCalendar, mutate:mutateCalendar} = useSWR(`/api/show-all-book/${church_id || 0}`, () => 
         axios
-            .get(`/api/admin/show-all-book/${church_id || 0}`)
+            .get(`/admin/show-all-book/${church_id || 0}`)
             .then(res => res.data)
     )
 
