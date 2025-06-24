@@ -72,6 +72,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                     setLoading(false)
                 }
                 console.log(res)
+                
             })
             .catch(error => {
                 if (error.response.status !== 422) throw error
