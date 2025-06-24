@@ -35,6 +35,7 @@ export default function CustomDateTimePicker({
     { label: '8:00 AM - 9:00 AM', value: '08:00:00' },
     { label: '9:00 AM - 10:00 AM', value: '09:00:00' },
     { label: '10:00 AM - 11:00 AM', value: '10:00:00' },
+    { label: "11:00 AM - 12:00 PM", value: "11:00:00"}
     // { label: '1:00 PM - 2:00 PM', value: '13:00:00' },
   ];
 
@@ -95,10 +96,18 @@ export default function CustomDateTimePicker({
           }}
         />
 
-        {selectedDate && (
-          <>
+        <div className='flex justify-center items-center flex-col'>
+          {selectedDate && (
+            <>
             <Typography variant="subtitle1">Select a time slot:</Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: 1,
+                width: 400
+              }}
+            >
               {timeSlots.map((slot) => (
                 <Button
                   key={slot.value}
@@ -113,14 +122,16 @@ export default function CustomDateTimePicker({
                   {slot.label}
                 </Button>
               ))}
-              {allSlotsBooked && (
-                <Typography variant="body2" color="error">
-                  All time slots are fully booked for this day.
-                </Typography>
-              )}
             </Box>
-          </>
-        )}
+
+            {allSlotsBooked && (
+              <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+                All time slots are fully booked for this day.
+              </Typography>
+            )}
+            </>
+          )}
+        </div>
 
         {selectedDate && selectedTime && (
           <Typography variant="body1" sx={{ mt: 2 }}>

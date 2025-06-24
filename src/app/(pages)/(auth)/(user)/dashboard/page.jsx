@@ -24,10 +24,12 @@ export default function Dashboard() {
         <Image src={HomeImage} className=' w-[40rem] xl:w-[37rem] ' alt='Home' />
         <div className='flex flex-col gap-2'>
           <h1 className='text-xl font-bold md:text-5xl josefin-regular text-center'>Welcome to ChurchConnect!</h1>
-          <h1 className='joan-regular text-xl'>Bringing the church closer to you, wherever you are,</h1>
-          <h1 className='joan-regular text-xl'>Honoring life’s sacred milestones through meaningful church services.</h1>
-          <h1 className='joan-regular'>Gathering - Services - Liturgy</h1>
-          <Link href={"/church"} className='joan-regular bg-white w-40 text-center py-1 px-4 border-2 border-black/50 rounded-xl cursor-pointer '>Select a Church</Link>
+          <h1 className='joan-regular text-xl text-center'>Bringing the church closer to you, wherever you are,</h1>
+          <h1 className='joan-regular text-xl text-center'>Honoring life’s sacred milestones through meaningful church services.</h1>
+          <h1 className='joan-regular text-center'>Gathering - Services - Liturgy</h1>
+          <div className='flex justify-center'>
+            <Link href={"/church"} className='joan-regular bg-white w-40 text-center py-1 px-4 border-2 border-black/50 rounded-xl cursor-pointer '>Select a Church</Link>
+          </div>
         </div>
       </div>
     </div>
