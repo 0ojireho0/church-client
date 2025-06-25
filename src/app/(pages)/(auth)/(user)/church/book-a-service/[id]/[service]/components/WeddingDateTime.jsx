@@ -40,7 +40,7 @@ function WeddingDateTime({
             <FaX className='text-xl cursor-pointer ' onClick={() => setShowWeddingModal(false)} />
         </div>
         <div className='text-center'>
-            <h1 className='josefin-regular font-bold text-xl'>Rehearsal Date & Time</h1>
+            <h1 className='josefin-regular font-bold text-xl'>Wedding Date & Time</h1>
         </div>
         <div className='mt-5 flex justify-center items-center'>
             <CustomDateTimePicker 
