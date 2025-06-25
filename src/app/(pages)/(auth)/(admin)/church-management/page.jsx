@@ -88,7 +88,7 @@ function UserManagement() {
       <>
     <AdminLayout>
         <div className='flex flex-col gap-5'>
-          <h1 className='josefin-regular font-bold text-center text-2xl'>User Management</h1>
+          <h1 className='josefin-regular font-bold text-center text-2xl'>Admin Management</h1>
         </div>
 
         <div className='mt-5 flex justify-center items-center md:justify-end'>
