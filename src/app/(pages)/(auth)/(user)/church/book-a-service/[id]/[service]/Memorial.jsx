@@ -424,6 +424,7 @@ function Memorial({church, user, allChurch}) {
                     multiple
                     accept=".pdf,.jpg,.jpeg,.png"
                     onChange={handleFileChange}
+                    required
                   />
                 </div>
               {files.length > 0 && (

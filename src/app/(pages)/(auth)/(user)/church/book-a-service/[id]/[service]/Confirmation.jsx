@@ -340,6 +340,7 @@ function Confirmation({church, user, allChurch}) {
                       multiple
                       accept=".pdf,.jpg,.jpeg,.png"
                       onChange={handleFileChange}
+                      required
                     />
                     {files.length > 0 && (
                       <div className="mt-3 flex flex-col gap-2">
