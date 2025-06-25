@@ -154,6 +154,45 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         window.location.pathname = '/login'
     }
 
+    const editProfile = async({setCleaveKey, setLoading, reset, ...props}) => {
+        // console.log(props)
+        await csrf()
+
+        axios.put('/api/edit-profile', props)
+            .then(res => {
+                console.log(res)
+
+                if(res.data.requireReLogin){
+                    Swal.fire({
+                        title: "Success",
+                        text: "Change Password Success, you need to login again.",
+                        icon: "success"
+                    })
+                    window.location.href = "/login"
+                    return
+                }
+
+                Swal.fire({
+                    title: "Success",
+                    text: `${res.data.message}`,
+                    icon: "success"
+                })
+
+
+                mutate()
+                // setCleaveKey(prev => prev + 1)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+            .finally(() => {
+                setLoading(false)
+        
+            })
+
+
+    }
+
     useEffect(() => {
         if (middleware === 'guest' && redirectIfAuthenticated && user)
             router.push(redirectIfAuthenticated)
@@ -177,5 +216,6 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         resetPassword,
         // resendEmailVerification,
         logout,
+        editProfile,
     }
 }

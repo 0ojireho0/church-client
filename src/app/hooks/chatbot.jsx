@@ -5,41 +5,34 @@ import { useParams, useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 
 
-export const useChatBot = ({} = {}) => {
+export const useChatBot = () => {
+  const csrf = () => axios.get('/sanctum/csrf-cookie');
 
+  const chatBot = async ({ chatInput, setMessages, setIsLoading }) => {
+    await csrf();
 
+    axios.post('api/chatbot', { message: chatInput })
+      .then(res => {
+        setMessages(prev => {
+          // Remove the loader
+          const withoutLoader = prev.filter(msg =>
+            !(msg.sender === 'bot' && typeof msg.text !== 'string')
+          );
+          return [...withoutLoader, { sender: 'bot', text: res.data }];
+        });
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setMessages(prev => [
+          ...prev.filter(msg =>
+            !(msg.sender === 'bot' && typeof msg.text !== 'string')
+          ),
+          { sender: 'bot', text: 'Sorry, something went wrong. Please try again.' }
+        ]);
+        setIsLoading(false);
+      });
+  };
 
-    const csrf = () => axios.get('/sanctum/csrf-cookie')
-
-    const chatBot = async({setMessages, ...props}) => {
-        await csrf()
-
-        axios.post('api/chatbot', {
-            message: props.chatInput
-        })
-        .then(res => {
-            console.log(res)
-            const botMessage = { sender: 'bot', text: (
-                <>
-                <div>
-                    <h1>{res.data}</h1> {' '}
-
-                </div>
-                
-            </>
-            )  };
-            setMessages((prevMessages) => [...prevMessages, botMessage]);
-        })
-        .catch(err => {
-            console.log(err)
-        })
-
-    }
-
-
-    return {
-        chatBot
-    }
-
-
-}
+  return { chatBot };
+};

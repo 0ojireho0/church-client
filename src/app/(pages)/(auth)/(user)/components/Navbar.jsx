@@ -121,7 +121,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {showProfile && <Dropdown />}
+      {showProfile && <Dropdown showProfile={showProfile} setShowProfile={setShowProfile} />}
     </>
   )
 }

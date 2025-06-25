@@ -201,6 +201,29 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
+    const editProfileAdmin = async({setLoading, reset, ...props}) => {
+        await csrf()
+
+
+        axios.put('/admin/edit-profile', props)
+            .then(res => {
+                if(res.status === 200){
+                Swal.fire({
+                    title: "Success",
+                    text: `${res.data.message}`,
+                    icon: "success"
+                })
+                mutate()
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    }
+
     useEffect(() => {
         if (middleware === 'guest' && redirectIfAuthenticated && admin)
             router.push(redirectIfAuthenticated)
@@ -226,6 +249,7 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
         logoutAdmin,
         allAdmin,
         deleteAdmin,
-        updateAdmin
+        updateAdmin,
+        editProfileAdmin
     }
 }
