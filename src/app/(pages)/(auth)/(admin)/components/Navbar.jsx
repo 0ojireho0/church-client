@@ -33,7 +33,7 @@ export default function Navbar() {
       icon: <FaCalculator />
     },
     {
-      name: "Church Management",
+      name: "Admin Management",
       path: "/church-management",
       icon: <MdManageAccounts />
     },
