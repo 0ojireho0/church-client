@@ -569,7 +569,7 @@ function Wedding({church, user, allChurch}) {
                 </div>
               </div>
         
-              <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
+              {/* <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
                 <h1 className='font-bold josefin-regular text-center'>DONATION METHOD</h1>
                 <div className='flex justify-center items-center'>
                   <RowRadioButtonsGroup 
@@ -618,6 +618,56 @@ function Wedding({church, user, allChurch}) {
               )}
 
 
+              </div> */}
+              <div className='w-full flex flex-col md:flex-row items-center justify-center gap-2'>
+                <div className='border-2 border-black/30 p-2 rounded-lg'>
+                  <h1 className='font-bold josefin-regular text-center'>DONATION METHOD</h1>
+                  <div className='flex justify-center items-center'>
+                    <RowRadioButtonsGroup 
+                      label={"Select a payment method"}
+                      name="payment"
+                      value={selectedPayment}
+                      onChange={(e) => setSelectedPayment(e.target.value)}
+                      options={payment}
+                  
+                  />
+                  </div>
+                </div>
+                <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col justify-center items-center'>
+                  <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS</h1>
+                  <label
+                    htmlFor="file-upload"
+                    className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
+                  >
+                    Upload File
+                  </label>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    className="hidden"
+                    multiple
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    onChange={handleFileChange}
+                    required
+                  />
+                    {files.length > 0 && (
+                      <div className="mt-3 flex flex-col gap-2">
+                        {files.map((file, index) => (
+                          <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                            <div className="text-sm">{file.name}</div>
+                            <button
+                              type="button"
+                              className="text-red-500 hover:underline text-xs"
+                              onClick={() => handleFileDelete(index)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                </div>
+                
               </div>
 
 

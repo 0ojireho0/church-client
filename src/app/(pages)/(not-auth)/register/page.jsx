@@ -48,6 +48,7 @@ export default function Register() {
             username: data.username,
             password: data.password,
             password_confirmation: data.confirm_password,
+            address: data.address,
             setErrors,
             setLoading,
             reset,
@@ -103,6 +104,17 @@ export default function Register() {
                         })}
                     />
                     {error.email && <span className='text-[0.7rem] text-red-800 '>{error.email.message}</span>}
+                </div>
+                <div className='flex flex-col'>
+                    <input 
+                        type="address" 
+                        placeholder='Address' 
+                        className='border-2 border-black/50 py-2 px-4 rounded-lg joan-regular outline-none' 
+                        {...registers('address', {
+                            required: "Address is required"
+                        })}
+                    />
+                    {error.address && <span className='text-[0.7rem] text-red-800 '>{error.address.message}</span>}
                 </div>
                 <div className='flex flex-col'>
                     <Controller
