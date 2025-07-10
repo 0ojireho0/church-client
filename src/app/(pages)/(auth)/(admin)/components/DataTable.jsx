@@ -188,7 +188,6 @@ export default function FileTable({searchStatus, church_id}){
         setBook(data)
         setShowEditModal(true)
         setSelectedStatus(data.status)
-
     }
 
     const viewForm = (data) => {
@@ -271,7 +270,11 @@ export default function FileTable({searchStatus, church_id}){
     const editModalFooter = (
         <React.Fragment>
             <Button label="Cancel" icon="pi pi-times" onClick={hideDialog} />
-            <Button label="Save" loading={loading} icon="pi pi-check" onClick={saveStatus} />
+            {book?.set_status !== 1 && selectedStatus !== "Cancelled" && (
+                <Button label="Save" loading={loading} icon="pi pi-check" onClick={saveStatus} />
+            )}
+
+            
         </React.Fragment>
     );
 
@@ -342,7 +345,7 @@ export default function FileTable({searchStatus, church_id}){
     )
   
     const handleSelectStatus = (status) => {
-        // console.log(status)
+        console.log(status)
         setSelectedStatus(status)
 
         if(status !== book?.status){
@@ -473,12 +476,11 @@ export default function FileTable({searchStatus, church_id}){
                     />
                 
             </div>
+                </>
+            )}
             <div className="field">
                 {error && <Message severity="warn" text="Must choose status" />}
             </div>
-                
-                </>
-            )}
 
         </Dialog>
 
