@@ -14,8 +14,39 @@ export const useUser = ({user_id} = { }) => {
             .then(res => res.data)
     )
 
+    const csrf = () => axios.get('/sanctum/csrf-cookie')
+
+    const cancelBookingData = async({setLoader,show, ...props}) => {
+        // console.log(props)
+
+        await csrf()
+
+        axios.post('api/cancel-booking', props)
+            .then((res) => {
+                if(res.status === 200){
+                    Swal.fire({
+                        title: "Success",
+                        text: "Cancellation of booking is successfully!",
+                        icon: "success"
+                    })
+                    mutate()
+                }
+                console.log(res)
+                
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+            .finally(() => {
+                show(false)
+                setLoader(false)
+            })
+
+    } 
+
     return {
-        myBooks
+        myBooks,
+        cancelBookingData
     }
 
 }

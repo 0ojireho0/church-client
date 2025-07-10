@@ -335,7 +335,11 @@ export default function FileTable({searchStatus, church_id}){
         return (
             <>
             <span className={`
-                ${rowData.status === "Approved" ? "bg-green-600" : rowData.status === "Rejected" ? "bg-red-600" : "bg-yellow-400"}
+                ${rowData.status === "Approved" ? "bg-green-600" 
+                    : rowData.status === "Rejected" ? "bg-red-600" 
+                    : rowData.status === "Pending" ? "bg-yellow-600"
+                    : "bg-rose-600"
+                }
                 px-4 py-2 text-white rounded-lg
                 `}>
                 {rowData.status}
