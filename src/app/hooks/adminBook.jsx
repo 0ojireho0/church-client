@@ -19,9 +19,9 @@ export const useAdminBook = ({searchStatus, church_id} = {}) => {
 
     const csrf = () => axios.get('/sanctum/csrf-cookie')
 
-    const changeStatus = ({setLoading, setShowEditModal, setRemarks, ...props}) => {
+    const changeStatus = async({setLoading, setShowEditModal, setRemarks, setSelectedIsPaid, ...props}) => {
 
-        csrf()
+        await csrf()
 
         axios.post('/admin/changeStatus', props)
             .then(res => {
@@ -34,6 +34,7 @@ export const useAdminBook = ({searchStatus, church_id} = {}) => {
                         icon: 'success'
                     })
                     setRemarks("")
+                    setSelectedIsPaid(null)
                 }
             })
             .catch(err => console.log(err))

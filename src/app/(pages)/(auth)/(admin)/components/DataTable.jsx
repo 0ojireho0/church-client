@@ -33,6 +33,7 @@ export default function FileTable({searchStatus, church_id}){
     const [globalFilter, setGlobalFilter] = useState(null);
     const dt = useRef(null);
     const [selectedStatus, setSelectedStatus] = useState(null)
+    const [selectedIsPaid, setSelectedIsPaid] = useState(null)
     const [error, setError] = useState(false)
     const [loading, setLoading] = useState(false)
     const [remarks, setRemarks] = useState("")
@@ -67,7 +68,12 @@ export default function FileTable({searchStatus, church_id}){
     const status = [
         {name: "Pending", code: 'Pending'},
         {name: "Approved", code: 'Approved'},
-        {name: "Rejected", code: "Rejected"}
+        {name: "Rejected", code: "Rejected"},
+        {name: "Cancelled", code: "Cancelled"}
+    ]
+    const statusPaid = [
+        {name: "Paid", code: 'Paid'},
+        {name: "Not Paid", code: 'Not Paid'},
     ]
     
     const exportColumns = cols.map((col) => ({ title: col.header, dataKey: col.field }));
@@ -224,6 +230,7 @@ export default function FileTable({searchStatus, church_id}){
     const hideDialog = () => {
         setError(false)
         setRemarks('')
+        setSelectedIsPaid(null)
         setShowEditModal(false)
     }
 
@@ -234,14 +241,26 @@ export default function FileTable({searchStatus, church_id}){
             return
         }
 
+        if(remarks === "" && selectedStatus === "Rejected"){
+            setError(true)
+            return
+        }
+
+        if(selectedIsPaid === null && selectedStatus === "Rejected"){
+            setError(true)
+            return
+        }
+
         setLoading(true)
         changeStatus({
             id: book?.id,
             remarks,
             selectedStatus,
+            selectedIsPaid,
             setLoading,
             setShowEditModal,
-            setRemarks
+            setRemarks,
+            setSelectedIsPaid
         })
     
 
@@ -325,6 +344,15 @@ export default function FileTable({searchStatus, church_id}){
     const handleSelectStatus = (status) => {
         // console.log(status)
         setSelectedStatus(status)
+
+        if(status !== book?.status){
+            setError(false)
+        }
+    }
+
+    const handleSelectIsPaid = (status) => {
+        // console.log(status)
+        setSelectedIsPaid(status)
 
         if(status !== book?.status){
             setError(false)
@@ -425,14 +453,31 @@ export default function FileTable({searchStatus, church_id}){
                     />
                 
             </div>
+            {selectedStatus === "Rejected" && (
+                <>
+                <div className="field">
+                        <label htmlFor="remarks" className="font-bold">Remarks</label>
+                        <InputText id="remarks" required value={remarks} onChange={e => setRemarks(e.target.value)} />
+                </div>
+            <div className="field">
+                <label htmlFor="" className="font-bold">Is Paid</label>
+                <Dropdown 
+                    options={statusPaid} 
+                    optionLabel="name" 
+                    optionValue="code" 
+                    value={selectedIsPaid} 
+                    onChange={(e) => handleSelectIsPaid(e.value)} 
+                    checkmark={true}
+                    disabled={book?.set_status === 1 ? true : false} 
+                    
+                    />
+                
+            </div>
             <div className="field">
                 {error && <Message severity="warn" text="Must choose status" />}
             </div>
-            {selectedStatus === "Rejected" && (
-            <div className="field">
-                    <label htmlFor="remarks" className="font-bold">Remarks</label>
-                    <InputText id="remarks" required value={remarks} onChange={e => setRemarks(e.target.value)} />
-            </div>
+                
+                </>
             )}
 
         </Dialog>
