@@ -59,10 +59,20 @@ function Baptism({church, user, allChurch}) {
 
   const handleSubmitBaptism = (data) => {
 
+
   if (!selectedDate || !selectedTime) {
     Swal.fire({
       title: "Error",
       text: "Select Booking Date",
+      icon: "warning"
+    })
+    return
+  }
+
+  if(files.length <= 0){
+    Swal.fire({
+      title: "Error",
+      text: "Upload File is required",
       icon: "warning"
     })
     return
@@ -397,7 +407,6 @@ function Baptism({church, user, allChurch}) {
                     multiple
                     accept=".pdf,.jpg,.jpeg,.png"
                     onChange={handleFileChange}
-                    required
                   />
                 </div>
               {files.length > 0 && (
