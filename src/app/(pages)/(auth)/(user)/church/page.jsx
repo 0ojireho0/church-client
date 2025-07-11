@@ -13,6 +13,7 @@ import Table from './components/Table';
 
 // Hooks
 import { useChurch } from '@/app/hooks/church';
+import { useAuth } from '@/app/hooks/auth'
 
 
 
@@ -21,6 +22,12 @@ export default function Church() {
   const router = useRouter()
 
   const { church } = useChurch()
+
+  const { user } = useAuth({
+    middleware: "auth",
+    redirectIfAuthenticated: '/dashboard'
+  })
+
 
 
 

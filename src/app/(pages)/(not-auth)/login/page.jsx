@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -19,12 +19,29 @@ import { useForm } from 'react-hook-form'
 
 // Hooks
 import { useAuth } from '@/app/hooks/auth'
+import { useSearchParams } from 'next/navigation'
+import Swal from 'sweetalert2'
 
 export default function Login() {
 
   const [errors, setErrors] = useState("")
   const [status, setStatus] = useState(null)
   const [loading, setLoading] = useState(false)
+  const searchParams = useSearchParams()
+  const verified = searchParams.get('verified') 
+
+  useEffect(() => {
+
+    if(verified === "success"){
+      Swal.fire({
+        title: "Successfully",
+        text: "Verfication Successfully",
+        icon: "success"
+      })
+    }
+
+  }, [verified])
+
 
   const { register, handleSubmit, watch, formState: { errors: error } } = useForm();
   const { login } = useAuth({

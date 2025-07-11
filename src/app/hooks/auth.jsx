@@ -34,7 +34,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
                 if(res.status === 204){
                     Swal.fire({
                         title: "Success",
-                        text: "Created Successfully",
+                        text: "Created Successfully!! Email Verification Sent",
                         icon: "success"
                     })
                     reset({
@@ -136,11 +136,11 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
-    // const resendEmailVerification = ({ setStatus }) => {
-    //     axios
-    //         .post('/email/verification-notification')
-    //         .then(response => setStatus(response.data.status))
-    // }
+    const resendEmailVerification = ({ setStatus }) => {
+        axios
+            .post('/email/verification-notification')
+            .then(response => setStatus(response.data.status))
+    }
 
     const logout = async ({setLoading} = {}) => {
         if (!error) {
@@ -197,14 +197,15 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         if (middleware === 'guest' && redirectIfAuthenticated && user)
             router.push(redirectIfAuthenticated)
 
-        // if (middleware === 'auth' && (user && !user.email_verified_at))
-        //     router.push('/verify-email')
+        if (middleware === 'auth' && (user && !user.email_verified_at))
+            router.push('/verify-email')
         
-        // if (
-        //     window.location.pathname === '/verify-email' &&
-        //     user?.email_verified_at
-        // )
-        //     router.push(redirectIfAuthenticated)
+        if (
+            window.location.pathname === '/verify-email' &&
+            user?.email_verified_at
+        )
+            router.push(redirectIfAuthenticated)
+
         if (middleware === 'auth' && error) logout()
     }, [user, error])
 
@@ -214,7 +215,7 @@ export const useAuth = ({ middleware, redirectIfAuthenticated } = {}) => {
         login,
         forgotPassword,
         resetPassword,
-        // resendEmailVerification,
+        resendEmailVerification,
         logout,
         editProfile,
     }
