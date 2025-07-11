@@ -21,8 +21,9 @@ import { useForm } from 'react-hook-form'
 import { useAuth } from '@/app/hooks/auth'
 import { useSearchParams } from 'next/navigation'
 import Swal from 'sweetalert2'
+import { Suspense } from 'react'
 
-export default function Login() {
+function LoginContent() {
 
   const [errors, setErrors] = useState("")
   const [status, setStatus] = useState(null)
@@ -124,6 +125,14 @@ export default function Login() {
 
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   )
 }
 
