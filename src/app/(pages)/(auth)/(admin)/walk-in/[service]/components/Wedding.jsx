@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useForm, Controller } from 'react-hook-form'
@@ -6,9 +7,9 @@ import { useForm, Controller } from 'react-hook-form'
 import { MoonLoader } from 'react-spinners'
 import CustomDatePicker from '@/app/components/CustomDatePicker'
 import RowRadioButtonsGroup from '@/app/components/RowRadioButtonsGroup'
-import RehearsalDateTime from './components/RehearsalDateTime'
+import RehearsalDateTime from '@/app/(pages)/(auth)/(user)/church/book-a-service/[id]/[service]/components/RehearsalDateTime'
 import dayjs from 'dayjs'
-import WeddingDateTime from './components/WeddingDateTime'
+import WeddingDateTime from '@/app/(pages)/(auth)/(user)/church/book-a-service/[id]/[service]/components/WeddingDateTime'
 import Swal from 'sweetalert2'
 
 import { useBook } from '@/app/hooks/book'
@@ -16,8 +17,7 @@ import { useRouter } from 'next/navigation'
 
 
 
-function Wedding({church, user, allChurch}) {
-
+function Wedding({church}) {
 
   const [showRehearsalModal, setShowRehearsalModal] = useState(false)
   const [rehearsalSelectedDate, setRehearsalSelectedDate] = useState(null);
@@ -32,13 +32,9 @@ function Wedding({church, user, allChurch}) {
   const [selectedPayment, setSelectedPayment] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  const [showOnlinePaymentModal, setShowOnlinePaymentModal] = useState(false)
-  const [passData, setPassData] = useState()
-  const [loadingDone, setLoadingDone] = useState(false)
+  const { register, handleSubmit, reset, formState: {errors: error}, control, getValues } = useForm()
 
-  const [files, setFiles] = useState([])
-
-  const router = useRouter()
+  const { walkinWedding } = useBook({})
 
   const payment = [
       {
@@ -52,14 +48,7 @@ function Wedding({church, user, allChurch}) {
       },
   ]
 
-  const { weddingBook } = useBook({})
-
-
-  const { register, handleSubmit, reset, formState: {errors: error}, control, getValues } = useForm()
-
-
-
-  const handleSubmitWedding = (data) => {
+  const submitWedding = (data) => {
     if(!rehearsalSelectedDate || !rehearsalSelectedTime || !weddingSelectedDate || !weddingSelectedTime){
       Swal.fire({
         title: "Error",
@@ -69,173 +58,28 @@ function Wedding({church, user, allChurch}) {
       return
     }
 
-  if(files.length <= 0){
-    Swal.fire({
-      title: "Error",
-      text: "Upload File is required",
-      icon: "warning"
-    })
-    return
-  }
-
-    const formData = new FormData()
-
-    formData.append('jsonData', JSON.stringify(data))
-    formData.append('rehearsal_date', dayjs(rehearsalSelectedDate).format('YYYY-MM-DD'))
-    formData.append('rehearsal_time', rehearsalSelectedTime)
-    formData.append('wedding_date', dayjs(weddingSelectedDate).format('YYYY-MM-DD'))
-    formData.append('wedding_time', weddingSelectedTime)
-    formData.append('selectedPayment', selectedPayment)
-    formData.append('church_id', church?.id)
-    formData.append('user_id', user?.id)
-    formData.append('rehearsalFullyBooked', rehearsalFullyBooked)
-    formData.append('weddingFullyBooked', weddingFullyBooked)
-
-    files.forEach((file, index) => {
-      formData.append(`files[]`, file)
-    })
-
-    if(selectedPayment === "online"){
-      setShowOnlinePaymentModal(true)
-
-      setPassData(formData)
-      return
-    }
-
-
     setLoading(true)
-
-    weddingBook({
-      formData,
-      reset,
+    walkinWedding({
+      jsonData: JSON.stringify(data),
+      reserved_by: data.reserved_by,
+      rehearsal_date: dayjs(rehearsalSelectedDate).format('YYYY-MM-DD'),
+      rehearsal_time: rehearsalSelectedTime,
+      wedding_date: dayjs(weddingSelectedDate).format('YYYY-MM-DD'),
+      wedding_time: weddingSelectedTime,
+      selectedPayment: selectedPayment,
+      church_id: church?.church_id,
+      rehearsalFullyBooked: rehearsalFullyBooked,
+      weddingFullyBooked: weddingFullyBooked,
       setLoading,
+      reset,
       setSelectedPayment,
       setWeddingSelectedDate,
       setWeddingSelectedTime,
       setRehearsalSelectedDate,
       setRehearsalSelectedTime,
-      setShowOnlinePaymentModal,
-      setLoadingDone,
-      setFiles
     })
 
-  }
 
-  const handleDoneSubmit = () => {
-    setLoadingDone(true)
-    weddingBook({
-      formData: passData,
-      reset,
-      setLoading,
-      setSelectedPayment,
-      setWeddingSelectedDate,
-      setWeddingSelectedTime,
-      setRehearsalSelectedDate,
-      setRehearsalSelectedTime,
-      setShowOnlinePaymentModal,
-      setLoadingDone,
-      setFiles
-    })
-  }
-
-  const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files)
-
-    const filteredFiles = selectedFiles.filter(file => file.size <= 10 * 1024 * 1024)
-
-    if (filteredFiles.length !== selectedFiles.length) {
-      Swal.fire({
-        title: "File Too Large",
-        text: "One or more files exceed the 10MB limit.",
-        icon: "error"
-      })
-    }
-
-    setFiles(prev => [...prev, ...filteredFiles])
-  }
-
-  const handleFileDelete = (index) => {
-    setFiles(prev => prev.filter((_, i) => i !== index))
-  }
-
-  function haversineDistance(lat1, lon1, lat2, lon2) {
-      const toRad = angle => (angle * Math.PI) / 180;
-      const R = 6378; // Earth radius in km
-
-      const dLat = toRad(lat2 - lat1);
-      const dLon = toRad(lon2 - lon1);
-
-      const a =
-          Math.sin(dLat / 2) ** 2 +
-          Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-          Math.sin(dLon / 2) ** 2;
-
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-      return R * c; // Distance in km
-  }
-  function getNearestChurches(churches, targetChurchId, limit = 3) {
-    const target = churches.find(ch => ch.id === targetChurchId);
-    if (!target) throw new Error("Target church not found.");
-
-    // Compute distances
-    const distances = churches
-        .filter(ch => ch.id !== targetChurchId) // exclude self
-        .map(ch => ({
-            ...ch,
-            distance: haversineDistance(target.latitude, target.longitude, ch.latitude, ch.longitude)
-        }));
-
-    // Greedy: sort by distance and pick the closest 3
-    distances.sort((a, b) => a.distance - b.distance);
-
-    return distances.slice(0, limit);
-  }
-
-  const handleFindRecommendedChurch = () => {
-    const formData = getValues()
-
-    const fullData = {
-      ...formData,
-      selectedPayment,
-      churchId: church?.id
-    }
-
-    const recommended = getNearestChurches(allChurch, church.id, 3)
-
-    console.log(fullData, recommended)
-
-    localStorage.setItem("wedding_form", JSON.stringify(fullData))
-    localStorage.setItem("recommended_church", JSON.stringify(recommended))
-
-    router.push('/church/recommended-church/wedding')
-  }
-
-  const handleBackBtn = () => {
-    localStorage.removeItem('wedding_form')
-  }
-
-  useEffect(() => {
-    const getWeddingForm = JSON.parse(localStorage.getItem('wedding_form'))
-
-    if (!getWeddingForm) {
-      // console.log("wala") // No saved form
-    } else {
-      // console.log("meron", getWeddingForm) // Restore the form
-      reset(getWeddingForm)
-
-      // Restore other selections manually
-      if (getWeddingForm.selectedPayment) setSelectedPayment(getWeddingForm.selectedPayment)
-
-    }
-  }, [reset])
-
-  if(!church){
-    return(
-       <div className='flex justify-center items-center'>
-            <MoonLoader />
-        </div>
-    )
   }
 
 
@@ -245,11 +89,11 @@ function Wedding({church, user, allChurch}) {
       <div className='bg-white w-full p-3 rounded-lg border border-black/30 shadow-md flex flex-col gap-3'>
         <div>
           <h1 className='text-center font-bold josefin-regular lg:text-2xl'>Wedding Application Form</h1>
-          <h1 className='text-center josefin-regular'>Selected Church: <span className='font-bold'>{church?.church_name}</span></h1>
+          <h1 className='text-center josefin-regular'>Selected Church: <span className='font-bold'>{church?.church?.church_name}</span></h1>
         </div>
 
         <div className='flex flex-col justify-center items-center gap-3'>
-          <form onSubmit={handleSubmit(handleSubmitWedding)}>
+          <form onSubmit={handleSubmit(submitWedding)}>
             <div className='flex flex-col justify-center items-center my-5'>
                 <h1 className='font-bold josefin-regular text-center'>WEDDING SCHEDULE</h1>
                 <div className='grid grid-cols-2 justify-center items-center gap-2'>
@@ -260,6 +104,22 @@ function Wedding({church, user, allChurch}) {
 
                 </div>
             </div>
+
+            <div className='flex justify-center items-center gap-3 mb-3'>
+              <h1 className='font-bold josefin-regular'>Reserved By: </h1>
+              <div>
+                <input 
+                  type="text" 
+                  placeholder='Full Name' 
+                  className='p-2 border rounded-lg' 
+                  {...register('reserved_by' , {
+                    required: "Reservation Name is Required"
+                  })}
+                  />
+                  {error?.reserved_by && <h1 className='text-red-700 font-semibold text-sm'>{error?.reserved_by?.message}</h1>}
+              </div>
+            </div>
+
             <div className='grid gap-3 md:grid-cols-2 items-start'>
 
               <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
@@ -581,57 +441,6 @@ function Wedding({church, user, allChurch}) {
 
                 </div>
               </div>
-        
-              {/* <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
-                <h1 className='font-bold josefin-regular text-center'>DONATION METHOD</h1>
-                <div className='flex justify-center items-center'>
-                  <RowRadioButtonsGroup 
-                      label={"Select a payment method"}
-                      name="payment"
-                      value={selectedPayment}
-                      onChange={(e) => setSelectedPayment(e.target.value)}
-                      options={payment}
-                  
-                  />
-                </div>
-
-                <div className="flex flex-col items-center justify-center">
-                  <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS:</h1>
-                  <label
-                    htmlFor="file-upload"
-                    className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
-                  >
-                    Upload File
-                  </label>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    className="hidden"
-                    multiple
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    onChange={handleFileChange}
-                    required
-                  />
-                </div>
-              {files.length > 0 && (
-                <div className="mt-3 flex flex-col gap-2">
-                  {files.map((file, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
-                      <div className="text-sm truncate max-w-xs">{file.name}</div>
-                      <button
-                        type="button"
-                        className="text-red-500 hover:underline text-xs"
-                        onClick={() => handleFileDelete(index)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-
-              </div> */}
               <div className='w-full flex flex-col md:flex-row items-center justify-center gap-2'>
                 <div className='border-2 border-black/30 p-2 rounded-lg'>
                   <h1 className='font-bold josefin-regular text-center'>DONATION METHOD</h1>
@@ -646,40 +455,6 @@ function Wedding({church, user, allChurch}) {
                   />
                   </div>
                 </div>
-                <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col justify-center items-center'>
-                  <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS & PROOF OF PAYMENT</h1>
-                  <label
-                    htmlFor="file-upload"
-                    className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
-                  >
-                    Upload File
-                  </label>
-                  <input
-                    id="file-upload"
-                    type="file"
-                    className="hidden"
-                    multiple
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    onChange={handleFileChange}
-                  />
-                    {files.length > 0 && (
-                      <div className="mt-3 flex flex-col gap-2">
-                        {files.map((file, index) => (
-                          <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
-                            <div className="text-sm">{file.name}</div>
-                            <button
-                              type="button"
-                              className="text-red-500 hover:underline text-xs"
-                              onClick={() => handleFileDelete(index)}
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                </div>
-                
               </div>
 
 
@@ -688,18 +463,16 @@ function Wedding({church, user, allChurch}) {
             <div className='my-5 flex justify-center items-center'>
               {loading ? (
                 <div className='flex items-center gap-10'>
-                  <Link href={`/church/book-a-service/${church.id}`} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700' onClick={handleBackBtn}>Back</Link>
+                  <Link href={`/dashboard-admin`} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Back</Link>
                   <div className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>
                     <MoonLoader size={20} />
                   </div>
-                  <h1 className='bg-green-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-green-700' onClick={handleFindRecommendedChurch}>Recommend Another Church</h1>
                 </div>
               ) : (
                 <>
                   <div className='flex items-center gap-10'>
-                  <Link href={`/church/book-a-service/${church.id}`} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700' onClick={handleBackBtn}>Back</Link>
+                  <Link href={`/dashboard-admin`} className='bg-red-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-red-700'>Back</Link>
                     <button type='submit' className='bg-blue-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-blue-700'>Submit</button>
-                    <h1 className='bg-green-600 py-2 px-4 rounded-lg text-white cursor-pointer hover:bg-green-700' onClick={handleFindRecommendedChurch}>Recommend Another Church</h1>
                   </div>
                 </>
               ) }
@@ -710,10 +483,9 @@ function Wedding({church, user, allChurch}) {
         </div>
 
 
-
       </div>
     </div>
-
+    
     {showRehearsalModal && <RehearsalDateTime 
                                   setShowRehearsalModal={setShowRehearsalModal} 
                                   rehearsalSelectedDate={rehearsalSelectedDate}
@@ -721,7 +493,7 @@ function Wedding({church, user, allChurch}) {
                                   rehearsalSelectedTime={rehearsalSelectedTime}
                                   setRehearsalSelectedTime={setRehearsalSelectedTime}
                                   setRehearsalFullyBooked={setRehearsalFullyBooked}
-                                  church_id={church?.id}
+                                  church_id={church?.church_id}
                                   />}
 
     {showWeddingModal && <WeddingDateTime 
@@ -731,51 +503,9 @@ function Wedding({church, user, allChurch}) {
                                   weddingSelectedTime={weddingSelectedTime}
                                   setWeddingSelectedTime={setWeddingSelectedTime}
                                   setWeddingFullyBooked={setWeddingFullyBooked}
-                                  church_id={church?.id}
+                                  church_id={church?.church_id}
                                   />}
 
-    {showOnlinePaymentModal && (
-      <>
-      <div className='fixed inset-0 bg-black/50 flex justify-center items-center px-2 z-[1000]'>
-        <div className='bg-white w-full md:w-1/2 py-2 px-4 rounded-lg'>
-          <h1 className='josefin-regular font-bold text-sm text-center'>Here are the steps for confirmation of your booking!</h1>
-          <h1 className='text-sm josefin-regular font-bold mt-3'>1. Send the full payment amount to GCASH/Bank Transfer:</h1>
-          <div className='flex flex-col items-center'>
-            <h1 className='text-sm font-bold josefin-regular'>GCASH</h1>
-            <h1 className='josefin-regular text-sm'>09950249111</h1>
-            <h1 className='josefin-regular text-sm'>Shyanne Kylie Dela Rosa</h1>
-          </div>
-          <div className='flex flex-col items-center mt-3'>
-            <h1 className='text-sm font-bold josefin-regular'>Bank Transfer</h1>
-            <h1 className='josefin-regular text-sm'>Account #: 1234 567 890</h1>
-            <h1 className='josefin-regular text-sm'>Account Name: Juan Dela Cruz</h1>
-          </div>
-          <h1 className='text-sm josefin-regular font-bold mt-3'>2. Upload your Proof of Payment under the 'Requirements & Payment' section </h1>
-          {/* <h1 className='text-sm josefin-regular text-center'>quiapochurch@gmail.com</h1> */}
-          <h1 className='text-sm josefin-regular font-bold mt-3'>3. Wait for our confirmation email within 24 hours upon submitting your application/request form. (If you did not receive a confirmation email, please contact us at churchconnect05@gmail.com) </h1>
-          <div className='mt-3 flex justify-center items-center gap-5'>
-            {loadingDone ? (
-              <>
-              <div className='bg-red-600 py-1 px-6 rounded-lg'>
-                <MoonLoader size={30} color='white' />
-              </div>
-              </>
-            ) : (
-              <>
-              <h1 className='bg-red-600 hover:bg-red-700 text-white py-1 px-6 rounded-lg cursor-pointer' onClick={() => handleDoneSubmit()}>Done</h1>
-              </>
-            )}
-            <h1 className='bg-blue-600 hover:bg-blue-700 text-white py-1 px-6 rounded-lg cursor-pointer' onClick={() => setShowOnlinePaymentModal(false)}>Cancel</h1>
-          </div>
-
-        </div>
-      </div>
-
-
-      </>
-    )}
-    
-    
     
     </>
   )

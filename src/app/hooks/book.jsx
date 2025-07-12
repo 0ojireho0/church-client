@@ -259,6 +259,142 @@ export const useBook = ({church_id} = {}) => {
             })
     }
 
+    const walkinMass = async({setLoading, reset, setSelectedPayment, setSelectedDate, setSelectedTime, setSelectService, ...props}) => {
+        await csrf()
+
+        axios.post('admin/walkin-mass', props)
+            .then(res => {
+                if(res.status === 200){
+                    Swal.fire({
+                        title: "Success",
+                        text: `Submit Successfully, your reference number is ${res.data.result.reference_num}`,
+                        icon: "success"
+                    })
+                    reset();
+                    setSelectedPayment(null)
+                    setSelectedDate(null)
+                    setSelectedTime(null)
+                    setSelectService(null)
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    }
+
+    const walkinBaptism = async({setLoading, reset, setSelectedPayment, setSelectedDate, setSelectedTime, ...props}) => {
+        await csrf()
+
+        axios.post('admin/walkin-baptism', props)
+            .then(res => {
+                if(res.status === 200){
+                    Swal.fire({
+                        title: "Success",
+                        text: `Submit Successfully, your reference number is ${res.data.result.reference_num}`,
+                        icon: "success"
+                    })
+                    reset();
+                    setSelectedPayment(null)
+                    setSelectedDate(null)
+                    setSelectedTime(null)
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    }
+    const walkinWedding = async({reset, setLoading, setSelectedPayment, setWeddingSelectedDate, setWeddingSelectedTime, setRehearsalSelectedDate, setRehearsalSelectedTime, ...props}) => {
+        await csrf()
+
+        axios.post('admin/walkin-wedding', props)
+            .then(res => {
+                if(res.status === 200){
+                    Swal.fire({
+                        title: "Success",
+                        text: `Submit Successfully, your reference number is ${res.data.result.reference_num}`,
+                        icon: "success"
+                    })
+                    reset({
+                        groom_dob: null,
+                        bride_dob: null
+                    });
+                    setSelectedPayment(null)
+                    setWeddingSelectedDate(null)
+                    setWeddingSelectedTime(null)
+                    setRehearsalSelectedDate(null)
+                    setRehearsalSelectedTime(null)
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    }
+
+    const walkinMemorial = async({setLoading, reset, setSelectedPayment, setSelectedDate, setSelectedTime, ...props}) => {
+        await csrf()
+
+        axios.post('admin/walkin-memorial', props)
+            .then(res => {
+                if(res.status === 200){
+                    Swal.fire({
+                        title: "Success",
+                        text: `Submit Successfully, your reference number is ${res.data.result.reference_num}`,
+                        icon: "success"
+                    })
+                    reset({
+                        deceased_dob: null, 
+                        deceased_dod: null,
+                        spouse_deceased: null
+                    });
+                    setSelectedPayment(null)
+                    setSelectedDate(null)
+                    setSelectedTime(null)
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    }
+
+    const walkinConfirmation = async({setLoading, reset, setSelectedPayment, setSelectedDate, setSelectedTime, ...props}) => {
+        await csrf()
+
+        axios.post('admin/walkin-confirmation', props)
+            .then(res => {
+                if(res.status === 200){
+                    Swal.fire({
+                        title: "Success",
+                        text: `Submit Successfully, your reference number is ${res.data.result.reference_num}`,
+                        icon: "success"
+                    })
+                    reset({
+                        dob: null, 
+                    });
+                    setSelectedPayment(null)
+                    setSelectedDate(null)
+                    setSelectedTime(null)
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    }
+
     return{
         book,
         calendar,
@@ -267,7 +403,12 @@ export const useBook = ({church_id} = {}) => {
         memorialBook,
         confirmationBook,
         massBook,
-        requestCertificate
+        requestCertificate,
+        walkinMass,
+        walkinBaptism,
+        walkinWedding,
+        walkinMemorial,
+        walkinConfirmation
     }
 
 }

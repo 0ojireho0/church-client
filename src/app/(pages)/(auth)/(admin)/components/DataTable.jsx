@@ -15,6 +15,8 @@ import { InputTextarea } from "primereact/inputtextarea";
 import dayjs from "dayjs";
 import { MoonLoader } from "react-spinners";
 
+import { useRouter } from "next/navigation";
+
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -34,6 +36,7 @@ export default function FileTable({searchStatus, church_id}){
     const dt = useRef(null);
     const [selectedStatus, setSelectedStatus] = useState(null)
     const [selectedIsPaid, setSelectedIsPaid] = useState(null)
+    const [selectedServices, setSelectedServices] = useState(null)
     const [error, setError] = useState(false)
     const [loading, setLoading] = useState(false)
     const [remarks, setRemarks] = useState("")
@@ -45,6 +48,10 @@ export default function FileTable({searchStatus, church_id}){
     const [showViewMass, setShowViewMass] = useState(false)
     const [showViewCertificate, setShowViewCertificate] = useState(false)
     const [formData, setFormData] = useState([])
+
+    const [showServices, setShowServices] = useState(false)
+
+    const router = useRouter()
 
     const now = dayjs().format('YYYY-MM-DD HH:mm:ss');
 
@@ -74,6 +81,13 @@ export default function FileTable({searchStatus, church_id}){
     const statusPaid = [
         {name: "Paid", code: 'Paid'},
         {name: "Not Paid", code: 'Not Paid'},
+    ]
+    const listServices = [
+        {name: "Baptism", code: 'Baptism'},
+        {name: "Wedding", code: 'Wedding'},
+        {name: "Confirmation", code: 'Confirmation'},
+        {name: "Memorial", code: 'Memorial'},
+        {name: "Mass Intentions", code: 'Mass'},
     ]
     
     const exportColumns = cols.map((col) => ({ title: col.header, dataKey: col.field }));
@@ -177,10 +191,13 @@ export default function FileTable({searchStatus, church_id}){
             {searchStatus === 6 && "Request Certificates"}
             
             </h4>
-        <IconField iconPosition="left">
-            <InputIcon className="pi pi-search" />
-            <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
-        </IconField>
+        <div className="flex flex-col md:flex-row gap-3">
+            <Button onClick={() => setShowServices(true)}>Walk-In Applicants</Button>
+            <IconField iconPosition="left">
+                <InputIcon className="pi pi-search" />
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
+            </IconField>
+        </div>
     </div>
     );
 
@@ -333,6 +350,23 @@ export default function FileTable({searchStatus, church_id}){
         </React.Fragment>
     )
 
+    const onHideServices = () => {
+        // setFormData([])
+        setShowServices(false)
+        setSelectedServices(null)
+    }
+
+    const submitServices = () => {
+        // console.log(selectedServices)
+        router.push(`/walk-in/${selectedServices}`)
+    }
+
+    const servicesModalFooter = (
+        <React.Fragment>
+            <Button label="Continue" icon="pi pi-play" onClick={submitServices} />
+        </React.Fragment>
+    )
+
     const onHideCertificate = () => {
         // setFormData([])
         setShowViewCertificate(false)
@@ -362,6 +396,10 @@ export default function FileTable({searchStatus, church_id}){
         }
     }
 
+    const handleSelectedServices = (service) => {
+        setSelectedServices(service)
+    }
+
     const statusBody = (rowData) => {
         return (
             <>
@@ -375,6 +413,26 @@ export default function FileTable({searchStatus, church_id}){
                 `}>
                 {rowData.status}
             </span>
+            
+            </>
+        )
+    }
+
+    const nameBodyTemplate = (rowData) => {
+        return(
+            <>
+            {rowData.reservation_type === "Online" && (
+                <>
+                    <h1>{rowData?.user?.name}</h1>
+                </>
+            )}
+
+            {rowData.reservation_type === "Walk-In" && (
+                <>
+                    <h1>{rowData?.walkin_name}</h1>
+                </>
+            )}
+            
             
             </>
         )
@@ -396,15 +454,21 @@ export default function FileTable({searchStatus, church_id}){
                 {/* <Column></Column> */}
                 <Column field="id" header="Id" sortable style={{minWidth: '10rem'}} ></Column>
                 <Column field="reference_num" header="Reference No." sortable style={{minWidth: '12rem'}}   ></Column>
-                <Column field="user.name" header="Name" sortable style={{minWidth: '12rem'}}  ></Column>
+                <Column 
+                    // field="user.name" 
+                    header="Name" 
+                    sortable 
+                    style={{minWidth: '12rem'}}  
+                    body={nameBodyTemplate}
+                    ></Column>
                 <Column 
                     body={(rowData) => {
                         if (!rowData.date || !rowData.time_slot) {
-                            const date = dayjs(rowData.created_at).format('MMMM DD, YYYY hh:mm A')
+                            const date = dayjs(rowData?.created_at).format('MMMM DD, YYYY hh:mm A')
                             return `${date}`;
                         }
-                        const date = dayjs(rowData.date).format('MMMM DD, YYYY');
-                        const time = dayjs(`${date} ${rowData.time_slot}`, 'YYYY-MM-DD HH:mm:ss').format('hh:mm A');
+                        const date = dayjs(rowData?.date).format('MMMM DD, YYYY');
+                        const time = dayjs(`${date} ${rowData?.time_slot}`, 'YYYY-MM-DD HH:mm:ss').format('hh:mm A');
                         return `${date} ${time}`;
                     }}
                     sortable 
@@ -412,6 +476,7 @@ export default function FileTable({searchStatus, church_id}){
                     style={{minWidth: '10rem'}} ></Column>
                 <Column field="book_type" header="Type" sortable style={{minWidth: '12rem'}} ></Column>
                 <Column field="service_type" header="Service Type" sortable style={{minWidth: '12rem'}} ></Column>
+                <Column field="reservation_type" header="Reservation Type" sortable style={{minWidth: '12rem'}} ></Column>
                 <Column field="mop" header="Mode of Payment" sortable style={{minWidth: '12rem'}} ></Column>
                 <Column field="status" body={statusBody} header="Status" sortable style={{minWidth: '12rem'}} ></Column>
                 <Column header="View" body={viewBodyTemplate} exportable={false} style={{minWidth: '12rem'}} ></Column>
@@ -436,7 +501,7 @@ export default function FileTable({searchStatus, church_id}){
             </div>
             <div className="field">
                 <label htmlFor="id" className="font-bold">Name</label>
-                <InputText disabled id="id" value={book?.user?.name} />
+                <InputText disabled id="id" value={book?.reservation_type === "Online" ? book?.user?.name : book?.walkin_name} />
             </div>
             <div className="field">
                 <label htmlFor="ref_no" className="font-bold">Reference Number</label>
@@ -497,7 +562,7 @@ export default function FileTable({searchStatus, church_id}){
         >
         <div className="field">
             <label htmlFor="fullname" className="font-bold">Full Name</label>
-            <InputText disabled id="fullname" value={formData?.form_data?.fullname} />
+            <InputText disabled id="fullname" value={formData?.reservation_type === "Online" ? formData?.form_data?.fullname : formData?.walkin_name} />
         </div>
 
         <div className="field">
@@ -750,7 +815,7 @@ export default function FileTable({searchStatus, church_id}){
         >
         <div className="field">
             <label htmlFor="fullname" className="font-bold">Full Name</label>
-            <InputText disabled id="fullname" value={formData?.form_data?.fullname} />
+            <InputText disabled id="fullname" value={formData?.reservation_type === "Online" ? formData?.form_data?.fullname : formData?.walkin_name} />
         </div>
 
         <div className="field">
@@ -817,7 +882,7 @@ export default function FileTable({searchStatus, church_id}){
         >
         <div className="field">
             <label htmlFor="fullname" className="font-bold">Full Name</label>
-            <InputText disabled id="fullname" value={formData?.form_data?.fullname} />
+            <InputText disabled id="fullname" value={formData?.reservation_type === "Online" ? formData?.form_data?.fullname : formData?.walkin_name} />
         </div>
 
         <div className="field">
@@ -913,6 +978,30 @@ export default function FileTable({searchStatus, church_id}){
                 rows={2} 
             />
         </div>
+        </Dialog>
+
+        <Dialog 
+        visible={showServices} 
+        style={{ width: '32rem' }} 
+        breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
+        header={`Choose a Service Type`}
+        modal
+        className="p-fluid"
+        footer={servicesModalFooter}
+        onHide={onHideServices}
+        draggable={false}
+        >
+            <div className="field">
+                <label className="font-bold">Type of Services</label>
+                <Dropdown 
+                    options={listServices}
+                    optionLabel="name"
+                    optionValue="code"
+                    value={selectedServices}
+                    onChange={(e) => handleSelectedServices(e.value)}
+                    checkmark={true}
+                />
+            </div>
         </Dialog>
             </>
         ) : (

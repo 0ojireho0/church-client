@@ -162,6 +162,26 @@ function AccountingTable({searchStatus, church_id}) {
         )
     }
 
+    const nameBodyTemplate = (rowData) => {
+        return(
+            <>
+            {rowData.reservation_type === "Online" && (
+                <>
+                    <h1>{rowData?.user?.name}</h1>
+                </>
+            )}
+
+            {rowData.reservation_type === "Walk-In" && (
+                <>
+                    <h1>{rowData?.walkin_name}</h1>
+                </>
+            )}
+            
+            
+            </>
+        )
+    }
+
   return (
     <>
         {servicetype ? (
@@ -177,7 +197,13 @@ function AccountingTable({searchStatus, church_id}) {
                     {/* <Column></Column> */}
                     <Column field="id" header="Id" sortable style={{minWidth: '10rem'}} ></Column>
                     <Column field="reference_num" header="Reference No." sortable style={{minWidth: '12rem'}}   ></Column>
-                    <Column field="user.name" header="Name" sortable style={{minWidth: '12rem'}}  ></Column>
+                    <Column 
+                        // field="user.name" 
+                        header="Name" 
+                        sortable 
+                        style={{minWidth: '12rem'}}  
+                        body={nameBodyTemplate}
+                        ></Column>
                     <Column 
                         body={(rowData) => {
                             if (!rowData.date || !rowData.time_slot) {
