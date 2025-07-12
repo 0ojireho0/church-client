@@ -34,7 +34,7 @@ function CalendarPage() {
 
       return {
         id: index,
-        title: `${capitalize(item.service_type)} - ${item.user.name}`,
+        title: `${item?.reservation_type === "Online" ? `${capitalize(item?.service_type)} - ${item?.user?.name}` : `${capitalize(item?.service_type)} - ${item?.walkin_name}`}`,
         start,
         end,
       }
