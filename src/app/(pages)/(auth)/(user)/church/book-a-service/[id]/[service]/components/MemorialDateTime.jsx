@@ -33,7 +33,7 @@ function MemorialDateTime({setShowMemorialDateModal, selectedDate, setSelectedDa
           <FaX className='text-xl cursor-pointer ' onClick={() => setShowMemorialDateModal(false)} />
         </div>
         <div className='text-center'>
-            <h1 className='josefin-regular font-bold text-xl'>Rehearsal Date & Time</h1>
+            <h1 className='josefin-regular font-bold text-xl'>Memorial Date & Time</h1>
         </div>
         <div className='mt-5 flex justify-center items-center'>
             <CustomDateTimePicker 

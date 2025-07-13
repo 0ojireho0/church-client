@@ -418,6 +418,17 @@ function Memorial({church, user, allChurch}) {
                 />
               </div>
 
+            </div>
+            <div>
+              <h1 className='josefin-regular font-bold'>It is the responsibility of the Funeral Director to:</h1>
+              <ul className='list-disc'>
+                <li className='text-justify'>Supply all burial permit copies and cremation certificates.</li>
+                <li className='text-justify'>Ensure that all necessary documentation is properly completed and submitted to the parish office in a timely manner.</li>
+                <li className='text-justify'>Coordinate with the parish regarding the schedule and logistics of the funeral service, if it is to be held within church premises.</li>
+                <li className='text-justify'>Notify the parish if there are any changes or delays in document processing or scheduling.</li>
+              </ul>
+
+              <div className='border-2 border-black/30 p-2 rounded-lg mt-3'>
                 <div className="flex flex-col justify-center items-center">
                   <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS & PROOF OF PAYMENT</h1>
                   <label
@@ -451,18 +462,8 @@ function Memorial({church, user, allChurch}) {
                   ))}
                 </div>
               )}
-            
 
-
-            </div>
-            <div>
-              <h1 className='josefin-regular font-bold'>It is the responsibility of the Funeral Director to:</h1>
-              <ul className='list-disc'>
-                <li className='text-justify'>Supply all burial permit copies and cremation certificates.</li>
-                <li className='text-justify'>Ensure that all necessary documentation is properly completed and submitted to the parish office in a timely manner.</li>
-                <li className='text-justify'>Coordinate with the parish regarding the schedule and logistics of the funeral service, if it is to be held within church premises.</li>
-                <li className='text-justify'>Notify the parish if there are any changes or delays in document processing or scheduling.</li>
-              </ul>
+              </div>
             </div>
           </div>
 
