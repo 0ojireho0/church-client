@@ -224,6 +224,50 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
             })
     }
 
+    const selectEvent = async({setLoading, reset, ...props}) => {
+        // await csrf()
+
+        axios.post('/admin/select-event', props)
+            .then((res) => {
+                if(res.status === 200){
+                    Swal.fire({
+                        title: "Success",
+                        text: "Event Successfully Added!",
+                        icon: "success"
+                    })
+                    findEventAdded({
+                        admin: {
+                            church_id: props?.church_id
+                        }
+                    })
+                    reset()
+                }
+                
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+        // console.log(props)
+
+
+
+    }
+
+    const findEventAdded = async ({ admin }) => {
+        await csrf(); // if required for protection
+        try {
+            const response = await axios.post('/admin/findEventAdded', { admin });
+            return response; // <-- This is important!
+        } catch (error) {
+            console.error('Error fetching events:', error);
+            return null;
+        }
+    };
+
+
     useEffect(() => {
         if (middleware === 'guest' && redirectIfAuthenticated && admin)
             router.push(redirectIfAuthenticated)
@@ -250,6 +294,8 @@ export const useAuthAdmin = ({ middleware, redirectIfAuthenticated } = {}) => {
         allAdmin,
         deleteAdmin,
         updateAdmin,
-        editProfileAdmin
+        editProfileAdmin,
+        selectEvent,
+        findEventAdded
     }
 }

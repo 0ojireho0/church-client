@@ -36,6 +36,7 @@
     "react-icons": "^5.5.0",
     "react-select": "^5.10.1",
     "react-spinners": "^0.17.0",
+    "rsuite": "^5.83.1",
     "sweetalert2": "^11.19.1",
     "swr": "^2.3.3",
     "xlsx": "^0.18.5"

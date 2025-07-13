@@ -24,6 +24,12 @@ export const useBook = ({church_id} = {}) => {
             .then(res => res.data)
     )
 
+    const {data: event, error: errorEvent, mutate:mutateEvent} = useSWR(`/api/show-all-event/${church_id || 0}`, () => 
+        axios
+            .get(`/admin/show-all-event/${church_id || 0}`)
+            .then(res => res.data)
+    )
+
     const csrf = () => axios.get('/sanctum/csrf-cookie')
 
     const baptismBook = async({
@@ -398,6 +404,7 @@ export const useBook = ({church_id} = {}) => {
     return{
         book,
         calendar,
+        event,
         baptismBook,
         weddingBook,
         memorialBook,

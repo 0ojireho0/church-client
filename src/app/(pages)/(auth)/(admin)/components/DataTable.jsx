@@ -179,6 +179,10 @@ export default function FileTable({searchStatus, church_id}){
       )
     };
 
+    const handleSetDateEvent = () => {
+        router.push('/set-event-date')
+    }
+
     const header = (
     <div className="flex flex-col md:flex-row items-center justify-between">
         <h4 className="m-0">
@@ -192,6 +196,7 @@ export default function FileTable({searchStatus, church_id}){
             
             </h4>
         <div className="flex flex-col md:flex-row gap-3">
+            <Button onClick={handleSetDateEvent} icon="pi pi-calendar" label="Set Date Event" />
             <Button onClick={() => setShowServices(true)}>Walk-In Applicants</Button>
             <IconField iconPosition="left">
                 <InputIcon className="pi pi-search" />

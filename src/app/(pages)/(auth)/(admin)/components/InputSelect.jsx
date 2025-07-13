@@ -59,8 +59,9 @@ const InputSelect = ({
                                     : `${props?.label}`
                             }
                             onChange={opt => onChange(opt?.value)}
-                            value={option.find(opt => opt?.value === value)}
+                            value={option?.find(opt => opt?.value === value)}
                             isClearable={true}
+                            className='z-[1000]'
                             classNamePrefix={`focus:ring focus:ring-0 focus:ring-opacity-50`}
                             styles={customStyles}
                             {...props}

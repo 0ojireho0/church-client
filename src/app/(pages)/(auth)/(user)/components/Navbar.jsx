@@ -9,7 +9,7 @@ import Logo from "../../../../../assets/logo.png"
 
 // Icons
 import { IoMenu } from "react-icons/io5"
-import { FaHome } from "react-icons/fa"
+import { FaCalendarAlt, FaHome } from "react-icons/fa"
 import { RiAdminFill } from "react-icons/ri"
 import { FaXmark } from "react-icons/fa6"
 import { CgProfile } from "react-icons/cg";
@@ -30,6 +30,11 @@ export default function Navbar() {
       path: "/church",
       icon: <RiAdminFill />
     },
+    {
+      name: "Event",
+      path: "/event-parishioner",
+      icon: <FaCalendarAlt />
+    }
   ]
 
   const pathname = usePathname()

@@ -49,6 +49,11 @@ export default function Navbar() {
       name: "Calendar",
       path: "/calendar",
       icon: <FaCalendarAlt />
+    },
+    {
+      name: "Events",
+      path: "/events-admin",
+      icon: <FaCalendarAlt />
     }
   ]
 

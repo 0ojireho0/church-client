@@ -292,6 +292,14 @@ function MyBookingsTable({user_id}) {
         onHide={onHideBaptism}
         draggable={false}
         >
+        {formData?.set_status === 2 && (
+            <>
+        <div className="field mb-3">
+            <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
+        </div>
+            
+            </>
+        )}
         <div className="field">
             <label htmlFor="fullname" className="font-bold">Full Name</label>
             <InputText disabled id="fullname" value={formData?.form_data?.fullname} />
@@ -375,6 +383,14 @@ function MyBookingsTable({user_id}) {
         onHide={onHideWedding}
         draggable={false}
         >
+        {formData?.set_status === 2 && (
+            <>
+        <div className="field mb-3">
+            <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
+        </div>
+            
+            </>
+        )}
         {/* Groom Info */}
         <h4 className="mt-3 mb-2 font-bold">Groom Information</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -448,6 +464,14 @@ function MyBookingsTable({user_id}) {
         onHide={onHideMemorial}
         draggable={false}
         >
+        {formData?.set_status === 2 && (
+            <>
+        <div className="field mb-3">
+            <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
+        </div>
+            
+            </>
+        )}
         <div className="field">
             <label htmlFor="deceased_fullname" className="font-bold">Full Name of Deceased</label>
             <InputText disabled id="deceased_fullname" value={formData?.form_data?.deceased_fullname} />
@@ -545,6 +569,14 @@ function MyBookingsTable({user_id}) {
         onHide={onHideConfirmation}
         draggable={false}
         >
+        {formData?.set_status === 2 && (
+            <>
+        <div className="field mb-3">
+            <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
+        </div>
+            
+            </>
+        )}
         <div className="field">
             <label htmlFor="fullname" className="font-bold">Full Name</label>
             <InputText disabled id="fullname" value={formData?.form_data?.fullname} />
@@ -612,6 +644,14 @@ function MyBookingsTable({user_id}) {
         onHide={onHideMass}
         draggable={false}
         >
+        {formData?.set_status === 2 && (
+            <>
+        <div className="field mb-3">
+            <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
+        </div>
+            
+            </>
+        )}
         <div className="field">
             <label htmlFor="fullname" className="font-bold">Full Name</label>
             <InputText disabled id="fullname" value={formData?.form_data?.fullname} />
