@@ -196,7 +196,7 @@ export default function FileTable({searchStatus, church_id}){
             
             </h4>
         <div className="flex flex-col md:flex-row gap-3">
-            <Button onClick={handleSetDateEvent} icon="pi pi-calendar" label="Set Date Event" />
+            {/* <Button onClick={handleSetDateEvent} icon="pi pi-calendar" label="Set Date Event" /> */}
             <Button onClick={() => setShowServices(true)}>Walk-In Applicants</Button>
             <IconField iconPosition="left">
                 <InputIcon className="pi pi-search" />
@@ -292,9 +292,11 @@ export default function FileTable({searchStatus, church_id}){
     const editModalFooter = (
         <React.Fragment>
             <Button label="Cancel" icon="pi pi-times" onClick={hideDialog} />
-            {book?.set_status !== 1 && selectedStatus !== "Cancelled" && (
+            {book?.set_status < 1 && selectedStatus !== "Cancelled" && (
                 <Button label="Save" loading={loading} icon="pi pi-check" onClick={saveStatus} />
             )}
+            
+            
 
             
         </React.Fragment>
@@ -466,16 +468,17 @@ export default function FileTable({searchStatus, church_id}){
                     style={{minWidth: '12rem'}}  
                     body={nameBodyTemplate}
                     ></Column>
-                <Column 
-                    body={(rowData) => {
-                        if (!rowData.date || !rowData.time_slot) {
-                            const date = dayjs(rowData?.created_at).format('MMMM DD, YYYY hh:mm A')
-                            return `${date}`;
-                        }
-                        const date = dayjs(rowData?.date).format('MMMM DD, YYYY');
-                        const time = dayjs(`${date} ${rowData?.time_slot}`, 'YYYY-MM-DD HH:mm:ss').format('hh:mm A');
-                        return `${date} ${time}`;
-                    }}
+                    <Column 
+                        body={(rowData) => {
+                            if (!rowData?.date || !rowData?.time_slot) {
+                                const date = dayjs(rowData.created_at).format('MMMM DD, YYYY hh:mm A');
+                                return `${date}`;
+                            }
+                            const dateRaw = rowData.date; // Keep raw for parsing with time
+                            const timeSlot = rowData.time_slot;
+                            const fullDateTime = dayjs(`${dateRaw} ${timeSlot}`, 'YYYY-MM-DD HH:mm:ss');
+                            return fullDateTime.format('MMMM DD, YYYY hh:mm A');
+                        }}
                     sortable 
                     header="Date & Time"
                     style={{minWidth: '10rem'}} ></Column>
@@ -521,7 +524,7 @@ export default function FileTable({searchStatus, church_id}){
                     value={selectedStatus} 
                     onChange={(e) => handleSelectStatus(e.value)} 
                     checkmark={true}
-                    disabled={book?.set_status === 1 ? true : false} 
+                    disabled={book?.set_status !== null ? true : false} 
                     
                     />
                 
@@ -533,7 +536,7 @@ export default function FileTable({searchStatus, church_id}){
                         <InputText id="remarks" required value={remarks} onChange={e => setRemarks(e.target.value)} />
                 </div>
             <div className="field">
-                <label htmlFor="" className="font-bold">Is Paid</label>
+                <label htmlFor="" className="font-bold">Payment Status</label>
                 <Dropdown 
                     options={statusPaid} 
                     optionLabel="name" 

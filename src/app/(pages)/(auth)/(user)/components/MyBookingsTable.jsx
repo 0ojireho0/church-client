@@ -21,6 +21,8 @@ import 'primeicons/primeicons.css';
 import { useUser } from "@/app/hooks/user";
 import Swal from "sweetalert2";
 
+import CustomDateTimePicker from "@/app/components/CustomDateTimePicker";
+
 
 function MyBookingsTable({user_id}) {
 
@@ -36,10 +38,15 @@ function MyBookingsTable({user_id}) {
     const [loader, setLoader] = useState(false)
     const dt = useRef(null);
 
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedTime, setSelectedTime] = useState(null);
+    const [fullyBooked, setFullyBooked] = useState(null)
+    const [loading, setLoading] = useState(false)
+
 
     const includeStatus = ['Approved', 'Rejected']
 
-    const { myBooks, cancelBookingData } = useUser({
+    const { myBooks, cancelBookingData, anotherBook } = useUser({
         user_id: user_id
     })
 
@@ -102,6 +109,9 @@ function MyBookingsTable({user_id}) {
     const onHideBaptism = () => {
         // setFormData([])
         setShowViewBaptism(false)
+        setSelectedDate(null)
+        setSelectedTime(null)
+        setFullyBooked(null)
     }
 
     const cancelBooking = (data, show) => {
@@ -128,6 +138,32 @@ function MyBookingsTable({user_id}) {
         })
     }
 
+    const submitAnotherBook = (data, selectedDate, selectedTime, fullyBooked) => {
+        // console.log(data, dayjs(selectedDate).format('YYYY-MM-DD'), selectedTime, fullyBooked)
+
+        setLoading(true)
+        anotherBook({
+            id: data?.id,
+            church_id: data?.church_id,
+            selectedDate: dayjs(selectedDate).format('YYYY-MM-DD'),
+            selectedTime: selectedTime,
+            fullyBooked: fullyBooked,
+            setLoading,
+            setShowViewMass,
+            setShowViewBaptism,
+            setShowViewConfirmation,
+            setShowViewMemorial,
+            setShowViewWedding,
+            setSelectedDate,
+            setSelectedTime,
+            setFullyBooked
+        })
+
+
+
+
+    }
+
     const baptismModalFooter = () => {
         return(
             <React.Fragment>
@@ -140,6 +176,20 @@ function MyBookingsTable({user_id}) {
                                 <Button label="Cancel Book" severity="danger" icon="pi pi-times" onClick={() => cancelBooking(formData, setShowViewBaptism)} />
                             </>
                         )}
+
+                        {selectedDate && selectedTime && (
+                            <>
+                            {loading ? (
+                                <>
+                                <Button label="Submit Another Book" severity="success" icon="pi pi-spin pi-spinner" />
+                                </>
+                            ) : (
+                                <>
+                                <Button label="Submit Another Book" severity="success" icon="pi pi-check" onClick={() => submitAnotherBook(formData, selectedDate, selectedTime, fullyBooked)} />
+                                </>
+                            )}
+                            </>
+                        )}
                     </>
                 )}
 
@@ -150,6 +200,9 @@ function MyBookingsTable({user_id}) {
     const onHideWedding = () => {
         // setFormData([])
         setShowViewWedding(false)
+        setSelectedDate(null)
+        setSelectedTime(null)
+        setFullyBooked(null)
     }
 
     const weddingModalFooter = (
@@ -163,6 +216,20 @@ function MyBookingsTable({user_id}) {
                                 <Button label="Cancel Book" severity="danger" icon="pi pi-times" onClick={() => cancelBooking(formData, setShowViewWedding)} />
                             </>
                         )}
+
+                        {selectedDate && selectedTime && (
+                            <>
+                            {loading ? (
+                                <>
+                                <Button label="Submit Another Book" severity="success" icon="pi pi-spin pi-spinner" />
+                                </>
+                            ) : (
+                                <>
+                                <Button label="Submit Another Book" severity="success" icon="pi pi-check" onClick={() => submitAnotherBook(formData, selectedDate, selectedTime, fullyBooked)} />
+                                </>
+                            )}
+                            </>
+                        )}
                     </>
             )}
         </React.Fragment>
@@ -171,6 +238,9 @@ function MyBookingsTable({user_id}) {
     const onHideMemorial = () => {
         // setFormData([])
         setShowViewMemorial(false)
+        setSelectedDate(null)
+        setSelectedTime(null)
+        setFullyBooked(null)
     }
 
     const memorialModalFooter = (
@@ -184,6 +254,20 @@ function MyBookingsTable({user_id}) {
                             <Button label="Cancel Book" severity="danger" icon="pi pi-times" onClick={() => cancelBooking(formData, setShowViewMemorial)} />
                         </>
                     )}
+
+                    {selectedDate && selectedTime && (
+                        <>
+                            {loading ? (
+                                <>
+                                <Button label="Submit Another Book" severity="success" icon="pi pi-spin pi-spinner" />
+                                </>
+                            ) : (
+                                <>
+                                <Button label="Submit Another Book" severity="success" icon="pi pi-check" onClick={() => submitAnotherBook(formData, selectedDate, selectedTime, fullyBooked)} />
+                                </>
+                            )}
+                        </>
+                    )}
                 </>
             )}
         </React.Fragment>
@@ -192,6 +276,9 @@ function MyBookingsTable({user_id}) {
     const onHideConfirmation = () => {
         // setFormData([])
         setShowViewConfirmation(false)
+        setSelectedDate(null)
+        setSelectedTime(null)
+        setFullyBooked(null)
     }
 
     const confirmationModalFooter = (
@@ -205,6 +292,20 @@ function MyBookingsTable({user_id}) {
                             <Button label="Cancel Book" severity="danger" icon="pi pi-times" onClick={() => cancelBooking(formData, setShowViewConfirmation)} />
                         </>
                     )}
+
+                    {selectedDate && selectedTime && (
+                        <>
+                            {loading ? (
+                                <>
+                                <Button label="Submit Another Book" severity="success" icon="pi pi-spin pi-spinner" />
+                                </>
+                            ) : (
+                                <>
+                                <Button label="Submit Another Book" severity="success" icon="pi pi-check" onClick={() => submitAnotherBook(formData, selectedDate, selectedTime, fullyBooked)} />
+                                </>
+                            )}
+                        </>
+                    )}
                 </>
             )}
         </React.Fragment>
@@ -213,6 +314,9 @@ function MyBookingsTable({user_id}) {
     const onHideMass = () => {
         // setFormData([])
         setShowViewMass(false)
+        setSelectedDate(null)
+        setSelectedTime(null)
+        setFullyBooked(null)
     }
 
     const massModalFooter = (
@@ -224,6 +328,19 @@ function MyBookingsTable({user_id}) {
                     {!includeStatus.includes(formData?.status) && (
                         <>
                             <Button label="Cancel Book" severity="danger" icon="pi pi-times" onClick={() => cancelBooking(formData, setShowViewMass)} />
+                        </>
+                    )}
+                    {selectedDate && selectedTime && (
+                        <>
+                            {loading ? (
+                                <>
+                                <Button label="Submit Another Book" severity="success" icon="pi pi-spin pi-spinner" />
+                                </>
+                            ) : (
+                                <>
+                                <Button label="Submit Another Book" severity="success" icon="pi pi-check" onClick={() => submitAnotherBook(formData, selectedDate, selectedTime, fullyBooked)} />
+                                </>
+                            )}
                         </>
                     )}
                 </>
@@ -260,17 +377,21 @@ function MyBookingsTable({user_id}) {
                         <Column field="reference_num" header="Reference No." sortable style={{minWidth: '12rem'}}   ></Column>
                         <Column 
                             body={(rowData) => {
-                                if (!rowData.date || !rowData.time_slot) {
-                                    const date = dayjs(rowData.created_at).format('MMMM DD, YYYY hh:mm A')
+                                if (!rowData?.date || !rowData?.time_slot) {
+                                    const date = dayjs(rowData.created_at).format('MMMM DD, YYYY hh:mm A');
                                     return `${date}`;
                                 }
-                                const date = dayjs(rowData.date).format('MMMM DD, YYYY');
-                                const time = dayjs(`${date} ${rowData.time_slot}`, 'YYYY-MM-DD HH:mm:ss').format('hh:mm A');
-                                return `${date} ${time}`;
+
+                                const dateRaw = rowData.date; // Keep raw for parsing with time
+                                const timeSlot = rowData.time_slot;
+
+                                const fullDateTime = dayjs(`${dateRaw} ${timeSlot}`, 'YYYY-MM-DD HH:mm:ss');
+                                return fullDateTime.format('MMMM DD, YYYY hh:mm A');
                             }}
                             sortable 
                             header="Date & Time"
-                            style={{minWidth: '10rem'}} ></Column>
+                            style={{ minWidth: '10rem' }} 
+                        />
                         <Column field="service_type" header="Service Type" sortable style={{minWidth: '10rem'}}></Column>
                         <Column field="mop" header="Mode of Payment" sortable style={{minWidth: '12rem'}} ></Column>
                         <Column field="status" body={statusBody} header="Status" sortable style={{minWidth: '12rem'}} ></Column>
@@ -294,10 +415,20 @@ function MyBookingsTable({user_id}) {
         >
         {formData?.set_status === 2 && (
             <>
-        <div className="field mb-3">
-            <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
-        </div>
-            
+            <div className="field mb-3">
+                <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
+            </div>
+            <div className="field flex justify-center items-center flex-col mb-3">
+                <h1 className="font-bold josefin-regular">Choose Another Date</h1>
+                <CustomDateTimePicker 
+                    selectedDate={selectedDate} 
+                    setSelectedDate={setSelectedDate} 
+                    selectedTime={selectedTime} 
+                    setSelectedTime={setSelectedTime} 
+                    setFullyBooked={setFullyBooked}
+                    church_id={formData?.church_id}
+                />
+            </div>
             </>
         )}
         <div className="field">
@@ -385,10 +516,21 @@ function MyBookingsTable({user_id}) {
         >
         {formData?.set_status === 2 && (
             <>
-        <div className="field mb-3">
-            <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
-        </div>
-            
+            <div className="field mb-3">
+                <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
+            </div>
+
+            <div className="field flex justify-center items-center flex-col mb-3">
+                <h1 className="font-bold josefin-regular">Choose Another Date</h1>
+                <CustomDateTimePicker 
+                    selectedDate={selectedDate} 
+                    setSelectedDate={setSelectedDate} 
+                    selectedTime={selectedTime} 
+                    setSelectedTime={setSelectedTime} 
+                    setFullyBooked={setFullyBooked}
+                    church_id={formData?.church_id}
+                />
+            </div>
             </>
         )}
         {/* Groom Info */}
@@ -466,9 +608,21 @@ function MyBookingsTable({user_id}) {
         >
         {formData?.set_status === 2 && (
             <>
-        <div className="field mb-3">
-            <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
-        </div>
+            <div className="field mb-3">
+                <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
+            </div>
+
+            <div className="field flex justify-center items-center flex-col mb-3">
+                <h1 className="font-bold josefin-regular">Choose Another Date</h1>
+                <CustomDateTimePicker 
+                    selectedDate={selectedDate} 
+                    setSelectedDate={setSelectedDate} 
+                    selectedTime={selectedTime} 
+                    setSelectedTime={setSelectedTime} 
+                    setFullyBooked={setFullyBooked}
+                    church_id={formData?.church_id}
+                />
+            </div>
             
             </>
         )}
@@ -571,9 +725,21 @@ function MyBookingsTable({user_id}) {
         >
         {formData?.set_status === 2 && (
             <>
-        <div className="field mb-3">
-            <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
-        </div>
+            <div className="field mb-3">
+                <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
+            </div>
+
+            <div className="field flex justify-center items-center flex-col mb-3">
+                <h1 className="font-bold josefin-regular">Choose Another Date</h1>
+                <CustomDateTimePicker 
+                    selectedDate={selectedDate} 
+                    setSelectedDate={setSelectedDate} 
+                    selectedTime={selectedTime} 
+                    setSelectedTime={setSelectedTime} 
+                    setFullyBooked={setFullyBooked}
+                    church_id={formData?.church_id}
+                />
+            </div>
             
             </>
         )}
@@ -646,9 +812,21 @@ function MyBookingsTable({user_id}) {
         >
         {formData?.set_status === 2 && (
             <>
-        <div className="field mb-3">
-            <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
-        </div>
+            <div className="field mb-3">
+                <h1 className="text-red-700 font-bold">Your Booking Overlapped to Events</h1>
+            </div>
+
+            <div className="field flex justify-center items-center flex-col mb-3">
+                <h1 className="font-bold josefin-regular">Choose Another Date</h1>
+                <CustomDateTimePicker 
+                    selectedDate={selectedDate} 
+                    setSelectedDate={setSelectedDate} 
+                    selectedTime={selectedTime} 
+                    setSelectedTime={setSelectedTime} 
+                    setFullyBooked={setFullyBooked}
+                    church_id={formData?.church_id}
+                />
+            </div>
             
             </>
         )}

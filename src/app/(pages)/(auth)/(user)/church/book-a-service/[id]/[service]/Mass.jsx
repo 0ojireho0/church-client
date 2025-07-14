@@ -278,7 +278,7 @@ function Mass({church, user, allChurch}) {
               church_id={church?.id}
               />
           </div>
-          <div className='flex flex-col md:flex-row justify-between gap-3 md:px-10 lg:px-24 xl:px-42 pb-5'>
+          <div className='flex flex-col md:flex-row justify-between items-start gap-3 md:px-10 lg:px-24 xl:px-42 pb-5'>
             <div className='border p-2 rounded-lg'>
               <h1 className='font-bold josefin-regular text-center'>PERSONAL INFORMATION</h1>
               <div className='grid md:grid-cols-2 gap-3 items-center'>
@@ -297,18 +297,6 @@ function Mass({church, user, allChurch}) {
                   </div>
               </div>
               <div className='mt-5'>
-                <h1 className='font-bold josefin-regular text-center'>DONATION METHOD</h1>
-                <div className='flex justify-center items-center'>
-                  <RowRadioButtonsGroup 
-                      label={"Select a payment method"}
-                      name="payment"
-                      value={selectedPayment}
-                      onChange={(e) => setSelectedPayment(e.target.value)}
-                      options={payment}
-                  
-                  />
-                </div>
-
                 <div className="flex flex-col items-center">
                   <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS & PROOF OF PAYMENT</h1>
                   <label
@@ -356,6 +344,19 @@ function Mass({church, user, allChurch}) {
                 />
 
               </div>
+            </div>
+            <div className='border p-2 rounded-lg'>
+                <h1 className='font-bold josefin-regular text-center'>DONATION METHOD</h1>
+                <div className='flex justify-center items-center'>
+                  <RowRadioButtonsGroup 
+                      label={"Select a payment method"}
+                      name="payment"
+                      value={selectedPayment}
+                      onChange={(e) => setSelectedPayment(e.target.value)}
+                      options={payment}
+                  
+                  />
+                </div>
             </div>
           </div>
 

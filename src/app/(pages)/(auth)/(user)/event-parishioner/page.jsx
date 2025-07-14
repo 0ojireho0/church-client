@@ -72,10 +72,10 @@ function EventParishioner() {
         <div className='p-4'>
             <h1 className='text-xl font-bold mb-4'>Events</h1>
             <div className='w-full my-3'>
-                <h1 className='josefin-reguar font-bold'>Select Service Type</h1>
+                <h1 className='josefin-reguar font-bold'>Select a Church to See Events</h1>
                 <InputSelect
                     id="searchStatus"
-                    label="Default = All Service Type"
+                    label="Select a Church"
                     onChange={e => checkRequestStatus(e)}
                     required={false}
                     register={{

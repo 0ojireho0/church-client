@@ -328,46 +328,49 @@ function Confirmation({church, user, allChurch}) {
                 </div>
               </div>
 
-              <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
-                <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS & PROOF OF PAYMENT</h1>
-                  <ul className='list-inside list-disc'>
-                    <li>Baptismal Certificate</li>
-                    <li>Valid ID</li>
-                    <li>Authorization Letter (if someone else is claiming the certificate)</li>
-                  </ul>
-                  <div className="flex flex-col items-center justify-center">
-                    <label
-                      htmlFor="file-upload"
-                      className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
-                    >
-                      Upload File
-                    </label>
-                    <input
-                      id="file-upload"
-                      type="file"
-                      className="hidden"
-                      multiple
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      onChange={handleFileChange}
-                    />
-                    {files.length > 0 && (
-                      <div className="mt-3 flex flex-col gap-2">
-                        {files.map((file, index) => (
-                          <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
-                            <div className="text-sm truncate max-w-xs">{file.name}</div>
-                            <button
-                              type="button"
-                              className="text-red-500 hover:underline text-xs"
-                              onClick={() => handleFileDelete(index)}
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+              <div className='flex justify-center items-center flex-col'>
+                <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 '>
+                  <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS & PROOF OF PAYMENT</h1>
+                    <ul className='list-inside list-disc'>
+                      <li>Baptismal Certificate</li>
+                      <li>Valid ID</li>
+                      <li>Authorization Letter (if someone else is claiming the certificate)</li>
+                    </ul>
+                    <div className="flex flex-col items-center justify-center">
+                      <label
+                        htmlFor="file-upload"
+                        className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
+                      >
+                        Upload File
+                      </label>
+                      <input
+                        id="file-upload"
+                        type="file"
+                        className="hidden"
+                        multiple
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        onChange={handleFileChange}
+                      />
+                      {files.length > 0 && (
+                        <div className="mt-3 flex flex-col gap-2">
+                          {files.map((file, index) => (
+                            <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                              <div className="text-sm truncate max-w-xs">{file.name}</div>
+                              <button
+                                type="button"
+                                className="text-red-500 hover:underline text-xs"
+                                onClick={() => handleFileDelete(index)}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                </div>
 
+                <div className='border-2 border-black/30 p-2 rounded-lg flex flex-col gap-2 mt-3'>
                   <h1 className='font-bold josefin-regular text-center'>DONATION METHOD</h1>
                   <div className='flex justify-center items-center'>
                     <RowRadioButtonsGroup 
@@ -379,7 +382,15 @@ function Confirmation({church, user, allChurch}) {
                     
                     />
                   </div>
+                </div>
+
+
+
+
               </div>
+
+
+
             </div>
 
 

@@ -10,8 +10,20 @@ import { useAuthAdmin } from '@/app/hooks/authadmin'
 import AdminLayout from '@/app/components/Layout/AdminLayout'
 import { useBook } from '@/app/hooks/book'
 import { MoonLoader } from 'react-spinners'
+import { Button } from "primereact/button";
+import { useRouter } from "next/navigation";
+
+import 'primereact/resources/themes/saga-blue/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+
+
 
 function Events() {
+
+
+  const router = useRouter()
+
   const { admin } = useAuthAdmin({
     middleware: 'auth-admin',
     redirectIfAuthenticated: '/dashboard-admin',
@@ -43,6 +55,10 @@ function Events() {
     setEvents(convertedEvents)
   }, [event])
 
+    const handleSetDateEvent = () => {
+        router.push('/set-event-date')
+    }
+
   if (!event) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -55,6 +71,9 @@ function Events() {
     <AdminLayout>
       <div className="p-4">
         <h1 className="text-xl font-bold mb-4">Events</h1>
+        <div className='mb-3'>
+          <Button onClick={handleSetDateEvent} icon="pi pi-calendar" label="Set Date Event" />
+        </div>
         <FullCalendar
           plugins={[timeGridPlugin, dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"

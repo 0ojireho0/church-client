@@ -204,16 +204,19 @@ function AccountingTable({searchStatus, church_id}) {
                         style={{minWidth: '12rem'}}  
                         body={nameBodyTemplate}
                         ></Column>
-                    <Column 
-                        body={(rowData) => {
-                            if (!rowData.date || !rowData.time_slot) {
-                                const date = dayjs(rowData.created_at).format('MMMM DD, YYYY hh:mm A')
-                                return `${date}`;
-                            }
-                            const date = dayjs(rowData.date).format('MMMM DD, YYYY');
-                            const time = dayjs(`${date} ${rowData.time_slot}`, 'YYYY-MM-DD HH:mm:ss').format('hh:mm A');
-                            return `${date} ${time}`;
-                        }}
+                        <Column 
+                            body={(rowData) => {
+                                if (!rowData?.date || !rowData?.time_slot) {
+                                    const date = dayjs(rowData.created_at).format('MMMM DD, YYYY hh:mm A');
+                                    return `${date}`;
+                                }
+
+                                const dateRaw = rowData.date; // Keep raw for parsing with time
+                                const timeSlot = rowData.time_slot;
+
+                                const fullDateTime = dayjs(`${dateRaw} ${timeSlot}`, 'YYYY-MM-DD HH:mm:ss');
+                                return fullDateTime.format('MMMM DD, YYYY hh:mm A');
+                            }}
                         sortable 
                         header="Date & Time"
                         style={{minWidth: '10rem'}} ></Column>

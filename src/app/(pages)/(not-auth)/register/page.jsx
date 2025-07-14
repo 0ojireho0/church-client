@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -14,12 +14,27 @@ import { useForm, Controller } from 'react-hook-form';
 import { useAuth } from '@/app/hooks/auth'
 import Cleave from 'cleave.js/react'
 
+import { Dialog } from 'primereact/dialog'
+import { Button } from 'primereact/button'
+
+import 'primereact/resources/themes/lara-light-indigo/theme.css'
+import 'primereact/resources/primereact.min.css'
+import 'primeicons/primeicons.css'
+
 
 export default function Register() {
     
     const [errors, setErrors] = useState([])
     const [loading, setLoading] = useState(false)
     const [cleaveKey, setCleaveKey] = useState(0)
+    const [showPrivacy, setShowPrivacy] = useState(true)
+    const [agreed, setAgreed] = useState(false)
+
+
+    useEffect(() => {
+        // Show the privacy agreement on first mount
+        setShowPrivacy(true)
+    }, [])
     
     const { register:registers, reset, formState: {errors: error}, handleSubmit, control } = useForm({
         defaultValues: {
@@ -188,18 +203,75 @@ export default function Register() {
                 </div>
             </div>
         </form>
-   
-     
-        
-
-       
-  
-        
-
-
-
       </div>
     </div>
+
+
+    <Dialog
+    header="Privacy Agreement"
+    visible={showPrivacy}
+    modal
+    closable={false}
+    style={{ width: '90vw', maxWidth: '800px' }}
+    footer={
+        <div className="flex justify-end gap-2">
+        <Button
+            label="I Agree and Consent"
+            icon="pi pi-check"
+            onClick={() => {
+            setAgreed(true)
+            setShowPrivacy(false)
+            }}
+            className="p-button-success"
+        />
+        </div>
+    }
+    >
+    <div className="text-sm text-gray-800 overflow-y-auto max-h-[60vh] josefin-regular space-y-3 px-1">
+        <p>
+        In compliance with the Data Privacy Act of 2012 (Republic Act No. 10173), the Church Connect System values your right to privacy. We are committed to safeguarding your personal data and ensuring that your information is processed in accordance with the law.
+        </p>
+
+        <p><strong>1. Collection of Personal Information</strong></p>
+        <ul className="list-disc ml-5">
+        <li>Full Name</li>
+        <li>Email Address</li>
+        <li>Contact Number</li>
+        <li>Address</li>
+        <li>Religious information (e.g., sacraments received, service participation)</li>
+        </ul>
+
+        <p><strong>2. Purpose of Data Collection</strong></p>
+        <ul className="list-disc ml-5">
+        <li>Registration and identity verification</li>
+        <li>Access to parish services and events</li>
+        <li>Document request processing</li>
+        <li>Notifications and updates</li>
+        <li>Service analytics</li>
+        </ul>
+
+        <p><strong>3. Data Sharing and Storage</strong></p>
+        <p>Your data will only be accessed by authorized Church personnel. It will not be shared without your consent unless required by law.</p>
+
+        <p><strong>4. Retention and Disposal</strong></p>
+        <p>We will store your data only as long as needed, and dispose of it securely after.</p>
+
+        <p><strong>5. Your Rights Under the Law</strong></p>
+        <ul className="list-disc ml-5">
+        <li>Be informed about data usage</li>
+        <li>Access your data</li>
+        <li>Correct or update data</li>
+        <li>Withdraw consent</li>
+        <li>File a complaint</li>
+        </ul>
+
+        <p><strong>Consent Declaration</strong></p>
+        <p>By registering, you consent to our use of your data as outlined above under Republic Act No. 10173.</p>
+    </div>
+    </Dialog>
+
+
+
     </>
   )
 }
