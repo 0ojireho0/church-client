@@ -238,31 +238,65 @@ export const useBook = ({church_id} = {}) => {
     }
 
     const requestCertificate = async({setLoading, setLoadingDone, reset, setShowOnlinePaymentModal, setSelectedPayment, setSelectedOptions, ...props}) => {
+
+        const isFormData = props?.formData instanceof FormData
+        const dataToSend = isFormData ? props.formData : props
         
         await csrf()
 
-        axios.post('api/request-certificate', props)
-            .then(res => {
-                if(res.status === 200){
-                    console.log(res)
-                    Swal.fire({
-                        title: "Success",
-                        text: `Submit Successfully, your reference number is ${res.data.ref_num}`,
-                        icon: "success"
-                    })
-                    setSelectedPayment(null)
-                    setSelectedOptions([])
-                    reset()
-                }
-            })
-            .catch(err => {
-                // console.log(err)
-            })
-            .finally(() => {
-                setLoading(false)
-                setLoadingDone(false)
-                setShowOnlinePaymentModal(false)
-            })
+        axios.post('api/request-certificate', dataToSend, {
+            headers: isFormData ? {
+                'Content-Type' : 'multipart/form-data'
+            } : {}
+        })
+        .then(res => {
+             if(res.status === 200){
+                 console.log(res)
+                 Swal.fire({
+                     title: "Success",
+                     text: `Submit Successfully, your reference number is ${res.data.ref_num}`,
+                     icon: "success"
+                 })
+                 setSelectedPayment(null)
+                 setSelectedOptions([])
+                 reset()
+             }
+            // console.log(res)
+         })
+         .catch(err => {
+             // console.log(err)
+         })
+         .finally(() => {
+             setLoading(false)
+             setLoadingDone(false)
+             setShowOnlinePaymentModal(false)
+         })
+
+
+
+
+        // axios.post('api/request-certificate', props)
+        //     .then(res => {
+        //         if(res.status === 200){
+        //             console.log(res)
+        //             Swal.fire({
+        //                 title: "Success",
+        //                 text: `Submit Successfully, your reference number is ${res.data.ref_num}`,
+        //                 icon: "success"
+        //             })
+        //             setSelectedPayment(null)
+        //             setSelectedOptions([])
+        //             reset()
+        //         }
+        //     })
+        //     .catch(err => {
+        //         // console.log(err)
+        //     })
+        //     .finally(() => {
+        //         setLoading(false)
+        //         setLoadingDone(false)
+        //         setShowOnlinePaymentModal(false)
+        //     })
     }
 
     const walkinMass = async({setLoading, reset, setSelectedPayment, setSelectedDate, setSelectedTime, setSelectService, ...props}) => {

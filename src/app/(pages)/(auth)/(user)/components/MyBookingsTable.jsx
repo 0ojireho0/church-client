@@ -928,6 +928,26 @@ function MyBookingsTable({user_id}) {
                 rows={2} 
             />
         </div>
+
+        {formData?.files?.length > 0 && (
+            <div className="field">
+            <label className="font-bold">Uploaded Files</label>
+            <ul className="list-disc ml-5">
+                {formData.files.map((file, index) => (
+                <li key={index}>
+                    <a 
+                    href={file.filepath} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline break-words"
+                    >
+                    {file.filename}
+                    </a>
+                </li>
+                ))}
+            </ul>
+            </div>
+        )}
         </Dialog>
 
             </>

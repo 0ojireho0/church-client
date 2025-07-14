@@ -15,6 +15,7 @@ import RowRadioButtonsGroup from '@/app/components/RowRadioButtonsGroup'
 import Link from 'next/link'
 import { useBook } from '@/app/hooks/book'
 import { useAuth } from '@/app/hooks/auth'
+import Swal from 'sweetalert2'
 
 function RequestCertificate() {
 
@@ -27,6 +28,7 @@ function RequestCertificate() {
     const [loadingDone, setLoadingDone] = useState(false)
 
     const [loading, setLoading] = useState(false)
+    const [files, setFiles] = useState([])
 
     const { register, handleSubmit, reset, formState: {errors} } = useForm()
 
@@ -83,25 +85,48 @@ function RequestCertificate() {
     // }
 
     const submitForm = (data) => {
-        const formData = {
+
+        if(files.length <= 0){
+            Swal.fire({
+                title: "Error",
+                text: "Upload File is required",
+                icon: "warning"
+            })
+            return
+        }
+        if(selectedOptions.length <= 0){
+            Swal.fire({
+                title: "Error",
+                text: "Select Certificate Type",
+                icon: "warning"
+            })
+            return
+        }
+        
+        const formsData = {
             ...data,
             services: selectedOptions
         }
-        const jsonData = JSON.stringify(formData)
 
+        const formData = new FormData()
+        formData.append('jsonData', JSON.stringify(formsData))
+        formData.append('selectedPayment', selectedPayment)
+        formData.append('id', id)
+        formData.append('user_id', user?.id)
+        formData.append('mop', selectedPayment)
+        files.forEach((file, index) => {
+            formData.append(`files[]`, file)
+        })
 
         if(selectedPayment === "online"){
             setShowOnlinePaymentModal(true)
 
-            setPassData(jsonData)
+            setPassData(formData)
             return
         }
         setLoading(true)
         requestCertificate({
-            jsonData,
-            selectedPayment,
-            id,
-            user,
+            formData,
             setLoading,
             setLoadingDone,
             setSelectedOptions,
@@ -114,20 +139,36 @@ function RequestCertificate() {
 
   const handleDoneSubmit = () => {
     setLoadingDone(true)
-        requestCertificate({
-            jsonData: passData,
-            selectedPayment,
-            id,
-            user,
-            setLoading,
-            setLoadingDone,
-            setSelectedOptions,
-            setShowOnlinePaymentModal,
-            setSelectedPayment,
-            reset
-        })
+    requestCertificate({
+        formData: passData,
+        setLoading,
+        setLoadingDone,
+        setSelectedOptions,
+        setShowOnlinePaymentModal,
+        setSelectedPayment,
+        reset
+    })
   }
 
+    const handleFileChange = (e) => {
+      const selectedFiles = Array.from(e.target.files)
+  
+      const filteredFiles = selectedFiles.filter(file => file.size <= 10 * 1024 * 1024)
+  
+      if (filteredFiles.length !== selectedFiles.length) {
+        Swal.fire({
+          title: "File Too Large",
+          text: "One or more files exceed the 10MB limit.",
+          icon: "error"
+        })
+      }
+  
+      setFiles(prev => [...prev, ...filteredFiles])
+    }
+
+    const handleFileDelete = (index) => {
+        setFiles(prev => prev.filter((_, i) => i !== index))
+    }
  
 
 
@@ -260,6 +301,42 @@ function RequestCertificate() {
                         
                     </div>
 
+                <div className='mt-5'>
+                    <div className="flex flex-col items-center">
+                    <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS & PROOF OF PAYMENT</h1>
+                    <label
+                        htmlFor="file-upload"
+                        className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
+                    >
+                        Upload File
+                    </label>
+                    <input
+                        id="file-upload"
+                        type="file"
+                        className="hidden"
+                        multiple
+                        accept=".pdf,.jpg,.jpeg,.png"
+                        onChange={handleFileChange}
+                    />
+                    </div>
+                {files.length > 0 && (
+                    <div className="mt-3 flex flex-col gap-2">
+                    {files.map((file, index) => (
+                        <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                        <div className="text-sm truncate max-w-xs">{file.name}</div>
+                        <button
+                            type="button"
+                            className="text-red-500 hover:underline text-xs"
+                            onClick={() => handleFileDelete(index)}
+                        >
+                            Delete
+                        </button>
+                        </div>
+                    ))}
+                    </div>
+                )}
+                </div>
+
                     <div className='flex justify-center items-center mt-5 gap-3'>
                         {loading ? (
                             <div className='flex items-center gap-10'>
@@ -291,17 +368,17 @@ function RequestCertificate() {
           <h1 className='text-sm josefin-regular font-bold mt-3'>1. Send the full payment amount to GCASH/Bank Transfer:</h1>
           <div className='flex flex-col items-center'>
             <h1 className='text-sm font-bold josefin-regular'>GCASH</h1>
-            <h1 className='josefin-regular text-sm'>09123456789</h1>
-            <h1 className='josefin-regular text-sm'>Juan Dela Cruz</h1>
+            <h1 className='josefin-regular text-sm'>09950249111</h1>
+            <h1 className='josefin-regular text-sm'>Shyanne Kylie Dela Rosa</h1>
           </div>
           <div className='flex flex-col items-center mt-3'>
             <h1 className='text-sm font-bold josefin-regular'>Bank Transfer</h1>
             <h1 className='josefin-regular text-sm'>Account #: 1234 567 890</h1>
             <h1 className='josefin-regular text-sm'>Account Name: Juan Dela Cruz</h1>
           </div>
-          <h1 className='text-sm josefin-regular font-bold mt-3'>2. Send Proof of payment to our email: </h1>
-          <h1 className='text-sm josefin-regular text-center'>quiapochurch@gmail.com</h1>
-          <h1 className='text-sm josefin-regular font-bold mt-3'>3. Wait for our confirmation email within 24 hours upon sending your proof of payment via Email. (If you did not receive a confirmation email, please contact us.) </h1>
+          <h1 className='text-sm josefin-regular font-bold mt-3'>2. Upload your Proof of Payment under the 'Payment' section </h1>
+          {/* <h1 className='text-sm josefin-regular text-center'>quiapochurch@gmail.com</h1> */}
+          <h1 className='text-sm josefin-regular font-bold mt-3'>3. Wait for our confirmation email within 24 hours upon submitting your application/request form. (If you did not receive a confirmation email, please contact us at churchconnect05@gmail.com) </h1>
           <div className='mt-3 flex justify-center items-center gap-5'>
             {loadingDone ? (
               <>
