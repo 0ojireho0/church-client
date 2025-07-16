@@ -306,7 +306,7 @@ function RequestCertificate() {
                     <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS & PROOF OF PAYMENT</h1>
                     <div className="w-full my-2 bg-yellow-100 border border-yellow-300 rounded-md p-4 text-sm text-black space-y-4">
                         <div>
-                            <h2 className="font-bold text-red-700">BAPTISMAL CERT:</h2>
+                            <h2 className="font-bold text-red-700">BAPTISMAL CERTIFICATE:</h2>
                             <ul className="list-disc ml-5">
                             <li>Birth Certificate from PSA (original and photocopy)</li>
                             <li>Valid Government-Issued ID (of requester or parent/guardian if minor)</li>
@@ -316,7 +316,7 @@ function RequestCertificate() {
                         </div>
 
                         <div>
-                            <h2 className="font-bold text-red-700">CONFIRMATION CERT:</h2>
+                            <h2 className="font-bold text-red-700">CONFIRMATION CERTIFICATE:</h2>
                             <ul className="list-disc ml-5">
                             <li>Baptismal Certificate (with “For Confirmation” annotation)</li>
                             <li>Confirmation Stub or ID (if available)</li>
@@ -327,7 +327,7 @@ function RequestCertificate() {
                         </div>
 
                         <div>
-                            <h2 className="font-bold text-red-700">MARRIAGE CERT:</h2>
+                            <h2 className="font-bold text-red-700">MARRIAGE CERTIFICATE:</h2>
                             <ul className="list-disc ml-5">
                             <li>Marriage Contract from PSA (ORIGINAL AND PHOTOCOPY)</li>
                             <li>Canonical Interview Certificate (if available)</li>
