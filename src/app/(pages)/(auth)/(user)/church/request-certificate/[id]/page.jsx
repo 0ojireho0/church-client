@@ -304,6 +304,39 @@ function RequestCertificate() {
                 <div className='mt-5'>
                     <div className="flex flex-col items-center">
                     <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS & PROOF OF PAYMENT</h1>
+                    <div className="w-full my-2 bg-yellow-100 border border-yellow-300 rounded-md p-4 text-sm text-black space-y-4">
+                        <div>
+                            <h2 className="font-bold text-red-700">BAPTISMAL CERT:</h2>
+                            <ul className="list-disc ml-5">
+                            <li>Birth Certificate from PSA (original and photocopy)</li>
+                            <li>Valid Government-Issued ID (of requester or parent/guardian if minor)</li>
+                            <li>Authorization Letter (if requester is not the baptized person)</li>
+                            <li>Proof of Payment (screenshot or scanned receipt)</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h2 className="font-bold text-red-700">CONFIRMATION CERT:</h2>
+                            <ul className="list-disc ml-5">
+                            <li>Baptismal Certificate (with “For Confirmation” annotation)</li>
+                            <li>Confirmation Stub or ID (if available)</li>
+                            <li>Valid Government-Issued ID</li>
+                            <li>Authorization Letter (if requester is not the confirmed person)</li>
+                            <li>Proof of Payment (screenshot or scanned receipt)</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h2 className="font-bold text-red-700">MARRIAGE CERT:</h2>
+                            <ul className="list-disc ml-5">
+                            <li>Marriage Contract from PSA (ORIGINAL AND PHOTOCOPY)</li>
+                            <li>Canonical Interview Certificate (if available)</li>
+                            <li>Valid Government-Issued ID of Both Spouses</li>
+                            <li>Authorization Letter (if requester is not one of the spouses)</li>
+                            <li>Proof of Payment (screenshot or scanned receipt)</li>
+                            </ul>
+                        </div>
+                    </div>
                     <label
                         htmlFor="file-upload"
                         className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
