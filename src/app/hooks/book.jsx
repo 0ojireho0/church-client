@@ -237,7 +237,7 @@ export const useBook = ({church_id} = {}) => {
             })
     }
 
-    const requestCertificate = async({setLoading, setLoadingDone, reset, setShowOnlinePaymentModal, setSelectedPayment, setSelectedOptions, ...props}) => {
+    const requestCertificate = async({setFiles, setLoading, setLoadingDone, reset, setShowOnlinePaymentModal, setSelectedPayment, setSelectedOptions, ...props}) => {
 
         const isFormData = props?.formData instanceof FormData
         const dataToSend = isFormData ? props.formData : props
@@ -257,7 +257,7 @@ export const useBook = ({church_id} = {}) => {
                      text: `Submit Successfully, your reference number is ${res.data.ref_num}`,
                      icon: "success"
                  })
-                 setSelectedPayment(null)
+                //  setSelectedPayment(null)
                  setSelectedOptions([])
                  reset()
              }
@@ -270,6 +270,7 @@ export const useBook = ({church_id} = {}) => {
              setLoading(false)
              setLoadingDone(false)
              setShowOnlinePaymentModal(false)
+             setFiles([])
          })
 
 
@@ -435,6 +436,8 @@ export const useBook = ({church_id} = {}) => {
             })
     }
 
+
+
     return{
         book,
         calendar,
@@ -449,7 +452,8 @@ export const useBook = ({church_id} = {}) => {
         walkinBaptism,
         walkinWedding,
         walkinMemorial,
-        walkinConfirmation
+        walkinConfirmation,
+        
     }
 
 }

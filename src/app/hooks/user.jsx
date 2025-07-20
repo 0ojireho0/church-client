@@ -79,10 +79,44 @@ export const useUser = ({user_id} = { }) => {
 
     }
 
+    const certificateMOP = async({setLoading, setshowOnlinePaymentModal, setShowViewCertificate, setSelectedMOP, setFiles, ...props}) => {
+
+        const isFormData = props?.formDatas instanceof FormData
+        const dataToSend = isFormData ? props.formDatas : props
+
+        await csrf()
+
+        axios.post('/api/certificateMOP', dataToSend, {
+            headers: isFormData ? {
+                "Content-Type" : "multipart/form-data"
+            } : {}
+        })
+        .then(res => {
+            if(res.status === 200){
+                Swal.fire({
+                    title: "Success",
+                    text: "Change Mode of Payment Successfully!",
+                    icon: "success"
+                })
+            }
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        .finally(() => {
+            setLoading(false)
+            setshowOnlinePaymentModal(false)
+            setShowViewCertificate(false)
+            setSelectedMOP(null)
+            setFiles([])
+        })
+    }   
+
     return {
         myBooks,
         cancelBookingData,
-        anotherBook
+        anotherBook,
+        certificateMOP
     }
 
 }

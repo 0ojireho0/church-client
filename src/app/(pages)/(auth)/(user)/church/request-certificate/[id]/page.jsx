@@ -21,7 +21,8 @@ function RequestCertificate() {
 
     const [getChurchInfo, setGetChurchInfo] = useState(null)
     const [selectedOptions, setSelectedOptions] = useState([]);
-    const [selectedPayment, setSelectedPayment] = useState(null)
+    // const [selectedPayment, setSelectedPayment] = useState(null)
+    const [selectedPayment, setSelectedPayment] = useState("pending")
 
     const [showOnlinePaymentModal, setShowOnlinePaymentModal] = useState(false)
     const [passData, setPassData] = useState()
@@ -113,17 +114,16 @@ function RequestCertificate() {
         formData.append('selectedPayment', selectedPayment)
         formData.append('id', id)
         formData.append('user_id', user?.id)
-        formData.append('mop', selectedPayment)
         files.forEach((file, index) => {
             formData.append(`files[]`, file)
         })
 
-        if(selectedPayment === "online"){
-            setShowOnlinePaymentModal(true)
+        // if(selectedPayment === "online"){
+        //     setShowOnlinePaymentModal(true)
 
-            setPassData(formData)
-            return
-        }
+        //     setPassData(formData)
+        //     return
+        // }
         setLoading(true)
         requestCertificate({
             formData,
@@ -132,23 +132,25 @@ function RequestCertificate() {
             setSelectedOptions,
             setShowOnlinePaymentModal,
             setSelectedPayment,
-            reset
+            reset,
+            setFiles
         })
+
   
     }
 
-  const handleDoneSubmit = () => {
-    setLoadingDone(true)
-    requestCertificate({
-        formData: passData,
-        setLoading,
-        setLoadingDone,
-        setSelectedOptions,
-        setShowOnlinePaymentModal,
-        setSelectedPayment,
-        reset
-    })
-  }
+//   const handleDoneSubmit = () => {
+//     setLoadingDone(true)
+//     requestCertificate({
+//         formData: passData,
+//         setLoading,
+//         setLoadingDone,
+//         setSelectedOptions,
+//         setShowOnlinePaymentModal,
+//         setSelectedPayment,
+//         reset
+//     })
+//   }
 
     const handleFileChange = (e) => {
       const selectedFiles = Array.from(e.target.files)
@@ -287,7 +289,7 @@ function RequestCertificate() {
                         </div>
                     </div>
 
-                    <div className='flex flex-col justify-center items-center'>
+                    {/* <div className='flex flex-col justify-center items-center'>
                         <h1 className='bg-[#ff6467] text-white px-4 py-2 rounded-lg josefin-regular '>PAYMENT METHOD</h1>
 
                         <RowRadioButtonsGroup 
@@ -299,11 +301,11 @@ function RequestCertificate() {
                         
                         />
                         
-                    </div>
+                    </div> */}
 
                 <div className='mt-5'>
                     <div className="flex flex-col items-center">
-                    <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS & PROOF OF PAYMENT</h1>
+                    <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS</h1>
                     <div className="w-full my-2 bg-yellow-100 border border-yellow-300 rounded-md p-4 text-sm text-black space-y-4">
                         <div>
                             <h2 className="font-bold text-red-700">BAPTISMAL CERTIFICATE:</h2>
@@ -311,7 +313,6 @@ function RequestCertificate() {
                             <li>Birth Certificate from PSA (original and photocopy)</li>
                             <li>Valid Government-Issued ID (of requester or parent/guardian if minor)</li>
                             <li>Authorization Letter (if requester is not the baptized person)</li>
-                            <li>Proof of Payment (screenshot or scanned receipt)</li>
                             </ul>
                         </div>
 
@@ -322,7 +323,6 @@ function RequestCertificate() {
                             <li>Confirmation Stub or ID (if available)</li>
                             <li>Valid Government-Issued ID</li>
                             <li>Authorization Letter (if requester is not the confirmed person)</li>
-                            <li>Proof of Payment (screenshot or scanned receipt)</li>
                             </ul>
                         </div>
 
@@ -333,7 +333,6 @@ function RequestCertificate() {
                             <li>Canonical Interview Certificate (if available)</li>
                             <li>Valid Government-Issued ID of Both Spouses</li>
                             <li>Authorization Letter (if requester is not one of the spouses)</li>
-                            <li>Proof of Payment (screenshot or scanned receipt)</li>
                             </ul>
                         </div>
                     </div>
@@ -421,7 +420,9 @@ function RequestCertificate() {
               </>
             ) : (
               <>
-              <h1 className='bg-red-600 hover:bg-red-700 text-white py-1 px-6 rounded-lg cursor-pointer' onClick={() => handleDoneSubmit()}>Done</h1>
+              <h1 className='bg-red-600 hover:bg-red-700 text-white py-1 px-6 rounded-lg cursor-pointer' 
+            //   onClick={() => handleDoneSubmit()}
+              >Done</h1>
               </>
             )}
             <h1 className='bg-blue-600 hover:bg-blue-700 text-white py-1 px-6 rounded-lg cursor-pointer' onClick={() => setShowOnlinePaymentModal(false)}>Cancel</h1>

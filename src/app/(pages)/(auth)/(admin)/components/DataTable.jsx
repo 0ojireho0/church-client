@@ -267,10 +267,11 @@ export default function FileTable({searchStatus, church_id}){
             return
         }
 
-        if(selectedIsPaid === null && selectedStatus === "Rejected"){
+        if(book?.book_type === "schedule" && selectedIsPaid === null && selectedStatus === "Rejected"){
             setError(true)
             return
         }
+
 
         setLoading(true)
         changeStatus({
@@ -535,20 +536,25 @@ export default function FileTable({searchStatus, church_id}){
                         <label htmlFor="remarks" className="font-bold">Remarks</label>
                         <InputText id="remarks" required value={remarks} onChange={e => setRemarks(e.target.value)} />
                 </div>
-            <div className="field">
-                <label htmlFor="" className="font-bold">Payment Status</label>
-                <Dropdown 
-                    options={statusPaid} 
-                    optionLabel="name" 
-                    optionValue="code" 
-                    value={selectedIsPaid} 
-                    onChange={(e) => handleSelectIsPaid(e.value)} 
-                    checkmark={true}
-                    disabled={book?.set_status === 1 ? true : false} 
-                    
-                    />
+            {book?.book_type !== "certificate" && (
+                <>
+                    <div className="field">
+                        <label htmlFor="" className="font-bold">Payment Status</label>
+                        <Dropdown 
+                            options={statusPaid} 
+                            optionLabel="name" 
+                            optionValue="code" 
+                            value={selectedIsPaid} 
+                            onChange={(e) => handleSelectIsPaid(e.value)} 
+                            checkmark={true}
+                            disabled={book?.set_status === 1 ? true : false} 
+                            
+                            />
+                        
+                    </div>
                 
-            </div>
+                </>
+            )}
                 </>
             )}
             <div className="field">

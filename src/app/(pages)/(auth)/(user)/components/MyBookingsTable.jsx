@@ -10,6 +10,7 @@ import { Dialog } from "primereact/dialog";
 import { Tooltip } from 'primereact/tooltip';
 import dayjs from "dayjs";
 import { MoonLoader } from "react-spinners";
+import { Dropdown } from "primereact/dropdown";
 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -43,10 +44,14 @@ function MyBookingsTable({user_id}) {
     const [fullyBooked, setFullyBooked] = useState(null)
     const [loading, setLoading] = useState(false)
 
+    const [selectedMOP, setSelectedMOP] = useState(null)
+    const [showOnlinePaymentModal, setshowOnlinePaymentModal] = useState(false)
+    const [files, setFiles] = useState([])
+
 
     const includeStatus = ['Approved', 'Rejected']
 
-    const { myBooks, cancelBookingData, anotherBook } = useUser({
+    const { myBooks, cancelBookingData, anotherBook, certificateMOP } = useUser({
         user_id: user_id
     })
 
@@ -350,14 +355,129 @@ function MyBookingsTable({user_id}) {
 
     const onHideCertificate = () => {
         // setFormData([])
+        setSelectedMOP(null)
         setShowViewCertificate(false)
     }
 
+    const submitCertificateMOP = () => {
+        // console.log(selectedMOP, formData?.id)
+
+
+        const formDatas = new FormData()
+
+        formDatas.append('id', formData?.id)
+        formDatas.append('mop', selectedMOP)
+
+        if(selectedMOP === "online"){
+            setShowViewCertificate(false)
+            setshowOnlinePaymentModal(true)
+            return
+        }
+
+
+        setLoading(true)
+        certificateMOP({
+            formDatas,
+            setLoading,
+            setShowViewCertificate,
+            setshowOnlinePaymentModal,
+            setSelectedMOP,
+            setFiles
+        })
+        
+
+
+    }
+
     const certificateModalFooter = (
-        <React.Fragment>
-            <Button label="Cancel" icon="pi pi-times" onClick={onHideCertificate} />
-        </React.Fragment>
+        <>
+            <Button label="Cancel" icon="pi pi-times" severity="danger" onClick={onHideCertificate} />
+
+            {selectedMOP && (
+                <>
+                    {loading ? (
+                        <>
+                        <Button label="Submit" icon="pi pi-spin pi-spinner"/>
+                        </>
+                    ) : (
+                        <>
+                        <Button label="Submit" icon="pi pi-check" onClick={submitCertificateMOP} />
+                        </>
+                    )}
+                </>
+            )}
+        </>
     )
+
+    const statusPaid = [
+        {name: "Cash", code: 'cash'},
+        {name: "Online Payment", code: 'online'},
+    ]
+
+    const handleSelectIsPaid = (status) => {
+        // console.log(status)
+        setSelectedMOP(status)
+
+    }
+
+    const handleFileChange = (e) => {
+      const selectedFiles = Array.from(e.target.files)
+  
+      const filteredFiles = selectedFiles.filter(file => file.size <= 10 * 1024 * 1024)
+  
+      if (filteredFiles.length !== selectedFiles.length) {
+        Swal.fire({
+          title: "File Too Large",
+          text: "One or more files exceed the 10MB limit.",
+          icon: "error"
+        })
+      }
+  
+      setFiles(prev => [...prev, ...filteredFiles])
+    }
+
+    const handleFileDelete = (index) => {
+        setFiles(prev => prev.filter((_, i) => i !== index))
+    }
+
+  const handleDoneSubmit = () => {
+    // setLoadingDone(true)
+
+    if(files.length <= 0){
+        Swal.fire({
+            title: "Error",
+            text: "Upload File is required",
+            icon: "warning"
+        })
+        return
+    }
+
+    const formDatas = new FormData()
+
+    formDatas.append('id', formData?.id)
+    formDatas.append('mop', selectedMOP)
+    files.forEach((file, index) => {
+        formDatas.append(`files[]`, file)
+    })
+
+    setLoading(true)
+    certificateMOP({
+        formDatas,
+        setLoading,
+        setshowOnlinePaymentModal,
+        setShowViewCertificate,
+        setSelectedMOP,
+        setFiles
+    })
+
+
+  }
+
+  const handleCancelModal = () => {
+    setshowOnlinePaymentModal(false)
+    setSelectedMOP(null)
+    setFiles([])
+  }
 
 
   return (
@@ -879,6 +999,31 @@ function MyBookingsTable({user_id}) {
         onHide={onHideCertificate}
         draggable={false}
         >
+
+       {formData?.set_status === 3 && (
+            <>
+
+            <div className="field mb-3">
+                <h1 className="text-blue-700 font-bold">Your Certificate has been approved, choose your Mode of Payment</h1>
+            </div>
+
+            <div className="field">
+                <label htmlFor="" className="font-bold">Payment Status</label>
+                <Dropdown 
+                    options={statusPaid} 
+                    optionLabel="name" 
+                    optionValue="code" 
+                    value={selectedMOP} 
+                    onChange={(e) => handleSelectIsPaid(e.value)} 
+                    checkmark={true}
+                    // disabled={formData?.set_status === 1 ? true : false} 
+                    
+                    />
+                
+            </div>
+            </>
+        )}
+
         <div className="field">
             <label htmlFor="fullname" className="font-bold">Full Name</label>
             <InputText disabled id="fullname" value={formData?.form_data?.fullname} />
@@ -948,7 +1093,84 @@ function MyBookingsTable({user_id}) {
             </ul>
             </div>
         )}
+
         </Dialog>
+
+    {showOnlinePaymentModal && (
+      <>
+      <div className='fixed inset-0 bg-black/50 flex justify-center items-center px-2'>
+        <div className='bg-white w-full md:w-1/2 py-2 px-4 rounded-lg'>
+          <h1 className='josefin-regular font-bold text-sm text-center'>Here are the steps for confirmation of your booking!</h1>
+          <h1 className='text-sm josefin-regular font-bold mt-3'>1. Send the full payment amount to GCASH/Bank Transfer:</h1>
+          <div className='flex flex-col items-center'>
+            <h1 className='text-sm font-bold josefin-regular'>GCASH</h1>
+            <h1 className='josefin-regular text-sm'>09950249111</h1>
+            <h1 className='josefin-regular text-sm'>Shyanne Kylie Dela Rosa</h1>
+          </div>
+          <div className='flex flex-col items-center mt-3'>
+            <h1 className='text-sm font-bold josefin-regular'>Bank Transfer</h1>
+            <h1 className='josefin-regular text-sm'>Account #: 1234 567 890</h1>
+            <h1 className='josefin-regular text-sm'>Account Name: Juan Dela Cruz</h1>
+          </div>
+          <h1 className='text-sm josefin-regular font-bold mt-3'>2. Upload your Proof of Payment under the 'Payment' section </h1>
+          {/* <h1 className='text-sm josefin-regular text-center'>quiapochurch@gmail.com</h1> */}
+          <h1 className='text-sm josefin-regular font-bold mt-3'>3. Wait for our confirmation email within 24 hours upon submitting your application/request form. (If you did not receive a confirmation email, please contact us at churchconnect05@gmail.com) </h1>
+          <div className="flex flex-col items-center my-3">
+              <h1 className="font-bold josefin-regular text-center">Upload Proof of Payment</h1>
+              <label
+                  htmlFor="file-upload"
+                  className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
+              >
+                  Upload File
+              </label>
+              <input
+                  id="file-upload"
+                  type="file"
+                  className="hidden"
+                  multiple
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  onChange={handleFileChange}
+              />
+          </div>
+        {files.length > 0 && (
+            <div className="mt-3 flex flex-col gap-2">
+            {files.map((file, index) => (
+                <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                <div className="text-sm truncate max-w-xs">{file.name}</div>
+                <button
+                    type="button"
+                    className="text-red-500 hover:underline text-xs"
+                    onClick={() => handleFileDelete(index)}
+                >
+                    Delete
+                </button>
+                </div>
+            ))}
+            </div>
+        )}
+          <div className='mt-3 flex justify-center items-center gap-5'>
+            {loading ? (
+              <>
+              <div className='bg-red-600 py-1 px-6 rounded-lg'>
+                <MoonLoader size={30} color='white' />
+              </div>
+              </>
+            ) : (
+              <>
+              <h1 className='bg-red-600 hover:bg-red-700 text-white py-1 px-6 rounded-lg cursor-pointer' 
+              onClick={() => handleDoneSubmit()}
+              >Done</h1>
+              </>
+            )}
+            <h1 className='bg-blue-600 hover:bg-blue-700 text-white py-1 px-6 rounded-lg cursor-pointer' onClick={handleCancelModal}>Cancel</h1>
+          </div>
+
+        </div>
+      </div>
+
+
+      </>
+    )}
 
             </>
         ) : (

@@ -298,7 +298,7 @@ function Mass({church, user, allChurch}) {
               </div>
               <div className='mt-5'>
                 <div className="flex flex-col items-center">
-                  <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS & PROOF OF PAYMENT</h1>
+                  <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS</h1>
                   <label
                     htmlFor="file-upload"
                     className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"

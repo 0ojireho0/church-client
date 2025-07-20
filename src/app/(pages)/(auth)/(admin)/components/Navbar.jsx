@@ -15,6 +15,7 @@ import { MdManageAccounts } from "react-icons/md"
 import { FaXmark } from "react-icons/fa6"
 import { CgProfile } from "react-icons/cg"
 import { FaCalendarAlt } from "react-icons/fa"
+import { AiFillSafetyCertificate } from "react-icons/ai";
 
 // Components
 import Dropdown from './Dropdown'
@@ -54,6 +55,11 @@ export default function Navbar() {
       name: "Events",
       path: "/events-admin",
       icon: <FaCalendarAlt />
+    },
+    {
+      name: "Certificate",
+      path: "/certificate",
+      icon: <AiFillSafetyCertificate />
     }
   ]
 
