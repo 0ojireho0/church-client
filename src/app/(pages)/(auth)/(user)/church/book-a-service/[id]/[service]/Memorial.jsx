@@ -430,7 +430,7 @@ function Memorial({church, user, allChurch}) {
 
               <div className='border-2 border-black/30 p-2 rounded-lg mt-3'>
                 <div className="flex flex-col justify-center items-center">
-                  <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS & PROOF OF PAYMENT</h1>
+                  <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS</h1>
                   <label
                     htmlFor="file-upload"
                     className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"

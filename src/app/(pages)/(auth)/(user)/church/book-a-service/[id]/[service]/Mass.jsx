@@ -94,14 +94,14 @@ function Mass({church, user, allChurch}) {
       return
     }
 
-    if(files.length <= 0){
-      Swal.fire({
-        title: "Error",
-        text: "Upload File is required",
-        icon: "warning"
-      })
-      return
-    }
+    // if(files.length <= 0){
+    //   Swal.fire({
+    //     title: "Error",
+    //     text: "Upload File is required",
+    //     icon: "warning"
+    //   })
+    //   return
+    // }
 
     const formData = new FormData()
     formData.append('jsonData', JSON.stringify(data))
@@ -297,7 +297,7 @@ function Mass({church, user, allChurch}) {
                   </div>
               </div>
               <div className='mt-5'>
-                <div className="flex flex-col items-center">
+                {/* <div className="flex flex-col items-center">
                   <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS</h1>
                   <label
                     htmlFor="file-upload"
@@ -313,7 +313,7 @@ function Mass({church, user, allChurch}) {
                     accept=".pdf,.jpg,.jpeg,.png"
                     onChange={handleFileChange}
                   />
-                </div>
+                </div> */}
               {files.length > 0 && (
                 <div className="mt-3 flex flex-col gap-2">
                   {files.map((file, index) => (
