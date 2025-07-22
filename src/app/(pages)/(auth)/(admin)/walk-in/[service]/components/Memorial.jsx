@@ -78,7 +78,7 @@ function Memorial({church}) {
 
         <form onSubmit={handleSubmit(submitMemorial)}>
           <div className='px-24 flex flex-col md:items-start '>
-            <div className='md:grid grid-cols-2 gap-5 items-center'>
+            <div className='md:flex gap-5 items-center'>
               <label className='text-end'>DATE OF REQUEST: </label>
               <h1 className='bg-blue-400 text-center text-white hover:bg-blue-500 rounded-lg py-2 px-4 cursor-pointer' onClick={() => setShowMemorialDateModal(true)}>{selectedDate && selectedTime ? `${dayjs(selectedDate).format('MMMM DD, YYYY')} ${dayjs(selectedTime, 'HH:mm:ss').format('hh:mm A')}` : "Select Date & Time"}</h1>
               <label className='text-end' htmlFor='funeral_home_name'>FUNERAL HOME NAME: </label>
