@@ -87,15 +87,15 @@ function MyBookingsTable({user_id}) {
 
     const viewForm = (data) => {
         setFormData(data)
-        if(data.service_type == "baptism"){
+        if(data.service_type == "baptism" && data.book_type == "schedule"){
             setShowViewBaptism(true)
-        } else if(data.service_type == "wedding"){
+        } else if(data.service_type == "wedding" && data.book_type == "schedule"){
             setShowViewWedding(true)
-        } else if(data.service_type == "memorial"){
+        } else if(data.service_type == "memorial" && data.book_type == "schedule"){
             setShowViewMemorial(true)
-        } else if(data.service_type == "confirmation"){
+        } else if(data.service_type == "confirmation" && data.book_type == "schedule"){
             setShowViewConfirmation(true)
-        }else if(data.service_type == "certificate"){
+        }else if(data.book_type == "certificate"){
             setShowViewCertificate(true)
         }else{
             setShowViewMass(true)
@@ -992,7 +992,7 @@ function MyBookingsTable({user_id}) {
         visible={showViewCertificate} 
         style={{ width: '32rem' }} 
         breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
-        header={`Certificate Details - ${formData?.reference_num}`}
+        header={`Certificate Details - ${formData?.service_type?.charAt(0)?.toUpperCase() + formData?.service_type?.slice(1)}`}
         modal
         className="p-fluid"
         footer={certificateModalFooter}
@@ -1035,7 +1035,7 @@ function MyBookingsTable({user_id}) {
         </div>
 
         <div className="field">
-            <label htmlFor="baptismDate" className="font-bold">Preferred Baptism Date</label>
+            <label htmlFor="baptismDate" className="font-bold">{formData?.service_type === "wedding" ? "Preferred Wedding Date" : formData?.service_type === "confirmation" ? "Preferred Confirmation Date" : "Preferred Baptism Date"} </label>
             <InputText disabled id="baptismDate" value={formData?.form_data?.baptismDate} />
         </div>
 
@@ -1069,8 +1069,7 @@ function MyBookingsTable({user_id}) {
             <InputTextarea 
                 disabled 
                 id="services" 
-                value={formData?.form_data?.services?.join(', ')} 
-                rows={2} 
+                value={formData?.service_type?.charAt(0).toUpperCase() + formData?.service_type?.slice(1)}
             />
         </div>
 
@@ -1112,7 +1111,7 @@ function MyBookingsTable({user_id}) {
             <h1 className='josefin-regular text-sm'>Account #: 1234 567 890</h1>
             <h1 className='josefin-regular text-sm'>Account Name: Juan Dela Cruz</h1>
           </div>
-          <h1 className='text-sm josefin-regular font-bold mt-3'>2. Upload your Proof of Payment under the 'Payment' section </h1>
+          <h1 className='text-sm josefin-regular font-bold mt-3'>2. Upload your Proof of Payment below by clicking the "Upload File" button. </h1>
           {/* <h1 className='text-sm josefin-regular text-center'>quiapochurch@gmail.com</h1> */}
           <h1 className='text-sm josefin-regular font-bold mt-3'>3. Wait for our confirmation email within 24 hours upon submitting your application/request form. (If you did not receive a confirmation email, please contact us at churchconnect05@gmail.com) </h1>
           <div className="flex flex-col items-center my-3">

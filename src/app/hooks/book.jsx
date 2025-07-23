@@ -41,6 +41,7 @@ export const useBook = ({church_id} = {}) => {
         setLoadingDone,
         setShowOnlinePaymentModal,
         setFiles,
+        setOnlineFiles,
         ...props
     }) => {
         await csrf()
@@ -66,6 +67,7 @@ export const useBook = ({church_id} = {}) => {
             setSelectedDate(null)
             setSelectedTime(null)
             setFiles([])
+            setOnlineFiles([])
         })
         .catch(err => {
             console.error(err)
@@ -83,7 +85,7 @@ export const useBook = ({church_id} = {}) => {
     }
 
 
-    const weddingBook = async({reset, setLoading, setSelectedPayment, setWeddingSelectedDate, setWeddingSelectedTime, setRehearsalSelectedDate, setRehearsalSelectedTime, setLoadingDone, setShowOnlinePaymentModal, setFiles, ...props}) => {
+    const weddingBook = async({reset, setLoading, setSelectedPayment, setWeddingSelectedDate, setWeddingSelectedTime, setRehearsalSelectedDate, setRehearsalSelectedTime, setLoadingDone, setShowOnlinePaymentModal, setFiles, setOnlineFiles, ...props}) => {
         await csrf()
 
         const isFormData = props?.formData instanceof FormData
@@ -112,6 +114,7 @@ export const useBook = ({church_id} = {}) => {
                     setRehearsalSelectedDate(null)
                     setRehearsalSelectedTime(null)
                     setFiles([])
+                    setOnlineFiles([])
                 }
                 console.log(res)
             })
@@ -124,7 +127,7 @@ export const useBook = ({church_id} = {}) => {
             
     }
 
-    const memorialBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, setLoadingDone, setShowOnlinePaymentModal, setFiles, ...props}) => {
+    const memorialBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, setLoadingDone, setShowOnlinePaymentModal, setFiles, setOnlineFiles, ...props}) => {
         await csrf()
 
         const isFormData = props?.formData instanceof FormData
@@ -152,6 +155,7 @@ export const useBook = ({church_id} = {}) => {
                     setSelectedDate(null)
                     setSelectedTime(null)
                     setFiles([])
+                    setOnlineFiles([])
                 }
                 mutate()
             })
@@ -163,7 +167,7 @@ export const useBook = ({church_id} = {}) => {
             })
     }
 
-    const confirmationBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, setLoadingDone, setShowOnlinePaymentModal, setFiles, ...props}) => {
+    const confirmationBook = async({reset, setLoading, setSelectedPayment, setSelectedDate, setSelectedTime, setLoadingDone, setShowOnlinePaymentModal, setFiles, setOnlineFiles, ...props}) => {
         await csrf()
 
         const isFormData = props?.formData instanceof FormData
@@ -190,6 +194,7 @@ export const useBook = ({church_id} = {}) => {
                     setSelectedDate(null)
                     setSelectedTime(null)
                     setFiles([])
+                    setOnlineFiles([])
                 }
                 mutate()
             })

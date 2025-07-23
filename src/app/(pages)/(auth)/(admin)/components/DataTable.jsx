@@ -214,15 +214,15 @@ export default function FileTable({searchStatus, church_id}){
 
     const viewForm = (data) => {
         setFormData(data)
-        if(data.service_type == "baptism"){
+        if(data.service_type == "baptism" && data.book_type == "schedule"){
             setShowViewBaptism(true)
-        } else if(data.service_type == "wedding"){
+        } else if(data.service_type == "wedding" && data.book_type == "schedule"){
             setShowViewWedding(true)
-        } else if(data.service_type == "memorial"){
+        } else if(data.service_type == "memorial" && data.book_type == "schedule"){
             setShowViewMemorial(true)
-        } else if(data.service_type == "confirmation"){
+        } else if(data.service_type == "confirmation" && data.book_type == "schedule"){
             setShowViewConfirmation(true)
-        }else if(data.service_type == "certificate"){
+        }else if(data.book_type == "certificate"){
             setShowViewCertificate(true)
         }else{
             setShowViewMass(true)
@@ -533,23 +533,31 @@ export default function FileTable({searchStatus, church_id}){
             {selectedStatus === "Rejected" && (
                 <>
                 <div className="field">
+                        {book?.set_status !== 1 && (
+                            <>
                         <label htmlFor="remarks" className="font-bold">Remarks</label>
                         <InputText id="remarks" required value={remarks} onChange={e => setRemarks(e.target.value)} />
+                            </>
+                        )}
                 </div>
-            {book?.book_type !== "certificate" && (
+            {book?.book_type !== "certificate"  && (
                 <>
                     <div className="field">
-                        <label htmlFor="" className="font-bold">Payment Status</label>
-                        <Dropdown 
-                            options={statusPaid} 
-                            optionLabel="name" 
-                            optionValue="code" 
-                            value={selectedIsPaid} 
-                            onChange={(e) => handleSelectIsPaid(e.value)} 
-                            checkmark={true}
-                            disabled={book?.set_status === 1 ? true : false} 
-                            
-                            />
+                        {book?.set_status !== 1 && (
+                            <>
+                            <label htmlFor="" className="font-bold">Payment Status</label>
+                            <Dropdown 
+                                options={statusPaid} 
+                                optionLabel="name" 
+                                optionValue="code" 
+                                value={selectedIsPaid} 
+                                onChange={(e) => handleSelectIsPaid(e.value)} 
+                                checkmark={true}
+                                disabled={book?.set_status === 1 ? true : false} 
+                                
+                                />
+                            </>
+                        )}
                         
                     </div>
                 
@@ -936,7 +944,7 @@ export default function FileTable({searchStatus, church_id}){
         visible={showViewCertificate} 
         style={{ width: '32rem' }} 
         breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
-        header={`Certificate Details - ${formData?.reference_num}`}
+        header={`Certificate Details - ${formData?.service_type?.charAt(0)?.toUpperCase() + formData?.service_type?.slice(1)}`}
         modal
         className="p-fluid"
         footer={certificateModalFooter}
@@ -988,8 +996,7 @@ export default function FileTable({searchStatus, church_id}){
             <InputTextarea 
                 disabled 
                 id="services" 
-                value={formData?.form_data?.services?.join(', ')} 
-                rows={2} 
+                value={formData?.service_type?.charAt(0).toUpperCase() + formData?.service_type?.slice(1)} 
             />
         </div>
         {formData?.files?.length > 0 && (

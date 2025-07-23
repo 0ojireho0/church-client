@@ -34,6 +34,7 @@ function Baptism({church, user, allChurch}) {
   const [loadingDone, setLoadingDone] = useState(false)
 
   const [files, setFiles] = useState([])
+  const [onlineFiles, setOnlineFiles] = useState([])
 
   const [loading, setLoading] = useState(false)
 
@@ -111,13 +112,30 @@ function Baptism({church, user, allChurch}) {
     setFullyBooked,
     setLoadingDone,
     setShowOnlinePaymentModal,
-    setFiles
+    setFiles,
+    setOnlineFiles
   })
 
     
   }
 
   const handleDoneSubmit = () => {
+
+
+    if(onlineFiles.length <= 0){
+      Swal.fire({
+        title: "Error",
+        text: "Upload File is required",
+        icon: "warning"
+      })
+      return
+    }
+
+    if (onlineFiles?.length > 0) {
+      onlineFiles.forEach((file) => {
+        passData.append('files[]', file);
+      });
+    }
     setLoadingDone(true)
     baptismBook({
       formData: passData,
@@ -128,7 +146,8 @@ function Baptism({church, user, allChurch}) {
       setSelectedTime, 
       setShowOnlinePaymentModal,
       setLoadingDone,
-      setFiles
+      setFiles,
+      setOnlineFiles
     })
   }
 
@@ -148,8 +167,28 @@ function Baptism({church, user, allChurch}) {
     setFiles(prev => [...prev, ...filteredFiles])
   }
 
+  const handleFileChangeOnline = (e) => {
+    const selectedFiles = Array.from(e.target.files)
+
+    const filteredFiles = selectedFiles.filter(file => file.size <= 10 * 1024 * 1024)
+
+    if (filteredFiles.length !== selectedFiles.length) {
+      Swal.fire({
+        title: "File Too Large",
+        text: "One or more files exceed the 10MB limit.",
+        icon: "error"
+      })
+    }
+
+    setOnlineFiles(prev => [...prev, ...filteredFiles])
+  }
+
   const handleFileDelete = (index) => {
     setFiles(prev => prev.filter((_, i) => i !== index))
+  }
+
+  const handleFileDeleteOnline = (index) => {
+    setOnlineFiles(prev => prev.filter((_, i) => i !== index))
   }
 
 
@@ -233,6 +272,7 @@ function Baptism({church, user, allChurch}) {
 
     router.push('/church/recommended-church/baptism')
   }
+
 
 
 
@@ -388,7 +428,7 @@ function Baptism({church, user, allChurch}) {
               </div>
 
               <div className=' p-2 rounded-lg flex flex-col gap-2 '>
-                <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS & PROOF OF PAYMENT</h1>
+                <h1 className='font-bold josefin-regular text-center'>REQUIREMENTS</h1>
                 <ul className='list-inside list-disc'>
                   <li>Birth Certificate from PSA (ORIGINAL AND PHOTOCOPY)</li>
                   <li>Marriage Contract</li>
@@ -492,9 +532,42 @@ function Baptism({church, user, allChurch}) {
             <h1 className='josefin-regular text-sm'>Account #: 1234 567 890</h1>
             <h1 className='josefin-regular text-sm'>Account Name: Juan Dela Cruz</h1>
           </div>
-          <h1 className='text-sm josefin-regular font-bold mt-3'>2. Upload your Proof of Payment under the 'Requirements & Payment' section </h1>
+          <h1 className='text-sm josefin-regular font-bold mt-3'>2. Upload your Proof of Payment below by clicking the "Upload File" button. </h1>
           {/* <h1 className='text-sm josefin-regular text-center'>quiapochurch@gmail.com</h1> */}
           <h1 className='text-sm josefin-regular font-bold mt-3'>3. Wait for our confirmation email within 24 hours upon submitting your application/request form. (If you did not receive a confirmation email, please contact us at churchconnect05@gmail.com) </h1>
+          <div className="flex flex-col items-center my-3">
+              <h1 className="font-bold josefin-regular text-center">Upload Proof of Payment</h1>
+              <label
+                  htmlFor="file-uploads"
+                  className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
+              >
+                  Upload File
+              </label>
+              <input
+                  id="file-uploads"
+                  type="file"
+                  className="hidden"
+                  multiple
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  onChange={handleFileChangeOnline}
+              />
+          </div>
+        {onlineFiles.length > 0 && (
+            <div className="mt-3 flex flex-col gap-2">
+            {onlineFiles.map((file, index) => (
+                <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                <div className="text-sm truncate max-w-xs">{file.name}</div>
+                <button
+                    type="button"
+                    className="text-red-500 hover:underline text-xs"
+                    onClick={() => handleFileDeleteOnline(index)}
+                >
+                    Delete
+                </button>
+                </div>
+            ))}
+            </div>
+        )}
           <div className='mt-3 flex justify-center items-center gap-5'>
             {loadingDone ? (
               <>

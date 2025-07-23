@@ -20,7 +20,7 @@ import Swal from 'sweetalert2'
 function RequestCertificate() {
 
     const [getChurchInfo, setGetChurchInfo] = useState(null)
-    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [selectedOptions, setSelectedOptions] = useState(null);
     // const [selectedPayment, setSelectedPayment] = useState(null)
     const [selectedPayment, setSelectedPayment] = useState("pending")
 
@@ -35,7 +35,7 @@ function RequestCertificate() {
 
     const service = [
         {
-            value: "baptismal",
+            value: "baptism",
             label: "Baptismal",
           
         },
@@ -45,7 +45,7 @@ function RequestCertificate() {
 
         },
         {
-            value: "marriage",
+            value: "wedding",
             label: "Marriage",
      
         }
@@ -183,12 +183,19 @@ function RequestCertificate() {
                 <h1 className='text-center josefin-regular text-xl font-bold mb-4 border-b pb-2'>Selected Church: {getChurchInfo?.church_name} </h1>
             </div>
             <div className='flex justify-center items-center'>
-                <RowCheckboxGroup 
-                label="Select a service"
-                name="service"
-                values={selectedOptions}
-                onChange={setSelectedOptions}
-                options={service}
+                {/* <RowCheckboxGroup 
+                    label="Select a service"
+                    name="service"
+                    values={selectedOptions}
+                    onChange={setSelectedOptions}
+                    options={service}
+                /> */}
+                <RowRadioButtonsGroup 
+                    label={"Select a service"}
+                    name="service"
+                    value={selectedOptions}
+                    onChange={(e) => setSelectedOptions(e.target.value)}
+                    options={service}
                 />
             </div>
             <div className='mt-5'>
@@ -230,7 +237,7 @@ function RequestCertificate() {
                     </div>
 
                     <div className="flex items-center gap-4 mb-4">
-                        <label htmlFor="baptismDate" className="min-w-[120px]">DATE OF BAPTISM:</label>
+                        <label htmlFor="baptismDate" className="min-w-[120px]">{selectedOptions === "wedding" ? "DATE OF WEDDING:" : selectedOptions === "confirmation" ? "DATE OF CONFIRMATION" : "DATE OF BAPTISM"}</label>
                         <div className='w-full'>
                             <input type="text" id="baptismDate" className="border border-black/50 bg-neutral-200  px-2 py-1 flex-1 rounded-lg w-1/2 md:w-full"  
                                 {...register('baptismDate', {

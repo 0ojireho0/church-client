@@ -141,6 +141,13 @@ function Mass({church, user, allChurch}) {
 
   const handleDoneSubmit = () => {
     setLoadingDone(true)
+
+  if (files?.length > 0) {
+    files.forEach((file) => {
+      passData.append('files[]', file);
+    });
+  }
+
     massBook({
       formData: passData,
       reset,
@@ -314,7 +321,7 @@ function Mass({church, user, allChurch}) {
                     onChange={handleFileChange}
                   />
                 </div> */}
-              {files.length > 0 && (
+              {/* {files.length > 0 && (
                 <div className="mt-3 flex flex-col gap-2">
                   {files.map((file, index) => (
                     <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
@@ -329,7 +336,7 @@ function Mass({church, user, allChurch}) {
                     </div>
                   ))}
                 </div>
-              )}
+              )} */}
               </div>
             </div>
             <div className='border p-2 rounded-lg'>
@@ -406,9 +413,42 @@ function Mass({church, user, allChurch}) {
             <h1 className='josefin-regular text-sm'>Account #: 1234 567 890</h1>
             <h1 className='josefin-regular text-sm'>Account Name: Juan Dela Cruz</h1>
           </div>
-          <h1 className='text-sm josefin-regular font-bold mt-3'>2. Upload your Proof of Payment under the 'Requirements & Payment' section </h1>
+          <h1 className='text-sm josefin-regular font-bold mt-3'>2. Upload your Proof of Payment below by clicking the "Upload File" button. </h1>
           {/* <h1 className='text-sm josefin-regular text-center'>quiapochurch@gmail.com</h1> */}
           <h1 className='text-sm josefin-regular font-bold mt-3'>3. Wait for our confirmation email within 24 hours upon submitting your application/request form. (If you did not receive a confirmation email, please contact us at churchconnect05@gmail.com) </h1>
+          <div className="flex flex-col items-center my-3">
+              <h1 className="font-bold josefin-regular text-center">Upload Proof of Payment</h1>
+              <label
+                  htmlFor="file-upload"
+                  className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg"
+              >
+                  Upload File
+              </label>
+              <input
+                  id="file-upload"
+                  type="file"
+                  className="hidden"
+                  multiple
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  onChange={handleFileChange}
+              />
+          </div>
+        {files.length > 0 && (
+            <div className="mt-3 flex flex-col gap-2">
+            {files.map((file, index) => (
+                <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded">
+                <div className="text-sm truncate max-w-xs">{file.name}</div>
+                <button
+                    type="button"
+                    className="text-red-500 hover:underline text-xs"
+                    onClick={() => handleFileDelete(index)}
+                >
+                    Delete
+                </button>
+                </div>
+            ))}
+            </div>
+        )}
           <div className='mt-3 flex justify-center items-center gap-5'>
             {loadingDone ? (
               <>
